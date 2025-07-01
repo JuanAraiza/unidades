@@ -1,0 +1,50 @@
+services:
+
+    # Webserver service configuration
+    webserver:
+        build: .
+        container_name: webserver
+        ports:
+            - 8000:80
+        volumes:
+          - ./:/var/www/html  # Mount the current directory to the container's /var/www/html
+          - /var/www/html/vendor  # Mount the /var/www/html/vendor directory
+        depends_on:
+            - db  # Depend on the db service
+
+    # Database service configuration
+    db:
+        image: mysql:latest
+        container_name: db
+        volumes:
+            - data:/var/lib/mysql  # Mount a volume for MySQL data storage
+        ports:
+            - 3306:3306  # Expose port 3306 for MySQL
+        environment:
+            - MYSQL_ROOT_PASSWORD=mysecret  # Set MySQL root password
+            - MYSQL_DATABASE=todos  # Create a database named "todos"
+
+    # Artisan service configuration
+    artisan:
+        build: .
+        container_name: artisan
+        entrypoint: ["php", "/var/www/html/artisan"]  # Set the entrypoint to run artisan commands
+        volumes:
+            - ./:/var/www/html  # Mount the current directory to the container's /var/www/html
+            - /var/www/html/vendor  # Mount the /var/www/html/vendor directory
+
+    # PhpMyAdmin service configuration
+    phpmyadmin:
+        image: phpmyadmin:latest
+        container_name: phpmyadmin
+        depends_on:
+            - db  # Depend on the db service
+        ports:
+            - 8001:80  # Expose port 8001 for PhpMyAdmin
+        environment:
+            - PMA_ARBITRARY=1
+            - PMA_HOST=mysql
+
+# Define a named volume for MySQL data storage
+volumes:
+    data:
