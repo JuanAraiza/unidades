@@ -22,7 +22,7 @@ services:
             - 3306:3306  # Expose port 3306 for MySQL
         environment:
             - MYSQL_ROOT_PASSWORD=mysecret  # Set MySQL root password
-            - MYSQL_DATABASE=todos  # Create a database named "todos"
+            - MYSQL_DATABASE=u  # Create a database named "todos"
 
     # Artisan service configuration
     artisan:
