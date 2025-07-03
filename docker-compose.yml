@@ -1,49 +1,58 @@
 services:
 
     # Webserver service configuration
-    webserver:
-        build: .
-        container_name: webserver
+    app:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        container_name: unidades
         ports:
-            - 8000:80
-        volumes:
-          - ./:/var/www/html  # Mount the current directory to the container's /var/www/html
-          - /var/www/html/vendor  # Mount the /var/www/html/vendor directory
+            - "8000:80"
+        networks:
+            - app_network
+        environment:
+            - DB_CONNECTION=mysql
+            - DB_HOST=db
+            - DB_PORT=3306
+            - DB_DATABASE=unisistom
+            - DB_USERNAME=root
+            - DB_PASSWORD=root
         depends_on:
-            - db  # Depend on the db service
+            - db    
 
     # Database service configuration
     db:
-        image: mysql:latest
+        image: mysql:8.0
         container_name: db
-        volumes:
-            - data:/var/lib/mysql  # Mount a volume for MySQL data storage
-        ports:
-            - 3306:3306  # Expose port 3306 for MySQL
+        restart: always
         environment:
-            - MYSQL_ROOT_PASSWORD=mysecret  # Set MySQL root password
-            - MYSQL_DATABASE=u  # Create a database named "todos"
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: unisistom
+        ports:
+            - "3306:3306"
+        networks:
+            - app_network # Create a database named "todos"
 
-    # Artisan service configuration
-    artisan:
-        build: .
-        container_name: artisan
-        entrypoint: ["php", "/var/www/html/artisan"]  # Set the entrypoint to run artisan commands
-        volumes:
-            - ./:/var/www/html  # Mount the current directory to the container's /var/www/html
-            - /var/www/html/vendor  # Mount the /var/www/html/vendor directory
-
-    # PhpMyAdmin service configuration
     phpmyadmin:
-        image: phpmyadmin:latest
+        image: phpmyadmin/phpmyadmin
         container_name: phpmyadmin
-        depends_on:
-            - db  # Depend on the db service
-        ports:
-            - 8001:80  # Expose port 8001 for PhpMyAdmin
         environment:
-            - PMA_ARBITRARY=1
-            - PMA_HOST=mysql
+            PMA_HOST: db
+            PMA_PORT: 3306
+            PMA_USER: root
+            PMA_PASSWORD: root
+        ports:
+            - "8080:80"
+        depends_on:
+            - db
+        networks:
+            - app_network
+        volumes:
+            - ./.docker/php/zzz-custom.ini:/usr/local/etc/php/conf.d/zzz-custom.ini
+
+networks:
+  app_network:
+    driver: bridge
 
 # Define a named volume for MySQL data storage
 volumes:
