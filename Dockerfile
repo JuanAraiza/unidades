@@ -39,6 +39,8 @@ RUN chown -R www-data:www-data /var/www/html/storage \
 RUN a2enmod rewrite && \
     sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
+RUN npm install
+
 # Expose port 80 for incoming HTTP traffic
 EXPOSE 80
 
