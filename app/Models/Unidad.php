@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use App\Observers\UnidadObserver;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+
 use Illuminate\Database\Eloquent\Model;
 
-#[ObservedBy(UnidadObserver::class)]
+
 class Unidad extends Model
 {
      protected $fillable=[
@@ -34,7 +33,9 @@ class Unidad extends Model
         'detalles',
         'clave',
         'user',
-        'deshabilitado'
+        'deshabilitado',
+        'poliza',
+        'vigencia'
         ];
 
     protected $table = 'unidad';

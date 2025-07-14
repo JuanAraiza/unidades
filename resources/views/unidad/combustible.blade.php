@@ -1,0 +1,409 @@
+@extends('adminlte::page')
+
+@section('title', 'Unidades')
+
+@section('content_header')
+    <h1>Cargar Combustible Unidad</h1>
+@stop
+
+@section('content')
+<x-adminlte-card theme="primary" theme-mode="outline">
+
+<div class="row col-md-12 ">
+    <div class="col-md-3">    
+        <a href="{{ route('unidad.show', $unidades->id) }}" class="btn btn-primary btn-block">Ver Información</a>
+    </div>
+     <div class="col-md-3">    
+        <a href="{{ route('unidad.combustible', $unidades->id) }}" class="btn btn-default btn-block">Cargar Combustible</a>
+    </div>
+     <div class="col-md-3">    
+        <a href="{{ route('unidad.incidentes', $unidades->id) }}" class="btn btn-info btn-block">Registro Incidentes</a>
+    </div>
+     <div class="col-md-3">    
+        <a href="{{ route('unidad.recordatorios', $unidades->id) }}" class="btn btn-success btn-block">Recordatorios</a>
+    </div>
+</div>
+<div class="row col-md-12 ">&nbsp; </div>
+<div class="row col-md-12 ">
+    <div class="col-md-3">    
+        <a href="{{ route('unidad.operadores', $unidades->id) }}" class="btn bg-purple btn-block">Operadores</a>
+    </div>
+     <div class="col-md-3">    
+        <a href="{{ route('unidad.estatus', $unidades->id) }}" class="btn btn-warning btn-block">Estatus</a>
+    </div>
+     <div class="col-md-3">    
+        <a href="{{ route('unidad.documentos', $unidades->id) }}" class="btn btn-danger btn-block">Documentos</a>
+    </div>
+     <div class="col-md-3">    
+        <a href="{{ route('unidad.imagenes', $unidades->id) }}" class="btn bg-navy btn-block">Imagenes</a>
+    </div>
+</div>
+
+</x-adminlte-card>
+
+
+<x-adminlte-card theme="primary" theme-mode="outline">
+ 
+
+
+
+<div class="row col-md-12 mb-2">
+  
+
+    <div class="col-md-2">
+<div class="form-group">
+            <label>Tipo Unidad</label>
+<p>{{ $unidades->tunidad }}</p>
+</div>
+</div>
+
+   <div class="col-md-2"> 
+        <div class="form-group">
+            <label>Modelo de la unidad</label>
+            <p>{{ $unidades->modelo }}</p>
+        </div>
+        
+    </div>
+
+  <div class="col-md-2"> 
+       <div class="form-group">
+            <label>Marca</label>
+            <p>{{ $unidades->marca }}</p>
+        </div>
+    </div>
+
+
+      <div class="col-md-2"> 
+        <div class="form-group">
+            <label>Año</label>
+            <p>{{ $unidades->anio }}</p>
+        </div>
+    </div>
+
+     <div class="col-md-2"> 
+        <div class="form-group">
+            <label>Color</label>
+            <p>{{ $unidades->color }}</p>
+        </div>
+    </div>
+
+
+<div class="col-md-2"> 
+        <div class="form-group">
+            <label>Placas</label>
+            <p>{{ $unidades->placas }}</p>
+        </div>
+    </div>
+
+<div class="col-md-2"> 
+        <div class="form-group">
+            <label>No. Económicos</label>
+            <p>{{ $unidades->no_economico }}</p>
+        </div>
+    </div>
+
+ <div class="col-md-2">
+<div class="form-group">
+            <label>Combustible</label>
+<p>{{ $unidades->combustible }}</p>
+</div>
+</div>
+
+<div class="col-md-2">
+<div class="form-group">
+            <label>Tipo Vehiculo</label>
+
+            @foreach($tipos as $tipo)
+               @if ($tipo->id == $unidades->tipov )
+             <p>{{ $tipo->tipo }}</p>
+            @endif
+            @endforeach
+
+</div>
+</div>
+
+
+<div class="col-md-2">
+<div class="form-group">
+            <label>Estatus</label>
+@switch($unidades->estatus )
+    @case(1)
+    <p>Disponible</p>
+        @break
+ 
+    @case(2)
+      <p>En Taller</p>
+        @break
+ 
+   @case(3)
+      <p>Fuera de Servicio</p>
+        @break
+@endswitch
+</div>
+</div>
+
+
+
+
+
+
+    
+
+
+<div class="col-md-2"> 
+        <div class="form-group">
+            <label>No. Serie</label>
+            <p>{{ $unidades->no_serie }}</p>
+        </div>
+    </div>
+
+
+
+
+<div class="col-md-2">
+<div class="form-group">
+            <label>Medida de uso</label>
+<p>{{ $unidades->medida_usu }}</p>
+</div>
+</div>
+
+
+</div>
+
+</x-adminlte-card>
+
+
+
+<x-adminlte-card theme="primary" theme-mode="outline">
+
+
+
+<form action="{{ route('unidad.guardarvale', $unidades->id ) }}" method="post" enctype="multipart/form-data">
+    @csrf
+
+
+    <div class="row col-md-12 mb-2">
+<input type="hidden" name="unidad" value="{{ $unidades->id }}">  
+    <div class="col-md-2"> 
+        <div class="form-group">
+            <label>Kilometraje</label>
+            <input type="text" name="km"  onKeyPress="return valida(event)"  value="{{ old('km') }}" class="form-control"
+               placeholder="Kilometraje" autofocus >
+        </div>
+        @error('km')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
+
+
+    <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Justificación</label>
+            <input type="text" name="justificacion" value="{{ old('justificacion') }}" class="form-control"
+               placeholder="Justificación"  >
+        </div>
+        @error('justificacion')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
+
+    <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Destino</label>
+            <input type="text" name="destino" value="{{ old('destino') }}" class="form-control"
+               placeholder="Destino"  >
+        </div>
+        @error('destino')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
+
+ <div class="col-md-2"> 
+        <div class="form-group">
+            <label>Litros</label>
+            <input type="text" name="litros"  onKeyPress="return valida(event)"  value="{{ old('litros') }}" class="form-control"
+               placeholder="Litros" maxlength="5" autofocus >
+        </div>
+        @error('litros')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
+
+
+
+
+
+<div class="col-md-2"> 
+       <div class="form-group">
+            <label>Tipo Combustible</label>
+      {{-- Minimal --}}
+            <x-adminlte-select2 name="tipo_com"  data-placeholder="Selecciona Tipo....">
+                   @if ( $unidades->combustible  == 'Gasolina' )
+                        <option @selected(old('tipo_com')) value="1">Gas 1</option>
+                        <option @selected(old('tipo_com')) value="2">Gas 2</option>
+                        @elseif ( $unidades->combustible  == 'Diesel')
+                        <option @selected(old('tipo_com')) value="3">Diesel</option>
+                          @else
+                        <option @selected(old('tipo_com')) value="4">Gas LP</option>
+                        @endif
+              
+            </x-adminlte-select2>
+        </div>
+      
+    </div>
+
+<div class="col-md-3"> 
+       <div class="form-group">
+            <label>Operador</label>
+      {{-- Minimal --}}
+            <x-adminlte-select2 name="operador"  data-placeholder="Selecciona Operador....">
+                    @foreach($operadores as $operador)
+                        <option @selected(old('operador') == $operador->id) value="{{ $operador->id }}">{{ $operador->nombre }} {{ $operador->paterno }} {{ $operador->materno }}</option>
+                    @endforeach
+            </x-adminlte-select2>
+        </div>
+      
+    </div>
+    
+
+<div class="col-md-3">
+<div class="form-group">
+            <label>Área</label>
+{{-- Minimal --}}
+<x-adminlte-select2 name="area"  data-placeholder="Selecciona Area....">
+    @foreach($areas as $area)
+        <option @selected(old('area') == $area->id) value="{{ $area->id }}">{{ $area->area }}</option>
+    @endforeach
+</x-adminlte-select2>
+</div>
+</div>
+
+<div class="col-md-4"> 
+        <div class="form-group">
+            <label>&nbsp;</label>
+        <button type=submit class="btn btn-primary form-control">
+                   <span class="fa fa-save"></span>&nbsp;
+                    Solicitar Vale
+                </button>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+</form>
+
+</x-adminlte-card>
+
+
+
+<x-adminlte-card theme="primary" theme-mode="outline">
+
+
+
+
+
+
+{{-- Setup data for datatables --}}
+@php
+$heads = [
+        'Folio',
+    'Fecha',
+    'Litros',
+    'Operador',
+    'Justificación',
+    'Destino',
+    'Tipo Combustible',
+    'Kilometraje',
+    'Área',
+    '',
+    ''
+];
+
+
+
+$config = [
+    
+    'order' => [[1, 'asc']],
+    'columns' => [null, null, null, ['orderable' => false]],
+];
+@endphp
+
+{{-- Minimal example / fill data using the component slot --}}
+<x-adminlte-datatable  id="table2" :heads="$heads" head-theme="dark" :config="$config"
+    striped hoverable bordered compressed>
+    @foreach ($vales as $vale)
+                <tr>
+                    <td>{{ $vale->folio }}</td>
+                    <td>{{ $vale->created_at->format('d/m/Y') }}</td>
+                    <td>{{ $vale->litros }}</td>
+                    <td>{{ $vale->operador }}</td>
+                    <td>{{ $vale->justificacion }}</td>
+                    <td>{{ $vale->destino }}</td>
+                    <td>{{ $vale->tipo_com == 1 ? 'Gas 1' : ($vale->tipo_com == 2 ? 'Gas 2' : ($vale->tipo_com == 3 ? 'Diesel' : 'Gas LP')) }}</td>
+                    <td>{{ $vale->km }}</td>
+                    <td>{{ $vale->area }}</td>
+                    <td>
+
+
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalVal{{ $vale->id }}">
+<i class="fa-solid fa-hand-holding-dollar"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modalVal{{ $vale->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title" id="exampleModalLabel">Validar Folio: {{ $vale->folio }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+     
+        <button type="button" class="btn btn-success mr">Validar</button>
+      </div>
+    </div>
+  </div>
+</div>
+                    </td>
+
+                      <td>
+
+
+                        <a type="button" class="btn btn-warning" href="{{ route('unidad.imvale', $vale->id) }}" target="_blank">
+<i class="fa-solid fa-print"></i>
+</a>
+</td>
+
+                </tr>
+                @endforeach
+</x-adminlte-datatable>
+
+</x-adminlte-card>
+
+
+@stop
+
+@section('css')
+    {{-- Add here extra stylesheets --}}
+    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+@stop
+
+@section('js')
+    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+@stop

@@ -96,7 +96,7 @@
             <label>&nbsp;</label>
         <button type=submit name="guardartipo" class="btn btn-primary form-control">
                    <span class="fa fa-save"></span>&nbsp;
-                    Guardar Area
+                    Guardar Responsable
                 </button>
         </div>
     </div>

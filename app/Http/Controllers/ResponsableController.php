@@ -7,6 +7,7 @@ use App\Models\Responsable;
 use Illuminate\Http\Request;
 use PhpParser\Node\Arg;
 
+
 class ResponsableController extends Controller
 {
     /**
@@ -27,6 +28,7 @@ class ResponsableController extends Controller
      */
     public function create()
     {
+        
           $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         
@@ -38,7 +40,8 @@ class ResponsableController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        
+ $request->validate([
             'nombre' => 'required'
         ]);
         Responsable::create($request->all());

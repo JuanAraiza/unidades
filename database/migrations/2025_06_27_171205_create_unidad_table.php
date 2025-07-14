@@ -42,6 +42,8 @@ return new class extends Migration
             $table->string('cilindros')->nullable();
             $table->string('factura')->nullable();
             $table->string('uso')->nullable();
+            $table->string('poliza')->nullable();
+            $table->date('vigencia')->nullable();
             $table->longText('detalles')->nullable();
             $table->string('clave');
             $table->unsignedBigInteger('user')->nullable();

@@ -39,7 +39,7 @@
         </td>
         <td>{{ $responsable->puesto }}</td>
             <td><a href="{{ route('responsable.edit', $responsable->id) }}" class="btn btn-warning"><span  class="fas fa-pencil"></span></a></td>
-            <td><form class="delete-form" action="{{ route('responsable.destroy', $area->id) }}" method="post">
+            <td><form class="delete-form" action="{{ route('responsable.destroy', $responsable->id) }}" method="post">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="nombre" value="{{ $responsable->nombre }}"  >

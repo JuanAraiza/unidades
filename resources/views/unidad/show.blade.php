@@ -3,17 +3,47 @@
 @section('title', 'Unidades')
 
 @section('content_header')
-    <h1>Unidad</h1>
+    <h1>Información Unidad</h1>
 @stop
 
 @section('content')
+<x-adminlte-card theme="primary" theme-mode="outline">
 
+<div class="row col-md-12 ">
+    <div class="col-md-3">    
+        <a href="{{ route('unidad.show', $unidades->id) }}" class="btn btn-default btn-block">Ver Información</a>
+    </div>
+     <div class="col-md-3">    
+        <a href="{{ route('unidad.combustible', $unidades->id) }}" class="btn btn-secondary btn-block">Cargar Combustible</a>
+    </div>
+     <div class="col-md-3">    
+        <a href="{{ route('unidad.incidentes', $unidades->id) }}" class="btn btn-info btn-block">Registro Incidentes</a>
+    </div>
+     <div class="col-md-3">    
+        <a href="{{ route('unidad.recordatorios', $unidades->id) }}" class="btn btn-success btn-block">Recordatorios</a>
+    </div>
+</div>
+<div class="row col-md-12 ">&nbsp; </div>
+<div class="row col-md-12 ">
+    <div class="col-md-3">    
+        <a href="{{ route('unidad.operadores', $unidades->id) }}" class="btn bg-purple btn-block">Operadores</a>
+    </div>
+     <div class="col-md-3">    
+        <a href="{{ route('unidad.estatus', $unidades->id) }}" class="btn btn-warning btn-block">Estatus</a>
+    </div>
+     <div class="col-md-3">    
+        <a href="{{ route('unidad.documentos', $unidades->id) }}" class="btn btn-danger btn-block">Documentos</a>
+    </div>
+     <div class="col-md-3">    
+        <a href="{{ route('unidad.imagenes', $unidades->id) }}" class="btn bg-navy btn-block">Imagenes</a>
+    </div>
+</div>
+
+</x-adminlte-card>
 
 
 <x-adminlte-card theme="primary" theme-mode="outline">
-
-
-
+ 
 
     @csrf
 
@@ -206,7 +236,7 @@
         <div class="form-group">
             <label>Factura</label>
             @if($unidades->factura!='')
-            <p><a href="{{ Storage::url($unidades->factura) }}" target="_blank" class="btn btn-warning">Ver Archivo</a></p>
+            <p><a href="{{ Storage::url($unidades->factura) }}" target="_blank" class="btn btn-warning">Ver Factura</a></p>
             @endif
     </div>
      
@@ -220,6 +250,23 @@
         </div>
     </div>
 
+  <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Poliza Seguros</label>
+            @if($unidades->poliza!='')
+            <p><a href="{{ Storage::url($unidades->poliza) }}" target="_blank" class="btn btn-warning">Ver Poliza</a></p>
+            @endif
+    </div>
+     
+    </div>
+
+ <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Vigencia</label>
+            <p>{{ substr($unidades->vigencia,8,2).'-'.substr($unidades->vigencia,5,2).'-'.substr($unidades->vigencia,0,4) }}</p>
+        </div>
+    </div>
+
 
     <div class="col-md-12"> 
         <div class="form-group">
@@ -227,7 +274,7 @@
             <p>{{ $unidades->detalles }}</p>
         
     </div>
-
+</div>
    
     
 </div>
