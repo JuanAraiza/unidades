@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Area;
 use App\Models\combustible;
 use App\Models\Dependencia;
+use App\Models\incidente;
 use App\Models\Operador;
 use App\Models\Responsable;
 use App\Models\Tipov;
 use App\Models\Unidad;
+use App\Models\Usuarios;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
@@ -300,11 +302,11 @@ public function guardarvale(Request $request, string $unidad)
         $request['folio']=$folio;
        
          
-   combustible::create($request->all());
+        combustible::create($request->all());
         //
         session()->flash('swal', [
             'icon' => 'success',
-            'title' => 'Vale Registradr!',
+            'title' => 'Vale Registrado!',
             'text' => 'Registrado Correctamente'
         ]);
         $areas = Area::where('deshabilitado',0)
@@ -321,6 +323,64 @@ public function guardarvale(Request $request, string $unidad)
        // return($tipovs);
         return view('unidad.combustible', compact('unidades','areas','responsables','tipos','operadores'));
         
+    }
+
+
+    
+public function guardarinci(Request $request, string $unidad){
+        if($request->hasFile('foto')){
+            $extension = $request->foto->extension();
+            $nameFile = $request['foto'].date('YmdHsi').'-INCI.'.$extension;
+            $upload = $request->file('foto');
+                    $image = Image::read($upload)
+                            ->scale(width:800)
+                            ->encodeByExtension($upload->getClientOriginalExtension(), quality: 70);
+                    Storage ::put('incidentes/'.$nameFile,
+                    $image
+            );
+            $request['imagen']='incidentes/'.$nameFile;
+        }
+       
+        $request['id_user']=auth()->user('web')->id;         
+
+        incidente::create($request->all());
+        //
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Incidente Registrado!',
+            'text' => 'Registrado Correctamente'
+        ]);
+       
+        $tipos = Tipov::where('deshabilitado',0)
+         ->latest('id')->paginate();
+        $incidentes = incidente::where('unidad', $unidad)
+         ->latest('id')->paginate();
+         //
+        $usuarios = Usuarios::All();
+
+        $unidades = Unidad::find($unidad);
+       // return($tipovs);
+        return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
+        
+    }
+
+
+ public function incidente(string $unidad)
+    {
+        $areas = Area::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $responsables = Responsable::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $tipos = Tipov::where('deshabilitado',0)
+         ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $incidentes = incidente::where('unidad', $unidad)
+         ->latest('id')->paginate();
+          $usuarios = Usuarios::All();
+        $unidades = Unidad::find($unidad);
+       // return($tipovs);
+        return view('unidad.incidente', compact('unidades','areas','responsables','tipos','operadores','incidentes','usuarios'));
     }
 
     /**

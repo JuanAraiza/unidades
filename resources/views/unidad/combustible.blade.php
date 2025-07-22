@@ -17,7 +17,7 @@
         <a href="{{ route('unidad.combustible', $unidades->id) }}" class="btn btn-default btn-block">Cargar Combustible</a>
     </div>
      <div class="col-md-3">    
-        <a href="{{ route('unidad.incidentes', $unidades->id) }}" class="btn btn-info btn-block">Registro Incidentes</a>
+        <a href="{{ route('unidad.incidente', $unidades->id) }}" class="btn btn-info btn-block">Registro Incidentes</a>
     </div>
      <div class="col-md-3">    
         <a href="{{ route('unidad.recordatorios', $unidades->id) }}" class="btn btn-success btn-block">Recordatorios</a>
@@ -42,22 +42,14 @@
 </x-adminlte-card>
 
 
-<x-adminlte-card theme="primary" theme-mode="outline">
- 
+<div class="row col-md-12 ">
+
+<x-adminlte-card  class="col-lg-8" title="CARGAR COMBUSTIBLE" theme="primary" style="padding-right: 0px; padding-left: 0px;" >
+
+<div class="row col-md-12 ">
 
 
-
-<div class="row col-md-12 mb-2">
-  
-
-    <div class="col-md-2">
-<div class="form-group">
-            <label>Tipo Unidad</label>
-<p>{{ $unidades->tunidad }}</p>
-</div>
-</div>
-
-   <div class="col-md-2"> 
+   <div class="col-md-3"> 
         <div class="form-group">
             <label>Modelo de la unidad</label>
             <p>{{ $unidades->modelo }}</p>
@@ -65,116 +57,31 @@
         
     </div>
 
-  <div class="col-md-2"> 
+  <div class="col-md-3"> 
        <div class="form-group">
             <label>Marca</label>
             <p>{{ $unidades->marca }}</p>
         </div>
     </div>
 
-
-      <div class="col-md-2"> 
+     <div class="col-md-3"> 
         <div class="form-group">
-            <label>Año</label>
-            <p>{{ $unidades->anio }}</p>
+            <label>Color / Año</label>
+            <p>{{ $unidades->color }} / {{ $unidades->anio }}</p>
         </div>
     </div>
 
-     <div class="col-md-2"> 
-        <div class="form-group">
-            <label>Color</label>
-            <p>{{ $unidades->color }}</p>
-        </div>
-    </div>
-
-
-<div class="col-md-2"> 
+    <div class="col-md-3"> 
         <div class="form-group">
             <label>Placas</label>
             <p>{{ $unidades->placas }}</p>
         </div>
     </div>
 
-<div class="col-md-2"> 
-        <div class="form-group">
-            <label>No. Económicos</label>
-            <p>{{ $unidades->no_economico }}</p>
-        </div>
-    </div>
 
- <div class="col-md-2">
-<div class="form-group">
-            <label>Combustible</label>
-<p>{{ $unidades->combustible }}</p>
-</div>
-</div>
-
-<div class="col-md-2">
-<div class="form-group">
-            <label>Tipo Vehiculo</label>
-
-            @foreach($tipos as $tipo)
-               @if ($tipo->id == $unidades->tipov )
-             <p>{{ $tipo->tipo }}</p>
-            @endif
-            @endforeach
-
-</div>
-</div>
-
-
-<div class="col-md-2">
-<div class="form-group">
-            <label>Estatus</label>
-@switch($unidades->estatus )
-    @case(1)
-    <p>Disponible</p>
-        @break
- 
-    @case(2)
-      <p>En Taller</p>
-        @break
- 
-   @case(3)
-      <p>Fuera de Servicio</p>
-        @break
-@endswitch
-</div>
-</div>
-
-
-
-
-
-
-    
-
-
-<div class="col-md-2"> 
-        <div class="form-group">
-            <label>No. Serie</label>
-            <p>{{ $unidades->no_serie }}</p>
-        </div>
-    </div>
-
-
-
-
-<div class="col-md-2">
-<div class="form-group">
-            <label>Medida de uso</label>
-<p>{{ $unidades->medida_usu }}</p>
-</div>
-</div>
 
 
 </div>
-
-</x-adminlte-card>
-
-
-
-<x-adminlte-card theme="primary" theme-mode="outline">
 
 
 
@@ -184,7 +91,7 @@
 
     <div class="row col-md-12 mb-2">
 <input type="hidden" name="unidad" value="{{ $unidades->id }}">  
-    <div class="col-md-2"> 
+    <div class="col-md-3"> 
         <div class="form-group">
             <label>Kilometraje</label>
             <input type="text" name="km"  onKeyPress="return valida(event)"  value="{{ old('km') }}" class="form-control"
@@ -224,7 +131,7 @@
         @enderror
     </div>
 
- <div class="col-md-2"> 
+ <div class="col-md-3"> 
         <div class="form-group">
             <label>Litros</label>
             <input type="text" name="litros"  onKeyPress="return valida(event)"  value="{{ old('litros') }}" class="form-control"
@@ -241,7 +148,7 @@
 
 
 
-<div class="col-md-2"> 
+<div class="col-md-3"> 
        <div class="form-group">
             <label>Tipo Combustible</label>
       {{-- Minimal --}}
@@ -286,7 +193,7 @@
 </div>
 </div>
 
-<div class="col-md-4"> 
+<div class="col-md-3"> 
         <div class="form-group">
             <label>&nbsp;</label>
         <button type=submit class="btn btn-primary form-control">
@@ -303,7 +210,21 @@
 
 </form>
 
+
 </x-adminlte-card>
+
+<div class="row col-md-4 ">
+    <div class="col-md-1 ">&nbsp;</div>
+<x-adminlte-card  class="col-lg-11" title="IMAGEN" theme="success" style="padding-right: 0px; padding-left: 0px;" >
+ <img style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded" src="{{ Storage::url($unidades->imagen) }}" alt="">
+
+</x-adminlte-card>
+</div>
+
+
+
+</div>
+
 
 
 

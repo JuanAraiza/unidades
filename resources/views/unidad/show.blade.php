@@ -17,7 +17,7 @@
         <a href="{{ route('unidad.combustible', $unidades->id) }}" class="btn btn-secondary btn-block">Cargar Combustible</a>
     </div>
      <div class="col-md-3">    
-        <a href="{{ route('unidad.incidentes', $unidades->id) }}" class="btn btn-info btn-block">Registro Incidentes</a>
+        <a href="{{ route('unidad.incidente', $unidades->id) }}" class="btn btn-info btn-block">Registro Incidentes</a>
     </div>
      <div class="col-md-3">    
         <a href="{{ route('unidad.recordatorios', $unidades->id) }}" class="btn btn-success btn-block">Recordatorios</a>
