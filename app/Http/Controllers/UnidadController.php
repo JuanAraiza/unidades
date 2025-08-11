@@ -360,7 +360,8 @@ public function guardarinci(Request $request, string $unidad){
 
         $unidades = Unidad::find($unidad);
        // return($tipovs);
-        return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
+        return redirect()->route('unidad.incidente', $unidad);
+       // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
         
     }
 
@@ -471,4 +472,110 @@ return redirect()->route('unidad.show', $unidad);
     {
         //
     }
+
+ public function updateIncidente(Request $request)
+    {
+        $unidad = $request['unidad'];
+        $incidente = $request['id_incidente'];
+
+        $inci = incidente::find($incidente);
+
+
+
+
+        if($request->hasFile('foto')){
+            if($inci->foto){
+             Storage::delete($inci->foto);
+                }
+            $extension = $request->foto->extension();
+            $nameFile = $request['foto'].date('YmdHsi').'-INCI.'.$extension;
+            $upload = $request->file('foto');
+                    $image = Image::read($upload)
+                            ->scale(width:800)
+                            ->encodeByExtension($upload->getClientOriginalExtension(), quality: 70);
+                    Storage ::put('incidentes/'.$nameFile,
+                    $image
+            );
+            $request['imagen']='incidentes/'.$nameFile;
+        }
+
+        $inci->update($request->all());
+
+
+        session()->flash('swal', [
+                    'icon' => 'success',
+                    'title' => 'Incidente Actualizado!',
+                    'text' => 'Actualizado Correctamente'
+                ]);
+
+    return redirect()->route('unidad.incidente', $unidad);
+    
+    }
+
+
+      public function editIncidente(Request $request, string $unidad)
+    {
+        $unidad = $request['unidad'];
+        $incidente = $request['incidente'];
+
+        $inci = incidente::find($incidente);
+
+         $areas = Area::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $responsables = Responsable::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $tipos = Tipov::where('deshabilitado',0)
+         ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $incidentes = incidente::where('unidad', $unidad)
+         ->latest('id')->paginate();
+          $usuarios = Usuarios::All();
+        $unidades = Unidad::find($unidad);
+
+        
+        return view('unidad.incidente', compact('unidades','areas','responsables','tipos','operadores','incidentes','usuarios','inci'));
+    }
+
+     public function distroyIncidente(Request $request)
+    {
+        $unidad = $request['unidad'];
+        $incidente = $request['incidente'];
+
+$eincidentes = incidente::find($incidente);
+if($eincidentes->imagen){
+    Storage::delete($eincidentes->imagen);
 }
+        $eincidentes->delete();
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Incidente Eliminado!',
+            'text' => 'Eliminado Correctamente'
+        ]);
+
+          return redirect()->route('unidad.incidente', $unidad);
+    }
+
+
+public function cerrarIncidente(Request $request, string $unidad)
+    {
+        $unidad = $request['unidad'];
+        $incidente = $request['id_incidente'];
+        $request['estatus']=4;
+        $inci = incidente::find($incidente);
+        $inci->update($request->all());
+
+        session()->flash('swal', [
+                    'icon' => 'success',
+                    'title' => 'Incidente Cerrado!',
+                    'text' => 'Cerrado Correctamente'
+                ]);
+
+    return redirect()->route('unidad.incidente', $unidad);
+    
+    }
+
+}
+
+
+

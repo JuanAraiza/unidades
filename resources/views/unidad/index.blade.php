@@ -56,6 +56,7 @@
     <a href="{{ route('unidad.show', $unidad->id) }}" class="btn btn-success"><i class="fa-solid fa-magnifying-glass"></i></a>
      <a href="{{ route('unidad.edit', $unidad->id) }}" class="btn btn-warning"><i class="fa-solid fa-pencil"></i></a>
      <a href="{{ route('unidad.combustible', $unidad->id) }}" class="btn btn-primary"><i class="fa-solid fa-gas-pump"></i></a>
+      <a href="{{ route('unidad.incidente', $unidad->id) }}" class="btn bg-purple"><i class="fa-solid fa-car-burst"></i></a>
 </div>
             <!-- /.card-body -->
           </div>

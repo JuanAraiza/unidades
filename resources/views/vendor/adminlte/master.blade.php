@@ -44,6 +44,8 @@
                 <link rel="stylesheet" href="{{ asset('vendor/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
                 <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
 
+                <link rel="stylesheet" href="{{ asset('vendor/datatables/css/dataTables.bootstrap4.min.css') }}">
+
                 @if(config('adminlte.google_fonts.allowed', true))
                     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
                 @endif
@@ -115,6 +117,8 @@
                 <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
                 <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
                 <script src="{{ asset('vendor/select2/js/select2.full.min.js') }}"></script>
+                <script src="{{ asset('vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
+                <script src="{{ asset('vendor/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
                 <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
         @endswitch
     @endif
@@ -140,8 +144,8 @@
         Swal.fire(@json(session('swal')));
 
 
-        
     </script>
+  
     @endif
 
     @if($errors->any())

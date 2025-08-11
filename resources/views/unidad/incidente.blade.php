@@ -86,9 +86,17 @@
 </div>
 
 
-
+@if(isset($inci))
+<form action="{{ route('incidente.updateIncidente', $unidades->id ) }}" method="post" enctype="multipart/form-data">
+    
+    @csrf
+    @method('POST')
+<input type="hidden" name="id_incidente" value="{{ $inci->id }}"> 
+@else
 <form action="{{ route('unidad.guardarinci', $unidades->id ) }}" method="post" enctype="multipart/form-data">
     @csrf
+@endif
+
 
 
     <div class="row col-md-12 mb-2">
@@ -97,7 +105,7 @@
 <div class="col-md-3"> 
         <div class="form-group">
             <label>Fecha de Reporte</label>
-            <input type="date" name="fecha_reg"  value="{{ old('fecha_reg') }}" class="form-control">
+            <input type="date" name="fecha_reg"  value="@if(isset($inci)){{ $inci->fecha_reg }}@else{{ old('fecha_reg') }} @endif" class="form-control">
         </div>
         @error('fecha_reg')
             <span style="color:crimson;">
@@ -110,7 +118,7 @@
 <div class="col-md-6"> 
         <div class="form-group">
             <label>Descripcion corta</label>
-            <input type="text" name="descripcion_c"   value="{{ old('descripcion_c') }}" class="form-control"
+            <input type="text" name="descripcion_c"   value="@if(isset($inci)){{ $inci->descripcion_c }}@else{{ old('descripcion_c') }}@endif" class="form-control"
                placeholder="Descripcion" autofocus >
         </div>
         @error('descripcion_c')
@@ -126,9 +134,9 @@
             <label>Importancia</label>
              {{-- Minimal --}}
             <x-adminlte-select2 name="importancia"  data-placeholder="Selecciona Importancia....">
-                        <option @selected(old('Moredada')) value="Moredada">Moredada</option>
-                        <option @selected(old('Critica')) value="Critica">Critica</option>
-                        <option @selected(old('Baja')) value="Baja">Baja</option>
+                        <option @if(isset($inci)) @selected($inci->importancia) @else @selected(old('Moredada')) @endif value="Moredada">Moredada</option>
+                        <option @if(isset($inci)) @selected($inci->importancia) @else @selected(old('Critica')) @endif value="Critica">Critica</option>
+                        <option @if(isset($inci)) @selected($inci->importancia) @else @selected(old('Baja')) @endif value="Baja">Baja</option>
             </x-adminlte-select2>
         </div>
     </div>
@@ -136,13 +144,19 @@
     <div class="col-md-10"> 
             <div class="form-group">
                 <label>Descripcion Detallada</label>
-    <x-adminlte-textarea name="descripcion" placeholder="Descripcion..."/>
+    
+    <x-adminlte-textarea name="descripcion" >
+        @if(isset($inci)){{ $inci->descripcion }}@else{{ old('descripcion') }}@endif
+    </x-adminlte-textarea>
             </div>
     </div>
 
     <div class="col-md-3"> 
         <div class="form-group">
             <label>Fotografia / Imagen</label>
+            @if(isset($inci))
+            <img style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded" src="{{ Storage::url($inci->imagen) }}" alt="">
+            @endif
             <input type="file" name="foto"  class="form-control">
         </div>
     </div>
@@ -151,7 +165,7 @@
     <div class="col-md-3"> 
         <div class="form-group">
             <label>Fecha de Vencimiento</label>
-            <input type="date" name="fecha_ven"  value="{{ old('fecha_ven') }}" class="form-control">
+            <input type="date" name="fecha_ven"  value="@if(isset($inci)){{ $inci->fecha_ven }}@else{{ old('fecha_ven') }}@endif" class="form-control">
         </div>
         @error('fecha_ven')
             <span style="color:crimson;">
@@ -163,7 +177,7 @@
      <div class="col-md-3"> 
         <div class="form-group">
             <label>Odómetro/Horómetro</label>
-            <input type="text" name="odometro"  onKeyPress="return valida(event)"  value="{{ old('odometro') }}" class="form-control"
+            <input type="text" name="odometro"  onKeyPress="return valida(event)"  value="@if(isset($inci)){{ $inci->odometro }}@else{{ old('odometro') }}@endif" class="form-control"
                placeholder="1000" maxlength="5" autofocus >
         </div>
         @error('odometro')
@@ -180,7 +194,11 @@
             <label>&nbsp;</label>
         <button type=submit class="btn btn-primary form-control">
                    <span class="fa fa-save"></span>&nbsp;
+                   @if(isset($inci))
+                    Actualizar
+                    @else
                     Registrar
+                    @endif
                 </button>
         </div>
     </div>
@@ -216,33 +234,23 @@
 
 
 
-
-{{-- Setup data for datatables --}}
-@php
-$heads = [
-        'ID',
-    'Reporte',
-    'Vencimiento',
-    'Incidente',
-    'Estatus',
-    'Imagen',
-    'Reporto',
-    'Acciones'
-];
-
-
-
-$config = [
-    
-    'order' => [[1, 'asc']],
-    'columns' => [null, null, null, ['orderable' => false]],
-];
-@endphp
-
-{{-- Minimal example / fill data using the component slot --}}
-<x-adminlte-datatable  id="table2" :heads="$heads" head-theme="dark" :config="$config"
-    striped hoverable bordered compressed>
-    @foreach ($incidentes as $incidente)
+ <table id="tablaincidentes" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Reporte</th>
+                  <th>Vencimiento</th>
+                  <th>Incidente</th>
+                  <th>Estatus</th>
+                  <th>Imagen</th>
+                  <th>Reporto</th>
+                    <th>Editar</th>
+                    <th>Cerrar</th> 
+                    <th>Eliminar</th>       
+                </tr>
+                </thead>
+                <tbody>
+               @foreach ($incidentes as $incidente)
                 <tr>
                     <td>{{ $incidente->id }}</td>
                     <td>{{ $incidente->fecha_reg }}</td>
@@ -279,15 +287,43 @@ $config = [
                     @endforeach
                 </td>
                                                          
+      <td>
+        <form  action="{{ route('incidente.editIncidente', $unidades->id )}}" method="post">
+                @csrf
+                @method('POST')
+               <input type="hidden" name="unidad" value="{{ $unidades->id }}"  >
+                <input type="hidden" name="incidente" value="{{ $incidente->id }}"  >
+              <button  class="btn btn-warning"><span  class="fas fa-pencil"></span></button>
+</form>       
+    </td>
+      <td>
+@if($incidente->estatus != 4)
 
-                </tr>
+      <form class="cerrar-form" action="{{ route('incidente.cerrarIncidente', $unidades->id) }}" method="post">
+                @csrf
+                @method('POST')
+               <input type="hidden" name="unidad" value="{{ $unidades->id }}"  >
+                <input type="hidden" name="id_incidente" value="{{ $incidente->id }}"  >
+              <button class="btn bg-black">  <span class="fas fa-close"></span></button>
+</form>  
+@endif                 
+</td>
+     <td>
+      <form class="delete-form" action="{{ route('incidente.destroyIncidente', $unidades->id) }}" method="post">
+                @csrf
+                @method('DELETE')
+               <input type="hidden" name="unidad" value="{{ $unidades->id }}"  >
+                <input type="hidden" name="incidente" value="{{ $incidente->id }}"  >
+              <button class="btn btn-danger">  <span class="fas fa-trash"></span></button>
+</form>                   
+</td>
+                
+            </tr>
                 @endforeach
-
+                </tbody>
                
-</x-adminlte-datatable>
-
+              </table>
 </x-adminlte-card>
-
 
 @stop
 
@@ -298,4 +334,78 @@ $config = [
 
 @section('js')
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+
+
+      <script>
+
+
+$('#tablaincidentes').DataTable({
+    "language": {
+        "sProcessing":    "Procesando...",
+        "sLengthMenu":    "Mostrar _MENU_ registros",
+        "sZeroRecords":   "No se encontraron resultados",
+        "sEmptyTable":    "Ningún dato disponible en esta tabla",
+        "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":   "",
+        "sSearch":        "Buscar:",
+        "sUrl":           "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+            "sFirst":    "Primero",
+            "sLast":    "Último",
+            "sNext":    "Siguiente",
+            "sPrevious": "Anterior"
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        }
+    }
+});
+      </script>
+
 @stop
+
+@push('js')
+    <script>
+        document.querySelectorAll('.delete-form').forEach(form => {
+            form.addEventListener('submit', (e) =>{
+                e.preventDefault();
+                Swal.fire({
+                    title: "¿Estas Seguro?",
+                    text: "¡No podrás revertir esto!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "¡Si, Eliminar!"
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+        document.querySelectorAll('.cerrar-form').forEach(form => {
+            form.addEventListener('submit', (e) =>{
+                e.preventDefault();
+                Swal.fire({
+                    title: "¿Estas Seguro?",
+                    text: "¡No podrás revertir esto!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "¡Si, Cerrar!"
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+@endpush

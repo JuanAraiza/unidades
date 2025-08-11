@@ -306,7 +306,7 @@
      <div class="col-md-3"> 
         <div class="form-group">
             <label>Vigencia</label>
-            <input type="date" name="vigencia" value="{{ old('vigencia', $unidades->vigenccia) }}" class="form-control">
+            <input type="date" name="vigencia" value="{{ old('vigencia', $unidades->vigencia) }}" class="form-control">
         </div>
      
     </div>

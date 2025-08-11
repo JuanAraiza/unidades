@@ -230,39 +230,23 @@
 
 <x-adminlte-card theme="primary" theme-mode="outline">
 
-
-
-
-
-
-{{-- Setup data for datatables --}}
-@php
-$heads = [
-        'Folio',
-    'Fecha',
-    'Litros',
-    'Operador',
-    'Justificación',
-    'Destino',
-    'Tipo Combustible',
-    'Kilometraje',
-    'Área',
-    '',
-    ''
-];
-
-
-
-$config = [
-    
-    'order' => [[1, 'asc']],
-    'columns' => [null, null, null, ['orderable' => false]],
-];
-@endphp
-
-{{-- Minimal example / fill data using the component slot --}}
-<x-adminlte-datatable  id="table2" :heads="$heads" head-theme="dark" :config="$config"
-    striped hoverable bordered compressed>
+<table id="tablaincidentes" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Folio</th>
+                  <th>Fecha</th>
+                  <th>Litros</th>
+                  <th>Operador</th>
+                  <th>Justificación</th>
+                  <th>Destino</th>
+                  <th>Tipo Combustible</th>
+                  <th>Kilometraje</th>
+                  <th>Área</th>
+                    <th></th>
+                    <th></th>       
+                </tr>
+                </thead>
+                <tbody>
     @foreach ($vales as $vale)
                 <tr>
                     <td>{{ $vale->folio }}</td>
@@ -313,7 +297,6 @@ $config = [
 
                 </tr>
                 @endforeach
-</x-adminlte-datatable>
 
 </x-adminlte-card>
 
@@ -327,4 +310,37 @@ $config = [
 
 @section('js')
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+
+
+ <script>
+
+
+$('#tablaincidentes').DataTable({
+    "language": {
+        "sProcessing":    "Procesando...",
+        "sLengthMenu":    "Mostrar _MENU_ registros",
+        "sZeroRecords":   "No se encontraron resultados",
+        "sEmptyTable":    "Ningún dato disponible en esta tabla",
+        "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":   "",
+        "sSearch":        "Buscar:",
+        "sUrl":           "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+            "sFirst":    "Primero",
+            "sLast":    "Último",
+            "sNext":    "Siguiente",
+            "sPrevious": "Anterior"
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        }
+    }
+});
+      </script>
+
 @stop
