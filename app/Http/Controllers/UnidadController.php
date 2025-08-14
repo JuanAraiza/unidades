@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Area;
 use App\Models\combustible;
 use App\Models\Dependencia;
+use App\Models\Docu_unidad;
+use App\Models\img_unidad;
 use App\Models\incidente;
 use App\Models\Operador;
 use App\Models\Responsable;
@@ -574,6 +576,144 @@ public function cerrarIncidente(Request $request, string $unidad)
     return redirect()->route('unidad.incidente', $unidad);
     
     }
+
+
+
+// ////////////. Imagenes de Incidentes //////////////
+ public function imagenes(string $unidad)
+    {
+        $areas = Area::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $responsables = Responsable::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $tipos = Tipov::where('deshabilitado',0)
+         ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $imagenes = img_unidad::where('unidad', $unidad)
+         ->latest('id')->paginate();
+          $usuarios = Usuarios::All();
+        $unidades = Unidad::find($unidad);
+       // return($tipovs);
+        return view('unidad.imagenes', compact('unidades','areas','responsables','tipos','operadores','imagenes','usuarios'));
+    }
+
+
+public function guardarimagenu(Request $request, string $unidad){
+        if($request->hasFile('foto')){
+            $extension = $request->foto->extension();
+            $nameFile = $request['foto'].'gu'.date('YmdHsi').'-INCI.'.$extension;
+            $upload = $request->file('foto');
+                    $image = Image::read($upload)
+                            ->scale(width:800)
+                            ->encodeByExtension($upload->getClientOriginalExtension(), quality: 70);
+                    Storage ::put('imagesUnidad/'.$nameFile,
+                    $image
+            );
+            $request['imagen']='imagesUnidad/'.$nameFile;
+        }
+       
+     
+        img_unidad::create($request->all());
+        //
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Imagen Guardada!',
+            'text' => 'Agregada Correctamente'
+        ]);
+       
+  
+       // return($tipovs);
+        return redirect()->route('unidad.imagenes', $unidad);
+       // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
+        
+    }
+
+ public function distroyImagen(Request $request, string $unidad)
+    {
+       
+        $imagen = $request['imagen'];
+
+$imagenes = img_unidad::find($imagen);
+if($imagenes->imagen){
+    Storage::delete($imagenes->imagen);
+}
+        $imagenes->delete();
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Imagen Eliminada!',
+            'text' => 'Eliminada Correctamente'
+        ]);
+
+          return redirect()->route('unidad.imagenes', $unidad);
+    }
+
+
+// ////////////. Documentos Unidad  //////////////
+ public function documentos(string $unidad)
+    {
+        $areas = Area::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $responsables = Responsable::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $tipos = Tipov::where('deshabilitado',0)
+         ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $documentos = Docu_unidad::where('unidad', $unidad)
+         ->latest('id')->paginate();
+        $usuarios = Usuarios::All();
+        $unidades = Unidad::find($unidad);
+       // return($tipovs);
+        return view('unidad.documentos', compact('unidades','areas','responsables','tipos','operadores','documentos','usuarios'));
+    }
+
+
+public function guardarDocumento(Request $request, string $unidad){
+        if($request->hasFile('archivo')){
+            
+            $extension = $request->archivo->extension();
+            $nameFile = $request['archivo'].date('YmdHsi').'-Docuu.'.$extension;
+            $request['documento'] = Storage::putFileAs('documentosUnidad', $request->archivo, $nameFile);
+
+        }
+     
+        Docu_unidad::create($request->all());
+        //
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Documento Guardado!',
+            'text' => 'Agregado Correctamente'
+        ]);
+       
+  
+       // return($tipovs);
+        return redirect()->route('unidad.documentos', $unidad);
+       // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
+        
+    }
+
+ public function distroyDocumento(Request $request, string $unidad)
+    {
+       
+        $documento = $request['documento'];
+
+$documentos = Docu_unidad::find($documento);
+if($documentos->documento){
+    Storage::delete($documentos->documento);
+}
+        $documentos->delete();
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Documento Eliminado!',
+            'text' => 'Eliminado Correctamente'
+        ]);
+
+          return redirect()->route('unidad.documentos', $unidad);
+    }
+
+
+
 
 }
 

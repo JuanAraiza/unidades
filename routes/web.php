@@ -38,8 +38,11 @@ Route::resource('unidad', UnidadController::class);
 
 Route::get('/unidad/{unidad}/combustible', [UnidadController::class, 'combustible'])->name('unidad.combustible');
 Route::get('/unidad/{unidad}/incidente', [UnidadController::class, 'incidente'])->name('unidad.incidente');
+Route::get('/unidad/{unidad}/imagenes', [UnidadController::class, 'imagenes'])->name('unidad.imagenes');
 Route::post('/unidad/{unidad}/combustible/gvale', [UnidadController::class, 'guardarvale'])->name('unidad.guardarvale');
 Route::post('/unidad/{unidad}/incidente/ginci', [UnidadController::class, 'guardarinci'])->name('unidad.guardarinci');
+Route::post('/unidad/{unidad}/imagenes/gimagen', [UnidadController::class, 'guardarimagenu'])->name('unidad.guardarimagen');
+Route::post('/unidad/{unidad}/documentos/gdocu', [UnidadController::class, 'guardarDocumento'])->name('unidad.guardarDocumento');
 //Route::get('/unidad/{unidad}/incidentes', [UnidadController::class, 'incidentes'])->name('unidad.incidentes');
 Route::get('/unidad/{unidad}/recordatorios', [UnidadController::class, 'recordatorios'])->name('unidad.recordatorios');
 Route::get('/unidad/{unidad}/operadores', [UnidadController::class, 'operadores'])->name('unidad.operadores');
@@ -52,6 +55,7 @@ Route::delete('/unidad/{unidad}/incidente/destroy', [UnidadController::class, 'd
 Route::post('/unidad/{unidad}/incidente/edit', [UnidadController::class, 'editIncidente'])->name('incidente.editIncidente');
 Route::post('/unidad/{unidad}/incidente/update', [UnidadController::class, 'updateIncidente'])->name('incidente.updateIncidente');
 Route::post('/unidad/{unidad}/incidente/cerrar', [UnidadController::class, 'cerrarIncidente'])->name('incidente.cerrarIncidente');
-
+Route::delete('/unidad/{unidad}/imagenes/destroy', [UnidadController::class, 'distroyImagen'])->name('imagenesu.destroyImagen');
+Route::delete('/unidad/{unidad}/documentos/destroy', [UnidadController::class, 'distroyDocumento'])->name('documentosu.distroyDocumento');
 Route::resource('proveedor', ProveedorController::class);
 Route::resource('preciogas', PreciogasController::class);

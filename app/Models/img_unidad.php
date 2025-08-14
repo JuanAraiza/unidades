@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class img_unidad extends Model
+{
+    //
+    protected $table = 'img_unidads';
+    protected $fillable = ['unidad', 'imagen'];
+}
