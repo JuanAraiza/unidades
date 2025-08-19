@@ -6,9 +6,12 @@ use App\Models\Area;
 use App\Models\combustible;
 use App\Models\Dependencia;
 use App\Models\Docu_unidad;
+use App\Models\Estatus_unidad;
 use App\Models\img_unidad;
 use App\Models\incidente;
 use App\Models\Operador;
+use App\Models\Operador_Unidad;
+use App\Models\Recordatorio_Unidad;
 use App\Models\Responsable;
 use App\Models\Tipov;
 use App\Models\Unidad;
@@ -207,13 +210,17 @@ return redirect()->route('unidad.show', $unidad);
         ->latest('id')->paginate();
         $tipos = Tipov::where('deshabilitado',0)
          ->latest('id')->paginate();
-        $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        
          $vales = combustible::where('unidad', $unidad)
          ->where('deshabilitado', 0)->latest('id')->paginate();
-        $unidades = Unidad::find($unidad);
+        
+        $operadores_u = Operador_Unidad::where('unidad', $unidad)
+         ->latest('id')->paginate();
+        $operadores = Operador::whereIn('id',$operadores_u->pluck('operador'))
+        ->latest('id')->paginate();
        // return($tipovs);
-        return view('unidad.combustible', compact('unidades','areas','responsables','tipos','operadores','vales'));
+       $unidades = Unidad::find($unidad);
+        return view('unidad.combustible', compact('unidades','areas','responsables','tipos','operadores','vales','operadores_u'));
     }
 
      public function imvale(string $vale)
@@ -226,9 +233,11 @@ return redirect()->route('unidad.show', $unidad);
          ->latest('id')->paginate();
         $operadores = Operador::where('deshabilitado',0)
         ->latest('id')->paginate();
+        
          $vales = combustible::find($vale);
         $unidades = Unidad::find($vales->unidad);
        // return($tipovs);
+       
        $customPaper = array(0,0,567.00,283.80);
        $pdf = Pdf::loadView('unidad.imvale', compact('unidades','areas','responsables','tipos','operadores','vales'))->setPaper($customPaper, 'landscape');
        return $pdf->stream('vale.pdf');
@@ -714,6 +723,186 @@ if($documentos->documento){
 
 
 
+    // ////////////. Estatus Unidad  //////////////
+ public function estatus(string $unidad)
+    {
+        $areas = Area::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $responsables = Responsable::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $tipos = Tipov::where('deshabilitado',0)
+         ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $estatus = Estatus_unidad::where('unidad', $unidad)
+         ->latest('id')->paginate();
+        $usuarios = Usuarios::All();
+        $unidades = Unidad::find($unidad);
+       // return($tipovs);
+        return view('unidad.estatus', compact('unidades','areas','responsables','tipos','operadores','estatus','usuarios'));
+    }
+
+    public function guardarEstatus(Request $request, string $unidad){
+        
+     
+        Estatus_unidad::create($request->all());
+        //
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Estatus Guardado!',
+            'text' => 'Agregado Correctamente'
+        ]);
+       
+  
+       // return($tipovs);
+        return redirect()->route('unidad.estatus', $unidad);
+       // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
+        
+    }
+
+    public function distroyEstatus(Request $request, string $unidad)
+        {
+        
+            $estatus = $request['estatusid'];
+
+    $estatuss = Estatus_unidad::find($estatus);
+
+            $estatuss->delete();
+            session()->flash('swal', [
+                'icon' => 'success',
+                'title' => 'Esatus Eliminado!',
+                'text' => 'Eliminado Correctamente'
+            ]);
+
+            return redirect()->route('unidad.estatus', $unidad);
+        }
+
+// ////////////. Recordatoris Unidad  //////////////
+ public function recordatorios(string $unidad)
+    {
+        $areas = Area::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $responsables = Responsable::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $tipos = Tipov::where('deshabilitado',0)
+         ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $recordatorios = Recordatorio_Unidad::where('unidad', $unidad)
+         ->latest('id')->paginate();
+        $usuarios = Usuarios::All();
+        $unidades = Unidad::find($unidad);
+       // return($tipovs);
+        return view('unidad.recordatorios', compact('unidades','areas','responsables','tipos','operadores','recordatorios','usuarios'));
+    }
+
+    public function guardarRecordatorio(Request $request, string $unidad){
+        
+     $request['fecha']=date('Y-m-d H:s:i');
+        Recordatorio_Unidad::create($request->all());
+        //
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Recordatorio Guardado!',
+            'text' => 'Agregado Correctamente'
+        ]);
+       
+  
+       // return($tipovs);
+        return redirect()->route('unidad.recordatorios', $unidad);
+       // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
+        
+    }
+
+public function cerrarRecordatorio(Request $request, string $unidad)
+    {
+        
+        $recordatorio = $request['id_recordatorio'];
+        $request['estatus']=2;
+        $inci = Recordatorio_Unidad::find($recordatorio);
+        $inci->update($request->all());
+
+        session()->flash('swal', [
+                    'icon' => 'success',
+                    'title' => 'Recordatorio Cerrado!',
+                    'text' => 'Cerrado Correctamente'
+                ]);
+
+    return redirect()->route('unidad.recordatorios', $unidad);
+    
+    }
+
+
+    public function distroyRecordatorio(Request $request, string $unidad)
+        {
+        
+            $recordatorio = $request['recordatorioid'];
+
+    $recordatorios = Recordatorio_Unidad::find($recordatorio);
+
+            $recordatorios->delete();
+            session()->flash('swal', [
+                'icon' => 'success',
+                'title' => 'Recordatorio Eliminado!',
+                'text' => 'Eliminado Correctamente'
+            ]);
+
+            return redirect()->route('unidad.recordatorios', $unidad);
+        }
+
+
+        // ////////////. Operdaro Unidad  //////////////
+ public function operadores(string $unidad)
+    {
+        $areas = Area::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $responsables = Responsable::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $tipos = Tipov::where('deshabilitado',0)
+         ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $operadores_uni = Operador_Unidad::where('unidad', $unidad)
+         ->latest('id')->paginate();
+        $usuarios = Usuarios::All();
+        $unidades = Unidad::find($unidad);
+       // return($tipovs);
+        return view('unidad.operadores', compact('unidades','areas','responsables','tipos','operadores','operadores_uni','usuarios'));
+    }
+
+
+public function guardarOperador(Request $request, string $unidad){
+
+        Operador_Unidad::create($request->all());
+        //
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Operador Guardado!',
+            'text' => 'Agregado Correctamente'
+        ]);
+       
+  
+       // return($tipovs);
+        return redirect()->route('unidad.operadores', $unidad);
+       // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
+        
+    }
+
+
+     public function distroyOperador(Request $request, string $unidad)
+        {
+            $operador = $request['operadorid'];
+            $operadors = Operador_Unidad::find($operador);
+
+            $operadors->delete();
+            session()->flash('swal', [
+                'icon' => 'success',
+                'title' => 'Operador Eliminado!',
+                'text' => 'Eliminado Correctamente'
+            ]);
+
+            return redirect()->route('unidad.operadores', $unidad);
+        }
 
 }
 

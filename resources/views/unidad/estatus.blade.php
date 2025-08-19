@@ -3,7 +3,7 @@
 @section('title', 'Unidades')
 
 @section('content_header')
-    <h1>Cargar Combustible Unidad</h1>
+    <h1>Estatus Unidad</h1>
 @stop
 
 @section('content')
@@ -42,9 +42,11 @@
 </x-adminlte-card>
 
 
+
+
 <div class="row col-md-12 ">
 
-<x-adminlte-card  class="col-lg-8" title="CARGAR COMBUSTIBLE" theme="primary" style="padding-right: 0px; padding-left: 0px;" >
+<x-adminlte-card  class="col-lg-8" title="ESTATUS" theme="primary" style="padding-right: 0px; padding-left: 0px;" >
 
 <div class="row col-md-12 ">
 
@@ -84,121 +86,72 @@
 </div>
 
 
-
-<form action="{{ route('unidad.guardarvale', $unidades->id ) }}" method="post" enctype="multipart/form-data">
+<form action="{{ route('unidad.guardarEstatus', $unidades->id ) }}" method="post" enctype="multipart/form-data">
     @csrf
+
+
 
 
     <div class="row col-md-12 mb-2">
 <input type="hidden" name="unidad" value="{{ $unidades->id }}">  
-    <div class="col-md-3"> 
+<div class="col-md-4"> 
         <div class="form-group">
-            <label>Kilometraje</label>
-            <input type="text" name="km"  onKeyPress="return valida(event)"  value="{{ old('km') }}" class="form-control"
-               placeholder="Kilometraje" autofocus >
+            <label>Fecha de Registro</label>
+            <input type="date" name="f_registro"   class="form-control">
         </div>
-        @error('km')
+        @error('f_registro')
             <span style="color:crimson;">
                 {{$message}}
             </span>
         @enderror
-    </div>
-
-
-    <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Justificación</label>
-            <input type="text" name="justificacion" value="{{ old('justificacion') }}" class="form-control"
-               placeholder="Justificación"  >
-        </div>
-        @error('justificacion')
-            <span style="color:crimson;">
-                {{$message}}
-            </span>
-        @enderror
-    </div>
-
-    <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Destino</label>
-            <input type="text" name="destino" value="{{ old('destino') }}" class="form-control"
-               placeholder="Destino"  >
-        </div>
-        @error('destino')
-            <span style="color:crimson;">
-                {{$message}}
-            </span>
-        @enderror
-    </div>
-
- <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Litros</label>
-            <input type="text" name="litros"  onKeyPress="return valida(event)"  value="{{ old('litros') }}" class="form-control"
-               placeholder="Litros" maxlength="5" autofocus >
-        </div>
-        @error('litros')
-            <span style="color:crimson;">
-                {{$message}}
-            </span>
-        @enderror
-    </div>
-
-
-
-
-
-<div class="col-md-3"> 
-       <div class="form-group">
-            <label>Tipo Combustible</label>
-      {{-- Minimal --}}
-            <x-adminlte-select2 name="tipo_com"  data-placeholder="Selecciona Tipo....">
-                   @if ( $unidades->combustible  == 'Gasolina' )
-                        <option @selected(old('tipo_com')) value="1">Gas 1</option>
-                        <option @selected(old('tipo_com')) value="2">Gas 2</option>
-                        @elseif ( $unidades->combustible  == 'Diesel')
-                        <option @selected(old('tipo_com')) value="3">Diesel</option>
-                          @else
-                        <option @selected(old('tipo_com')) value="4">Gas LP</option>
-                        @endif
-              
-            </x-adminlte-select2>
-        </div>
-      
-    </div>
-
-<div class="col-md-3"> 
-       <div class="form-group">
-            <label>Operador</label>
-      {{-- Minimal --}}
-            <x-adminlte-select2 name="operador"  data-placeholder="Selecciona Operador....">
-                    @foreach($operadores as $operador)
-                        <option @selected(old('operador') == $operador->id) value="{{ $operador->id }}">{{ $operador->nombre }} {{ $operador->paterno }} {{ $operador->materno }}</option>
-                    @endforeach
-            </x-adminlte-select2>
-        </div>
-      
     </div>
     
 
-<div class="col-md-3">
-<div class="form-group">
-            <label>Área</label>
-{{-- Minimal --}}
-<x-adminlte-select2 name="area"  data-placeholder="Selecciona Area....">
-    @foreach($areas as $area)
-        <option @selected(old('area') == $area->id) value="{{ $area->id }}">{{ $area->area }}</option>
-    @endforeach
-</x-adminlte-select2>
-</div>
-</div>
+<div class="col-md-4"> 
+        <div class="form-group">
+            <label>Periodo</label>
+            <input type="text" name="periodo" value="{{ old('periodo') }}" class="form-control"
+               placeholder="Periodo"  >
+        </div>
+        @error('periodo')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
 
-<div class="col-md-3"> 
+    <div class="col-md-4"> 
+        <div class="form-group">
+            <label>Estatus</label>
+            <input type="text" name="estatus" value="{{ old('estatus') }}" class="form-control"
+               placeholder="Estatus"  >
+        </div>
+        @error('estatus')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
+    <div class="col-md-4"> 
+        <div class="form-group">
+            <label>Motivo</label>
+            <input type="text" name="motivo" value="{{ old('motivo') }}" class="form-control"
+               placeholder="Motivo"  >
+        </div>
+        @error('motivo')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
+
+<div class="col-md-4"> 
         <div class="form-group">
             <label>&nbsp;</label>
         <button type=submit class="btn btn-primary form-control">
                    <span class="fa fa-save"></span>&nbsp;
-                    Solicitar Vale
+              
+                    Agregar Estatus
                 </button>
         </div>
     </div>
@@ -209,7 +162,6 @@
 
 
 </form>
-
 
 </x-adminlte-card>
 
@@ -228,62 +180,46 @@
 
 
 
+
 <x-adminlte-card theme="primary" theme-mode="outline">
 
-<table id="tablaincidentes" class="table table-bordered table-striped">
+ <table id="tabladocumentos" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Folio</th>
-                  <th>Fecha</th>
-                  <th>Litros</th>
-                  <th>Operador</th>
-                  <th>Justificación</th>
-                  <th>Destino</th>
-                  <th>Tipo Combustible</th>
-                  <th>Kilometraje</th>
-                  <th>Área</th>
-               
-                    <th></th>       
+                  <th>Fecha Registro</th>
+                  <th>Periodo</th>
+                  <th>Estatus</th>
+                  <th>Motivo</th>
+                    <th>Eliminar</th>       
                 </tr>
                 </thead>
                 <tbody>
-    @foreach ($vales as $vale)
+               @foreach ($estatus as $estatu)
                 <tr>
-                    <td>{{ $vale->folio }}</td>
-                    <td>{{ $vale->created_at->format('d/m/Y') }}</td>
-                    <td>{{ $vale->litros }}</td>
-                    <td>
-                        @foreach($operadores as $operador)
-                        {{ $vale->operador == $operador->id ? $operador->nombre . ' ' . $operador->paterno . ' ' . $operador->materno : '' }}
-                    @endforeach
-             
-                </td>
-                    <td>{{ $vale->justificacion }}</td>
-                    <td>{{ $vale->destino }}</td>
-                    <td>{{ $vale->tipo_com == 1 ? 'Gas 1' : ($vale->tipo_com == 2 ? 'Gas 2' : ($vale->tipo_com == 3 ? 'Diesel' : 'Gas LP')) }}</td>
-                    <td>{{ $vale->km }}</td>
-                    <td> 
-                        @foreach($areas as $area)
-                        {{ $vale->area == $area->id ? $area->area : '' }}
-    @endforeach
-                         </td>
-          
+                    <td>{{ $estatu->f_registro }}</td>
+                    <td>{{ $estatu->periodo }}</td>
+                    <td>{{ $estatu->estatus }}</td>
+                    <td>{{ $estatu->motivo }}</td>
 
-
-
-                      <td>
-
-
-                        <a type="button" class="btn btn-warning" href="{{ route('unidad.imvale', $vale->id) }}" target="_blank">
-<i class="fa-solid fa-print"></i>
-</a>
+     <td>
+      <form class="delete-form" action="{{ route('estatus.distroyEstatus', $unidades->id) }}" method="post">
+                @csrf
+                @method('DELETE')
+            
+                <input type="hidden" name="estatusid" value="{{ $estatu->id }}"  >
+              <button class="btn btn-danger">  <span class="fas fa-trash"></span></button>
+</form>                   
 </td>
-
-                </tr>
+                
+            </tr>
                 @endforeach
+                </tbody>
+               
+              </table>
+
+
 
 </x-adminlte-card>
-
 
 @stop
 
@@ -293,10 +229,13 @@
 @stop
 
 @section('js')
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!");
+    
+    $('.carousel').carousel();
+     </script>
 
 
- <script>
+      <script>
 
 
 $('#tablaincidentes').DataTable({
@@ -328,3 +267,27 @@ $('#tablaincidentes').DataTable({
       </script>
 
 @stop
+
+@push('js')
+    <script>
+        document.querySelectorAll('.delete-form').forEach(form => {
+            form.addEventListener('submit', (e) =>{
+                e.preventDefault();
+                Swal.fire({
+                    title: "¿Estas Seguro?",
+                    text: "¡No podrás revertir esto!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "¡Si, Eliminar!"
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+  
+    </script>
+@endpush

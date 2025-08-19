@@ -3,7 +3,7 @@
 @section('title', 'Unidades')
 
 @section('content_header')
-    <h1>Imágenes Unidad</h1>
+    <h1>Recordatorios Unidad</h1>
 @stop
 
 @section('content')
@@ -46,7 +46,7 @@
 
 <div class="row col-md-12 ">
 
-<x-adminlte-card  class="col-lg-12" title="IMAGENES" theme="primary" style="padding-right: 0px; padding-left: 0px;" >
+<x-adminlte-card  class="col-lg-8" title="ESTATUS" theme="primary" style="padding-right: 0px; padding-left: 0px;" >
 
 <div class="row col-md-12 ">
 
@@ -86,7 +86,7 @@
 </div>
 
 
-<form action="{{ route('unidad.guardarimagen', $unidades->id ) }}" method="post" enctype="multipart/form-data">
+<form action="{{ route('unidad.guardarRecordatorio', $unidades->id ) }}" method="post" enctype="multipart/form-data">
     @csrf
 
 
@@ -95,14 +95,16 @@
     <div class="row col-md-12 mb-2">
 <input type="hidden" name="unidad" value="{{ $unidades->id }}">  
 
-    <div class="col-md-8"> 
+
+
+
+    
+    <div class="col-md-12"> 
         <div class="form-group">
-            <label>Fotografia / Imagen</label>
-            @if(isset($inci))
-            <img style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded" src="{{ Storage::url($inci->imagen) }}" alt="">
-            @endif
-            <input type="file" name="foto"  class="form-control">
+            <label>Recordatorio</label>
+           <x-adminlte-textarea name="taBasic" placeholder="Recordatorio..." name="recordatorio" ></x-adminlte-textarea>
         </div>
+       
     </div>
 
 <div class="col-md-4"> 
@@ -111,7 +113,7 @@
         <button type=submit class="btn btn-primary form-control">
                    <span class="fa fa-save"></span>&nbsp;
               
-                    Agregar Imagen
+                    Agregar Recordatorio
                 </button>
         </div>
     </div>
@@ -122,32 +124,16 @@
 
 
 </form>
-<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-  <ol class="carousel-indicators">
-    @foreach ($imagenes as $imagen)
-    <li data-target="#carouselExampleIndicators" data-slide-to="{{ $imagen->id }}" class="{{ $loop->first ? 'active' : '' }}"></li>
- @endforeach 
-  </ol>
-  <div class="carousel-inner">
-     @foreach ($imagenes as $imagen)
-    <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-      <img class="d-block w-100" src="{{ Storage::url($imagen->imagen) }}" >
-    </div>
-     @endforeach
-    
-  </div>
-  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
-</div>
 
 </x-adminlte-card>
 
+<div class="row col-md-4 ">
+    <div class="col-md-1 ">&nbsp;</div>
+<x-adminlte-card  class="col-lg-11" title="IMAGEN" theme="success" style="padding-right: 0px; padding-left: 0px;" >
+ <img style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded" src="{{ Storage::url($unidades->imagen) }}" alt="">
+
+</x-adminlte-card>
+</div>
 
 
 
@@ -158,54 +144,59 @@
 
 
 <x-adminlte-card theme="primary" theme-mode="outline">
-<div class="row col-md-12 mb-2">
 
- @foreach ($imagenes as $imagen)
+ <table id="tabladocumentos" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  
+                  <th>Recordatorio</th>
+                  <th>Fecha</th>
+                  <th>Estatus</th>
+                  <th>Cerrar</th>
+                    <th>Eliminar</th>       
+                </tr>
+                </thead>
+                <tbody>
+               @foreach ($recordatorios as $recordatorio)
+                <tr>
+                    <td>{{ $recordatorio->recordatorio }}</td>
+                    <td>{{ $recordatorio->fecha }}</td>
+                    <td>
+                        @switch($recordatorio->estatus)
+                            @case(1)
+                                <span class="badge badge-success">Abierto</span>
+                                @break
+                            @case(2)
+                                <span class="badge badge-danger">Cerrado</span>
+                                @break
+                        @endswitch
+</td>
+ <td>
+@if($recordatorio->estatus != 2)
 
-    <div class="col-md-3"> 
-        <div class="form-group" style="text-align: center;">
-           <a type="button" class="btn" data-toggle="modal" data-target="#imgModal{{ $imagen->id }}">
-   <img style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded"  src="{{ Storage::url($imagen->imagen) }}" alt="">
-</a>
-           
-        <br><br>
-            <form class="delete-form" action="{{ route('imagenesu.destroyImagen', $unidades->id) }}" method="post">
+      <form class="cerrar-form" action="{{ route('recordatorios.cerrarRecordatorio', $unidades->id) }}" method="post">
+                @csrf
+                @method('POST')
+                <input type="hidden" name="id_recordatorio" value="{{ $recordatorio->id }}"  >
+              <button class="btn bg-black">  <span class="fas fa-close"></span></button>
+</form>  
+@endif                 
+</td>
+     <td>
+      <form class="delete-form" action="{{ route('recordatorios.distroyRecordatorio', $unidades->id) }}" method="post">
                 @csrf
                 @method('DELETE')
-                <input type="hidden" name="imagen" value="{{ $imagen->id }}"  >
+            
+                <input type="hidden" name="recordatorioid" value="{{ $recordatorio->id }}"  >
               <button class="btn btn-danger">  <span class="fas fa-trash"></span></button>
-</form>    
-        
-        </div>
-    </div>
-
-
-<!-- Button trigger modal -->
-
-
-<!-- Modal -->
-<div class="modal fade" id="imgModal{{ $imagen->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Imagen</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <img style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded"  src="{{ Storage::url($imagen->imagen) }}" alt="">
-      </div>
-     
-    </div>
-  </div>
-</div>
-
-
-
- @endforeach
-</div>
-
+</form>                   
+</td>
+                
+            </tr>
+                @endforeach
+                </tbody>
+               
+              </table>
 
 
 
