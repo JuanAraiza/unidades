@@ -56,17 +56,17 @@
     <div class="col-md-12" style="padding: 1px; text-align: center;">
     
     <a href="{{ route('unidad.show', $unidad->id) }}" class="btn btn-success"><i class="fa-solid fa-magnifying-glass"></i></a>
-     <a href="{{ route('unidad.edit', $unidad->id) }}" class="btn btn-warning"><i class="fa-solid fa-pencil"></i></a>
-     <a href="{{ route('unidad.combustible', $unidad->id) }}" class="btn btn-primary"><i class="fa-solid fa-gas-pump"></i></a>
-      <a href="{{ route('unidad.incidente', $unidad->id) }}" class="btn bg-purple"><i class="fa-solid fa-car-burst"></i></a>
-      <a href="{{ route('unidad.imagenes', $unidad->id) }}" class="btn bg-dark"><i class="fa-solid fa-images"></i></a>
+    <a href="{{ route('unidad.edit', $unidad->id) }}" class="btn btn-warning"><i class="fa-solid fa-pencil"></i></a>
+    <a href="{{ route('unidad.combustible', $unidad->id) }}" class="btn btn-primary"><i class="fa-solid fa-gas-pump"></i></a>
+    <a href="{{ route('unidad.incidente', $unidad->id) }}" class="btn bg-purple"><i class="fa-solid fa-car-burst"></i></a>
+    <a href="{{ route('unidad.imagenes', $unidad->id) }}" class="btn bg-dark"><i class="fa-solid fa-images"></i></a>
 </div>
 
 <div class="col-md-12" style="padding: 1px; text-align: center;">
       <a href="{{ route('unidad.documentos', $unidad->id) }}" class="btn bg-pink"><i class="fa-solid fa-folder-open"></i></a>
       <a href="{{ route('unidad.estatus', $unidad->id) }}" class="btn btn-default"><i class="fa-solid fa-bars-progress"></i></a>
 <a href="{{ route('unidad.operadores', $unidad->id) }}" class="btn btn-info"><i class="fa-solid fa-id-card"></i></a>
-      
+  <a href="{{ route('unidad.destroy', $unidad->id) }}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>    
 </div>
 
     </div>

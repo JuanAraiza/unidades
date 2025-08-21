@@ -18,9 +18,11 @@ use App\Models\Unidad;
 use App\Models\Usuarios;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Container\Attributes\Auth;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image;
+use Illuminate\Support\Facades\DB;
 
 class UnidadController extends Controller
 {
@@ -389,10 +391,18 @@ public function guardarinci(Request $request, string $unidad){
         ->latest('id')->paginate();
         $incidentes = incidente::where('unidad', $unidad)
          ->latest('id')->paginate();
+        $graincidentes = DB::table('incidentes')
+            ->where('unidad', $unidad)
+            ->select(DB::raw('count(id) as cuenta'), DB::raw('concat(YEAR(fecha_reg),"-",MONTH(fecha_reg)) as fecha'))
+            ->groupBy('fecha')
+            ->get();
+
+          
+
           $usuarios = Usuarios::All();
         $unidades = Unidad::find($unidad);
-       // return($tipovs);
-        return view('unidad.incidente', compact('unidades','areas','responsables','tipos','operadores','incidentes','usuarios'));
+       // return($graincidentes);
+        return view('unidad.incidente', compact('unidades','areas','responsables','tipos','operadores','incidentes','usuarios','graincidentes'));
     }
 
     /**

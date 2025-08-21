@@ -46,7 +46,7 @@
 
 <div class="row col-md-12 ">
 
-<x-adminlte-card  class="col-lg-8" title="ESTATUS" theme="primary" style="padding-right: 0px; padding-left: 0px;" >
+<x-adminlte-card  class="col-lg-8" title="OPERADORES" theme="primary" style="padding-right: 0px; padding-left: 0px;" >
 
 <div class="row col-md-12 ">
 

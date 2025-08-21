@@ -325,6 +325,64 @@
               </table>
 </x-adminlte-card>
 
+
+<x-adminlte-card theme="primary" theme-mode="outline">
+
+  
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+<?php function getMeses($m) {
+     $meses = [
+        1 => 'Ene',
+        2 => 'Feb',
+        3 => 'Mar',
+        4 => 'Abr',
+        5 => 'May',
+        6 => 'Jun',
+        7 => 'Jul',
+        8 => 'Ago',
+        9 => 'Sep',
+        10 => 'Oct',
+        11 => 'Nov',
+        12 => 'Dic'
+    ];
+    return $meses[$m] ?? 'Desconocido';
+}
+    ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [ @foreach ($graincidentes as $graincidente)
+    '{{ getMeses((int)date("m", strtotime($graincidente->fecha)))."/".date("y", strtotime($graincidente->fecha)) }}',
+  @endforeach],
+      datasets: [{
+        label: '# Incidentes',
+        data: [
+            @foreach ($graincidentes as $graincidente)
+    {{ $graincidente->cuenta }},
+  @endforeach
+ ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+
+
+</x-adminlte-card>
 @stop
 
 @section('css')

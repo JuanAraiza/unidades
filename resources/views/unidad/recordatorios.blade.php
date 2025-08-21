@@ -3,7 +3,7 @@
 @section('title', 'Unidades')
 
 @section('content_header')
-    <h1>Recordatorios Unidad</h1>
+    <h1>OPERADORES Unidad</h1>
 @stop
 
 @section('content')
@@ -46,7 +46,7 @@
 
 <div class="row col-md-12 ">
 
-<x-adminlte-card  class="col-lg-8" title="ESTATUS" theme="primary" style="padding-right: 0px; padding-left: 0px;" >
+<x-adminlte-card  class="col-lg-8" title="RECORDATORIOS" theme="primary" style="padding-right: 0px; padding-left: 0px;" >
 
 <div class="row col-md-12 ">
 
