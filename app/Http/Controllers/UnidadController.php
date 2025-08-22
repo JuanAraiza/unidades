@@ -754,6 +754,9 @@ if($documentos->documento){
 
     public function guardarEstatus(Request $request, string $unidad){
         
+        $unidads = Unidad::find($unidad);
+        $unidads->estatus=$request['estatus'];
+        $unidads->update(); 
      
         Estatus_unidad::create($request->all());
         //

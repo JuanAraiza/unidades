@@ -30,8 +30,8 @@ return [
     |
     */
 
-    'use_ico_only' => false,
-    'use_full_favicon' => false,
+    'use_ico_only' => 'assets/img/logoUnidades.png',
+    'use_full_favicon' => 'assets/img/logoUnidades.png',
 
     /*
     |--------------------------------------------------------------------------
@@ -327,6 +327,11 @@ return [
             'label' => 4,
             'label_color' => 'success',
         ],*/
+        [
+            'text' => 'CPANEL',
+            'url' => 'home/',
+            'icon' => 'fas fa-fw fa-solar-panel',
+        ],
         ['header' => 'Unidades'],
         [
             'text' => 'Padron',

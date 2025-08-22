@@ -123,15 +123,15 @@
     <div class="col-md-4"> 
         <div class="form-group">
             <label>Estatus</label>
-            <input type="text" name="estatus" value="{{ old('estatus') }}" class="form-control"
-               placeholder="Estatus"  >
-        </div>
-        @error('estatus')
-            <span style="color:crimson;">
-                {{$message}}
-            </span>
-        @enderror
+             {{-- Minimal --}}
+            <x-adminlte-select2 name="estatus"  data-placeholder="Selecciona estatus....">
+                        <option @selected(old('estatus')) value="1">Disponible</option>
+                        <option @selected(old('estatus')) value="2">Asignado</option>
+                        <option @selected(old('estatus')) value="3">En Taller</option>
+                        <option @selected(old('estatus')) value="4">Fuera de Servicio</option>
+            </x-adminlte-select2>
     </div>
+</div>
     <div class="col-md-4"> 
         <div class="form-group">
             <label>Motivo</label>
@@ -178,9 +178,6 @@
 </div>
 
 
-
-
-
 <x-adminlte-card theme="primary" theme-mode="outline">
 
  <table id="tabladocumentos" class="table table-bordered table-striped">
@@ -198,7 +195,21 @@
                 <tr>
                     <td>{{ $estatu->f_registro }}</td>
                     <td>{{ $estatu->periodo }}</td>
-                    <td>{{ $estatu->estatus }}</td>
+                    <td>@switch($estatu->estatus)
+                            @case(1) 
+                                Disponible
+                            @break
+                            @case(2) 
+                                Asignado
+                            @break
+                            case(3) 
+                                En Taller
+                            @break
+                            @case(4)
+                                Fuera de Servicio
+                            @break   
+                            @endswitch
+                    </td>
                     <td>{{ $estatu->motivo }}</td>
 
      <td>
