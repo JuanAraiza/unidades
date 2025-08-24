@@ -13,7 +13,7 @@
 
 <section class="col-lg-6 connectedSortable ui-sortable">
 
-<x-adminlte-card   title="Disponible / Asignado"  theme="info" style="padding-right: 0px; padding-left: 0px;" >
+<x-adminlte-card   title="Disponible / Asignado"  theme="success" style="padding-right: 0px; padding-left: 0px;" >
 <div class="col-md-12 row">
 <div class="col-md-6">
  <?php 
@@ -27,7 +27,7 @@
   if(isset($asignados[0]->cuenta)){
   $asignados=$asignados[0]->cuenta;
  }else{
-  $disponasignadosibles=0;
+  $asignados=0;
  } 
 
   if(isset($entallers[0]->cuenta)){
@@ -45,7 +45,7 @@
  ?>
 <canvas id="disponibleChart"></canvas>
 
-  <p style="position:absolute; top: 45%; bottom:50%; right: 35%; left:36%; font-size:12px; text-align: center;"><strong>DISPONIBLES<br>{{ $asignados }}</strong><p>
+  <p style="position:absolute; top: 45%; bottom:50%; right: 35%; left:36%; font-size:12px; text-align: center;"><strong>DISPONIBLES<br>{{ $disponibles  }}</strong><p>
 </div>
 <div class="col-md-6">
 <table class="table">
@@ -146,6 +146,88 @@
 </section>
 </div>
 
+<!-- Segunda Seccion -->
+
+<div class="row col-md-12 ">
+
+
+<section class="col-lg-6 connectedSortable ui-sortable">
+
+<x-adminlte-card   title="Incidentes Abiertos"  theme="warning" style="padding-right: 0px; padding-left: 0px;" >
+<div class="col-md-12 row">
+
+<p><i class="fa-solid fa-bolt"></i>&nbsp;Incidentes</p>
+<hr>
+<table class="table">
+ @foreach ($incidentes as $incidente)
+
+<tr>
+  <td>
+    <a href="{{ route('unidad.incidente', $incidente->id) }}#tablaincidentes" >{{ $incidente->modelo }} {{ $incidente->marca }}</a>
+  </td>
+  <td>
+{{ $incidente->descripcion_c }}
+  </td>
+</tr>
+
+@endforeach
+
+</table>
+
+</div>
+
+</x-adminlte-card>
+</section>
+
+
+<section class="col-lg-6 connectedSortable ui-sortable">
+
+<x-adminlte-card   title="Próximos Eventos"  theme="info" style="padding-right: 0px; padding-left: 0px;" >
+<div class="col-md-12 row">
+
+<p><i class="fa-solid fa-truck"></i>&nbsp;Renovaciones de Seguros</p>
+<hr>
+<table class="table">
+  
+      @foreach ($seguros as $seguro)
+      <tr>
+        <td>
+          <a href="{{ route('unidad.edit', $seguro->id) }}" >{{ $seguro->modelo }} {{ $seguro->marca }}</a>
+        </td>
+        <td>
+      {{ $seguro->aseguradora }}
+        </td>
+        <td>
+      {{ $seguro->placas }}
+        </td>
+        <td>
+      {{ substr($seguro->vigencia,8,2).'/'.substr($seguro->vigencia,5,2).'/'.substr($seguro->vigencia,0,4) }}
+        </td>
+        <td>
+          @if($seguro->vigencia<=date('Y-m-d'))
+            <span class="bg-yellow" style="border-radius:5px; padding:5px 10px 5px 10px;">por vencer</span>
+          @else
+            <span class="bg-red" style="border-radius:5px; padding:5px 10px 5px 10px;">vencido</span>
+          @endif
+        </td>
+      </tr>
+      @endforeach
+</table>
+</div>
+
+</x-adminlte-card>
+</section>
+
+
+
+  </div>
+
+
+
+
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -158,7 +240,7 @@
       labels: ['Disponible','Asignado'],
       datasets: [{
         label: '# unidades',
-        data: ['{{ $disponibles }}', '{{ $asignados }}'],
+        data: [{{ $disponibles }}, {{ $asignados }}],
         backgroundColor: [
       'rgb(82,187,86)',
       'rgb(3,156,253)',
@@ -188,7 +270,7 @@
       labels: ['En Taller','Fuera de Servicio'],
       datasets: [{
         label: '# unidades',
-        ddata: ['{{ $entallers }}', '{{ $fueras }}'],
+        data: [{{ $entallers }}, {{ $fueras }}],
         backgroundColor: [
       'rgb(241,181,61)',
       'rgb(239,83,80)',

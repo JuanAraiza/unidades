@@ -293,6 +293,19 @@
         @enderror
     </div>
 
+    <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Aseguradora</label>
+            <input type="text" name="aseguradora" value="{{ old('aseguradora', $unidades->aseguradora) }}" class="form-control"
+               placeholder="Aseguradora"  >
+        </div>
+        @error('aseguradora')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
+
 
       <div class="col-md-3"> 
         <div class="form-group">

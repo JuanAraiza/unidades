@@ -249,7 +249,12 @@
             <p>{{ $unidades->uso }}</p>
         </div>
     </div>
-
+ <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Aseguradora</label>
+            <p>{{ $unidades->aseguradora }}</p>
+        </div>
+    </div>
   <div class="col-md-3"> 
         <div class="form-group">
             <label>Poliza Seguros</label>

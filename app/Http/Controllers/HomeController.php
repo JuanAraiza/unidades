@@ -54,7 +54,20 @@ class HomeController extends Controller
             ->orderBy('estatus')
             ->get();
 
-        //return($asignados);
-        return view('home', compact('asignados','entallers','disponibles','fueras'));
+        $incidentes = DB::table('incidentes')
+            ->join('unidad', 'incidentes.unidad', '=', 'unidad.id')
+            ->select('unidad.id', 'unidad.modelo','unidad.marca', 'incidentes.descripcion_c')
+            ->where('incidentes.estatus',1)
+            ->get();
+
+        $date=date('Y-m-d',strtotime(date('Y-m-d')."+ 10 days"));
+
+        $seguros = DB::table('unidad')
+            ->where('deshabilitado',0)
+            ->where('vigencia', '<=', $date)
+            ->get();
+
+        //return($seguros);
+        return view('home', compact('asignados','entallers','disponibles','fueras','incidentes','seguros'));
     }
 }

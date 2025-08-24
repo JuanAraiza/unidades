@@ -35,6 +35,7 @@ class Unidad extends Model
         'user',
         'deshabilitado',
         'poliza',
+        'aseguradora',
         'vigencia'
         ];
 
