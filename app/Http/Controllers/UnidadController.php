@@ -322,7 +322,7 @@ public function guardarvale(Request $request, string $unidad)
             'title' => 'Vale Registrado!',
             'text' => 'Registrado Correctamente'
         ]);
-        $areas = Area::where('deshabilitado',0)
+        /*$areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
         ->latest('id')->paginate();
@@ -330,12 +330,12 @@ public function guardarvale(Request $request, string $unidad)
          ->latest('id')->paginate();
         $operadores = Operador::where('deshabilitado',0)
         ->latest('id')->paginate();
-        
+        */
          //
         $unidades = Unidad::find($unidad);
        // return($tipovs);
-        return view('unidad.combustible', compact('unidades','areas','responsables','tipos','operadores'));
-        
+        //return view('unidad.combustible', compact('unidades','areas','responsables','tipos','operadores'));
+         return redirect()->route('unidad.combustible', $unidad);
     }
 
 
@@ -492,6 +492,19 @@ return redirect()->route('unidad.show', $unidad);
     public function destroy(string $id)
     {
         //
+        $unidad = Unidad::find($id);
+        $unidad->deshabilitado=1;
+        $unidad->save();
+
+
+        session()->flash('swal', [
+            'icon' => 'Eliminado',
+            'title' => 'Unidad Eliminada!',
+            'text' => 'Eliminada Correctamente'
+        ]);
+
+        return redirect()->route('unidad.index');
+
     }
 
  public function updateIncidente(Request $request)

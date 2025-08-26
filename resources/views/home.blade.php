@@ -66,7 +66,7 @@
       $porcentaje1 = ($disponibles / $total) * 100;
     }
     ?>
-    {{ $porcentaje1 }} %</td>
+    {{ round($porcentaje1,2) }} %</td>
   </tr>
   <tr style="background-color: #039cfd; color: white;">
     <td>Asignado</td>
@@ -78,7 +78,7 @@
       $porcentaje2 = ($asignados / $total) * 100;
     }
     ?>
-    {{ $porcentaje2 }} %</td>
+    {{ round($porcentaje2,2) }} %</td>
   </tr>
 </table>
 
@@ -119,7 +119,7 @@
         $porcentaje1 = ($entallers / $total) * 100;
     }
     ?>
-    {{ $porcentaje1 }} %
+    {{ round($porcentaje1,2) }} %
   </td>
   </tr>
   <tr style="background-color: #ef5350; color: white;">
@@ -135,7 +135,7 @@
     }
    
     ?>
-    {{ $porcentaje2 }} %</td>
+    {{ round($porcentaje2,2) }} %</td>
   </tr>
 </table>
 
