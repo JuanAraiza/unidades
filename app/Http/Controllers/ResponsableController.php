@@ -15,12 +15,16 @@ class ResponsableController extends Controller
      */
     public function index()
     {
+        if (auth()->check()) {
         //
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
          $responsables = Responsable::where('deshabilitado',0)
         ->latest('id')->paginate();
         return view('responsable.index', compact('responsables','areas'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -28,11 +32,15 @@ class ResponsableController extends Controller
      */
     public function create()
     {
+        if (auth()->check()) {
         
           $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         
          return view('responsable.create', compact('areas'));
+         }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -40,6 +48,7 @@ class ResponsableController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth()->check()) {
         
  $request->validate([
             'nombre' => 'required'
@@ -51,6 +60,9 @@ class ResponsableController extends Controller
             'text' => 'Creado Correctamente'
         ]);
        return redirect()->route('responsable.index');
+       }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -58,9 +70,13 @@ class ResponsableController extends Controller
      */
     public function show(string $responsable)
     {
+        if (auth()->check()) {
          $responsables = Responsable::find($responsable);
        // return($tipovs);
         return view('responsable.show', compact('responsables'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -68,10 +84,14 @@ class ResponsableController extends Controller
      */
     public function edit(string $responsable)
     {
+        if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         $responsables = Responsable::find($responsable);
         return view('responsable.edit', compact('responsables','areas'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -79,6 +99,7 @@ class ResponsableController extends Controller
      */
     public function update(Request $request, string $responsable)
     {
+        if (auth()->check()) {
          //
         $request->validate([
             'nombre' => 'required'
@@ -91,6 +112,9 @@ class ResponsableController extends Controller
             'text' => 'Modificada Correctamente'
         ]);
        return redirect()->route('responsable.index');
+       }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -98,6 +122,7 @@ class ResponsableController extends Controller
      */
     public function destroy(Request $request, string $responsable)
     {
+        if (auth()->check()) {
         $responsables = Responsable::find($responsable);
         $responsables->update($request->all());
          //$areas->delete();
@@ -108,5 +133,8 @@ class ResponsableController extends Controller
             'text' => 'Eliminada Correctamente'
         ]);
          return redirect()->route('responsable.index');
+         }else{
+             return redirect()->route('login');
+        }
     }
 }

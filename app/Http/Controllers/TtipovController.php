@@ -12,10 +12,14 @@ class TtipovController extends Controller
      */
     public function index()
     {
+        if (auth()->check()) {
         //
         $tipovs = Tipov::where('deshabilitado',0)
         ->latest('id')->paginate();
         return view('tipov.index', compact('tipovs'));
+         }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -23,8 +27,12 @@ class TtipovController extends Controller
      */
     public function create()
     {
+        if (auth()->check()) {
         
         return view('tipov.create');
+         }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -32,6 +40,7 @@ class TtipovController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth()->check()) {
         //
         $request->validate([
             'tipo' => 'required'
@@ -44,6 +53,9 @@ class TtipovController extends Controller
             'text' => 'Creado Correctamente'
         ]);
        return redirect()->route('tipov.index');
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -51,10 +63,14 @@ class TtipovController extends Controller
      */
     public function show(string $tipov)
     {
+        if (auth()->check()) {
         //
         $tipovs = Tipov::find($tipov);
        // return($tipovs);
         return view('tipov.show', compact('tipovs'));
+         }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -62,9 +78,13 @@ class TtipovController extends Controller
      */
     public function edit(string $tipov)
     {
+        if (auth()->check()) {
         //
          $tipovs = Tipov::find($tipov);
         return view('tipov.edit', compact('tipovs'));
+         }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -72,6 +92,7 @@ class TtipovController extends Controller
      */
     public function update(Request $request, string $tipov)
     {
+        if (auth()->check()) {
         //
         $request->validate([
             'tipo' => 'required'
@@ -84,6 +105,9 @@ class TtipovController extends Controller
             'text' => 'Modificado Correctamente'
         ]);
        return redirect()->route('tipov.index');
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -91,6 +115,7 @@ class TtipovController extends Controller
      */
     public function destroy(Request $request, string $tipov)
     {
+        if (auth()->check()) {
         //
          $tipovs = Tipov::find($tipov);
          $tipovs->update($request->all());
@@ -102,6 +127,9 @@ class TtipovController extends Controller
             'text' => 'Eliminado Correctamente'
         ]);
          return redirect()->route('tipov.index');
+          }else{
+             return redirect()->route('login');
+        }
        
     }
 }

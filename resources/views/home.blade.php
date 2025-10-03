@@ -51,7 +51,7 @@
 <table class="table">
   <tr style="background-color: black; color: white;">
     <td>Estatus</td>
-    <td>Cantidad</td>
+    <td>Cant.</td>
     <td>%</td>
   </tr>
   <tr style="background-color: #52bb56; color: white;">
@@ -100,13 +100,12 @@
 <table class="table">
   <tr style="background-color: black; color: white;">
     <td>Estatus</td>
-    <td>Cantidad</td>
+    <td>Cant.</td>
     <td>%</td>
   </tr>
   <tr style="background-color: #f1b53d; color: white;">
     <td>En Taller</td>
     <td>
-    
     {{ $entallers }}
   </td>
     <td>

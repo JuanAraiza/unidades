@@ -13,10 +13,14 @@ class ProveedorController extends Controller
      */
     public function index()
     {
+        if (auth()->check()) {
         //
          $proveedores = Proveedor::where('deshabilitado',0)
         ->latest('id')->paginate();
         return view('proveedor.index', compact('proveedores'));
+         }else{
+             return redirect()->route('login');
+        }
 
     }
 
@@ -25,8 +29,12 @@ class ProveedorController extends Controller
      */
     public function create()
     {
+        if (auth()->check()) {
         //
         return view('proveedor.create');
+         }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -34,6 +42,7 @@ class ProveedorController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth()->check()) {
         //
         $request->validate([
             'gasolinera' => 'required'
@@ -45,6 +54,9 @@ class ProveedorController extends Controller
             'text' => 'Creado Correctamente'
         ]);
        return redirect()->route('proveedor.index');
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -60,10 +72,14 @@ class ProveedorController extends Controller
      */
     public function edit(string $proveedor)
     {
+        if (auth()->check()) {
         //
           $proveedores = Proveedor::find($proveedor);
        // return($tipovs);
         return view('proveedor.edit', compact('proveedores'));
+         }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -71,6 +87,7 @@ class ProveedorController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (auth()->check()) {
         //
         $request->validate([
             'gasolinera' => 'required'
@@ -84,6 +101,9 @@ class ProveedorController extends Controller
             'text' => 'Actualizado Correctamente'
         ]);
         return redirect()->route('proveedor.index');
+         }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -91,6 +111,7 @@ class ProveedorController extends Controller
      */
     public function destroy(string $id)
     {
+        if (auth()->check()) {
         //
         $proveedor = Proveedor::find($id);
         $proveedor->deshabilitado = 1;
@@ -101,5 +122,8 @@ class ProveedorController extends Controller
             'text' => 'Eliminado Correctamente'
         ]);
         return redirect()->route('proveedor.index');    
+         }else{
+             return redirect()->route('login');
+        }
     }
 }

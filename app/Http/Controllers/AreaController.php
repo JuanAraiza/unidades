@@ -13,12 +13,16 @@ class AreaController extends Controller
      */
     public function index()
     {
+        if (auth()->check()) {
         //
          $dependencias = Dependencia::where('deshabilitado',0)
         ->latest('id')->paginate();
          $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         return view('area.index', compact('areas','dependencias'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -26,11 +30,15 @@ class AreaController extends Controller
      */
     public function create()
     {
+        if (auth()->check()) {
         //
         $dependencias = Dependencia::where('deshabilitado',0)
         ->latest('id')->paginate();
         
          return view('area.create', compact('dependencias'));
+         }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -38,6 +46,7 @@ class AreaController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth()->check()) {
         $request->validate([
             'area' => 'required'
         ]);
@@ -48,6 +57,9 @@ class AreaController extends Controller
             'text' => 'Creada Correctamente'
         ]);
        return redirect()->route('area.index');
+       }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -55,10 +67,14 @@ class AreaController extends Controller
      */
     public function show(string $area)
     {
+        if (auth()->check()) {
         //
         $areas = Area::find($area);
        // return($tipovs);
         return view('area.show', compact('areas'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -66,11 +82,15 @@ class AreaController extends Controller
      */
     public function edit(string $area)
     {
+        if (auth()->check()) {
         //
         $dependencias = Dependencia::where('deshabilitado',0)
         ->latest('id')->paginate();
         $areas = Area::find($area);
         return view('area.edit', compact('areas','dependencias'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -78,6 +98,7 @@ class AreaController extends Controller
      */
     public function update(Request $request, string $area)
     {
+        if (auth()->check()) {
         //
         $request->validate([
             'area' => 'required'
@@ -90,6 +111,9 @@ class AreaController extends Controller
             'text' => 'Modificada Correctamente'
         ]);
        return redirect()->route('area.index');
+       }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -97,6 +121,7 @@ class AreaController extends Controller
      */
     public function destroy(Request $request, string $area)
     {
+        if (auth()->check()) {
         $areas = Area::find($area);
         $areas->update($request->all());
          //$areas->delete();
@@ -107,5 +132,8 @@ class AreaController extends Controller
             'text' => 'Eliminada Correctamente'
         ]);
          return redirect()->route('area.index');
+         }else{
+             return redirect()->route('login');
+        }
     }
 }

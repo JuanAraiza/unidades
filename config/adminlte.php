@@ -332,13 +332,17 @@ return [
             'url' => 'home/',
             'icon' => 'fas fa-fw fa-solar-panel',
         ],
-        ['header' => 'Unidades'],
+        //['header' => 'Unidades'],
         [
             'text' => 'Padron',
             'url' => 'unidad/',
             'icon' => 'fas fa-fw fa-car',
         ],
-       
+        [
+            'text' => 'Combustible',
+            'url' => 'combustible/',
+            'icon' => 'fas fa-fw fa-gas-pump',
+        ],
         [
             'text' => 'Catálogo',
             'icon' => 'fas fa-fw fa-share',

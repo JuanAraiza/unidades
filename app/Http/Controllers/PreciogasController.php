@@ -13,9 +13,13 @@ class PreciogasController extends Controller
      */
     public function index()
     {
+        if (auth()->check()) {
          $precios = PregcioGas::latest('id')->paginate();
          $proveedores = Proveedor::latest('id')->paginate();
         return view('preciogas.index', compact('proveedores','precios'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -23,10 +27,14 @@ class PreciogasController extends Controller
      */
     public function create()
     {
+        if (auth()->check()) {
         //
          $proveedores = Proveedor::where('deshabilitado',0)
         ->latest('id')->paginate();
         return view('preciogas.create', compact('proveedores'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -34,6 +42,7 @@ class PreciogasController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth()->check()) {
         //
         $request->validate([
             'gas1' => 'required',
@@ -51,6 +60,9 @@ class PreciogasController extends Controller
             'text' => 'Guardao Correctamente'
         ]);
         return redirect()->route('preciogas.index');
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -66,11 +78,15 @@ class PreciogasController extends Controller
      */
     public function edit(string $id)
     {
+        if (auth()->check()) {
         //
         $proveedores = Proveedor::where('deshabilitado',0)
         ->latest('id')->paginate();
         $precios = PregcioGas::find($id);
         return view('preciogas.edit', compact('proveedores','precios'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -78,6 +94,7 @@ class PreciogasController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (auth()->check()) {
         //
          //
         $request->validate([
@@ -96,6 +113,9 @@ class PreciogasController extends Controller
             'text' => 'Actualizado Correctamente'
         ]);
         return redirect()->route('preciogas.index');
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -103,6 +123,7 @@ class PreciogasController extends Controller
      */
     public function destroy(string $id)
     {
+        
         //
     }
 }

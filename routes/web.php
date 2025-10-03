@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AreaController;
+use App\Http\Controllers\CombustibleController;
 use App\Http\Controllers\TtipovController;
 use App\Http\Controllers\DependenciaController;
 use App\Http\Controllers\OperadorController;
@@ -69,3 +70,22 @@ Route::delete('/unidad/{unidad}/recordatorios/distroy', [UnidadController::class
 Route::delete('/unidad/{unidad}/operadores/distroy', [UnidadController::class, 'distroyOperador'])->name('operadores.distroyOperador');
 Route::resource('proveedor', ProveedorController::class);
 Route::resource('preciogas', PreciogasController::class);
+
+
+Route::resource('combustible', CombustibleController::class);
+Route::put('/combustible/{vale}/validar', [CombustibleController::class, 'validar'])->name('combustible.validar');
+Route::put('/combustible/{vale}/cancelar', [CombustibleController::class, 'cancelar'])->name('combustible.cancelar');
+
+Route::get('/valesvalidados', [CombustibleController::class, 'validados'])->name('combustible.validados');
+Route::put('/combustible/{vale}/cancelarValidados', [CombustibleController::class, 'cancelarValidados'])->name('combustible.cancelarValidados');
+Route::get('/combustible/{unidad}/imvale', [CombustibleController::class, 'imvale'])->name('combustible.imvale');
+
+Route::get('/vervale/{vale}', [CombustibleController::class, 'show'])->name('combustible.show');
+
+Route::post('/combustible/paracargar', [CombustibleController::class, 'paracargar'])->name('combustible.paracargar');
+Route::post('/combustible/cargados', [CombustibleController::class, 'cargados'])->name('combustible.cargados');
+Route::post('/combustible/pagogas', [CombustibleController::class, 'pagogas'])->name('combustible.pagogas');
+Route::post('/combustible/nuevoofi', [CombustibleController::class, 'nuevoofi'])->name('combustible.nuevoofi');
+Route::post('/combustible/oficios', [CombustibleController::class, 'oficios'])->name('combustible.oficios');
+Route::post('/combustible/cancelados', [CombustibleController::class, 'cancelados'])->name('combustible.cancelados');
+Route::post('/combustible/todos', [CombustibleController::class, 'todos'])->name('combustible.todos');

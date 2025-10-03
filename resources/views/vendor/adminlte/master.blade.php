@@ -94,7 +94,7 @@
 <link rel="stylesheet" href="{{ asset('vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 </head>
 
-<body class="@yield('classes_body')" @yield('body_data')>
+<body class="@yield('classes_body')  sidebar-collapse" @yield('body_data')>
 
     {{-- Body Content --}}
     @yield('body')

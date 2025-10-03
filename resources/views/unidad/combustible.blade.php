@@ -230,7 +230,7 @@
 
 <x-adminlte-card theme="primary" theme-mode="outline">
 
-<table id="tablaincidentes" class="table table-bordered table-striped">
+<table id="tablacombustible" class="table table-bordered table-striped">
                 <thead>
                 <tr>
                   <th>Folio</th>
@@ -243,7 +243,7 @@
                   <th>Kilometraje</th>
                   <th>Área</th>
                
-                    <th></th>       
+                  <!--  <th></th>     -->  
                 </tr>
                 </thead>
                 <tbody>
@@ -270,7 +270,7 @@
           
 
 
-
+<!--
                       <td>
 
 
@@ -278,9 +278,13 @@
 <i class="fa-solid fa-print"></i>
 </a>
 </td>
+-->
 
                 </tr>
                 @endforeach
+                </tbody>
+</table>
+
 
 </x-adminlte-card>
 
@@ -298,8 +302,8 @@
 
  <script>
 
-
-$('#tablaincidentes').DataTable({
+$("#tablacombustible").dataTable().fnDestroy();
+$('#tablacombustible').DataTable({
     "language": {
         "sProcessing":    "Procesando...",
         "sLengthMenu":    "Mostrar _MENU_ registros",

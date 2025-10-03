@@ -31,7 +31,7 @@ class UnidadController extends Controller
      */
     public function index()
     {
-        
+        if (auth()->check()) {
 
         $unidades = Unidad::orderBy('id','desc')
             ->where('deshabilitado', 0)
@@ -42,6 +42,9 @@ class UnidadController extends Controller
         return view('unidad.index', compact('unidades','dependencias','areas'));
         
        // return $unidades;
+       }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -49,6 +52,7 @@ class UnidadController extends Controller
      */
     public function create()
     {
+        if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
@@ -57,6 +61,9 @@ class UnidadController extends Controller
         ->latest('id')->paginate();
       
          return view('unidad.create', compact('areas','responsables','tipos'));
+         }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -65,7 +72,7 @@ class UnidadController extends Controller
     public function store(Request $request)
     {
 
-
+if (auth()->check()) {
         $folio='SF30-';
         $areas = Area::find($request['area_id']);
         $dependencia = Dependencia::find($areas->dependencia_id);
@@ -182,6 +189,9 @@ $unidad = Unidad::create($request->all());
 
 return redirect()->route('unidad.show', $unidad);
        // return $request->all();
+       }else{
+             return redirect()->route('login');
+        }
 
          
     }
@@ -191,6 +201,7 @@ return redirect()->route('unidad.show', $unidad);
      */
     public function show(string $unidad)
     {
+        if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
@@ -201,11 +212,15 @@ return redirect()->route('unidad.show', $unidad);
         $unidades = Unidad::find($unidad);
        // return($tipovs);
         return view('unidad.show', compact('unidades','areas','responsables','tipos'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
 
      public function combustible(string $unidad)
     {
+        if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
@@ -223,10 +238,14 @@ return redirect()->route('unidad.show', $unidad);
        // return($tipovs);
        $unidades = Unidad::find($unidad);
         return view('unidad.combustible', compact('unidades','areas','responsables','tipos','operadores','vales','operadores_u'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
      public function imvale(string $vale)
     {
+        if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
@@ -244,11 +263,14 @@ return redirect()->route('unidad.show', $unidad);
        $pdf = Pdf::loadView('unidad.imvale', compact('unidades','areas','responsables','tipos','operadores','vales'))->setPaper($customPaper, 'landscape');
        return $pdf->stream('vale.pdf');
         //return view('unidad.imvale', compact('unidades','areas','responsables','tipos','operadores','vales'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
 public function guardarvale(Request $request, string $unidad)
     {
-
+if (auth()->check()) {
 
         $folio='SF30-';
         $areas = Area::find($request['area']);
@@ -336,11 +358,15 @@ public function guardarvale(Request $request, string $unidad)
        // return($tipovs);
         //return view('unidad.combustible', compact('unidades','areas','responsables','tipos','operadores'));
          return redirect()->route('unidad.combustible', $unidad);
+         }else{
+             return redirect()->route('login');
+        }
     }
 
 
     
 public function guardarinci(Request $request, string $unidad){
+    if (auth()->check()) {
         if($request->hasFile('foto')){
             $extension = $request->foto->extension();
             $nameFile = $request['foto'].date('YmdHsi').'-INCI.'.$extension;
@@ -375,12 +401,16 @@ public function guardarinci(Request $request, string $unidad){
        // return($tipovs);
         return redirect()->route('unidad.incidente', $unidad);
        // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
+       }else{
+             return redirect()->route('login');
+        }
         
     }
 
 
  public function incidente(string $unidad)
     {
+        if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
@@ -403,6 +433,9 @@ public function guardarinci(Request $request, string $unidad){
         $unidades = Unidad::find($unidad);
        // return($graincidentes);
         return view('unidad.incidente', compact('unidades','areas','responsables','tipos','operadores','incidentes','usuarios','graincidentes'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -410,6 +443,7 @@ public function guardarinci(Request $request, string $unidad){
      */
     public function edit(string $unidad)
     {
+        if (auth()->check()) {
         //
          $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
@@ -420,6 +454,9 @@ public function guardarinci(Request $request, string $unidad){
          //
         $unidades = Unidad::find($unidad);
         return view('unidad.edit', compact('unidades','tipos','responsables','areas'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -429,7 +466,7 @@ public function guardarinci(Request $request, string $unidad){
 
     public function update(Request $request, string $unidad)
     {
-        
+        if (auth()->check()) {
 $unidades = Unidad::find($unidad);
 
 $request['imagen']=$unidades->imagen;
@@ -482,6 +519,9 @@ $unidades->update($request->all());
         ]);
 
 return redirect()->route('unidad.show', $unidad);
+}else{
+             return redirect()->route('login');
+        }
        // return $request->all();
 
     }
@@ -491,6 +531,7 @@ return redirect()->route('unidad.show', $unidad);
      */
     public function destroy(string $id)
     {
+        if (auth()->check()) {
         //
         $unidad = Unidad::find($id);
         $unidad->deshabilitado=1;
@@ -504,11 +545,15 @@ return redirect()->route('unidad.show', $unidad);
         ]);
 
         return redirect()->route('unidad.index');
+        }else{
+             return redirect()->route('login');
+        }
 
     }
 
  public function updateIncidente(Request $request)
     {
+        if (auth()->check()) {
         $unidad = $request['unidad'];
         $incidente = $request['id_incidente'];
 
@@ -543,12 +588,16 @@ return redirect()->route('unidad.show', $unidad);
                 ]);
 
     return redirect()->route('unidad.incidente', $unidad);
+    }else{
+             return redirect()->route('login');
+        }
     
     }
 
 
       public function editIncidente(Request $request, string $unidad)
     {
+        if (auth()->check()) {
         $unidad = $request['unidad'];
         $incidente = $request['incidente'];
 
@@ -569,10 +618,14 @@ return redirect()->route('unidad.show', $unidad);
 
         
         return view('unidad.incidente', compact('unidades','areas','responsables','tipos','operadores','incidentes','usuarios','inci'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
      public function distroyIncidente(Request $request)
     {
+        if (auth()->check()) {
         $unidad = $request['unidad'];
         $incidente = $request['incidente'];
 
@@ -588,11 +641,15 @@ if($eincidentes->imagen){
         ]);
 
           return redirect()->route('unidad.incidente', $unidad);
+          }else{
+             return redirect()->route('login');
+        }
     }
 
 
 public function cerrarIncidente(Request $request, string $unidad)
     {
+        if (auth()->check()) {
         $unidad = $request['unidad'];
         $incidente = $request['id_incidente'];
         $request['estatus']=4;
@@ -606,6 +663,9 @@ public function cerrarIncidente(Request $request, string $unidad)
                 ]);
 
     return redirect()->route('unidad.incidente', $unidad);
+    }else{
+             return redirect()->route('login');
+        }
     
     }
 
@@ -614,6 +674,7 @@ public function cerrarIncidente(Request $request, string $unidad)
 // ////////////. Imagenes de Incidentes //////////////
  public function imagenes(string $unidad)
     {
+        if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
@@ -628,10 +689,14 @@ public function cerrarIncidente(Request $request, string $unidad)
         $unidades = Unidad::find($unidad);
        // return($tipovs);
         return view('unidad.imagenes', compact('unidades','areas','responsables','tipos','operadores','imagenes','usuarios'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
 
 public function guardarimagenu(Request $request, string $unidad){
+    if (auth()->check()) {
         if($request->hasFile('foto')){
             $extension = $request->foto->extension();
             $nameFile = $request['foto'].'gu'.date('YmdHsi').'-INCI.'.$extension;
@@ -658,12 +723,15 @@ public function guardarimagenu(Request $request, string $unidad){
        // return($tipovs);
         return redirect()->route('unidad.imagenes', $unidad);
        // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
+       }else{
+             return redirect()->route('login');
+        }
         
     }
 
  public function distroyImagen(Request $request, string $unidad)
     {
-       
+       if (auth()->check()) {
         $imagen = $request['imagen'];
 
 $imagenes = img_unidad::find($imagen);
@@ -678,12 +746,16 @@ if($imagenes->imagen){
         ]);
 
           return redirect()->route('unidad.imagenes', $unidad);
+          }else{
+             return redirect()->route('login');
+        }
     }
 
 
 // ////////////. Documentos Unidad  //////////////
  public function documentos(string $unidad)
     {
+        if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
@@ -698,10 +770,14 @@ if($imagenes->imagen){
         $unidades = Unidad::find($unidad);
        // return($tipovs);
         return view('unidad.documentos', compact('unidades','areas','responsables','tipos','operadores','documentos','usuarios'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
 
 public function guardarDocumento(Request $request, string $unidad){
+    if (auth()->check()) {
         if($request->hasFile('archivo')){
             
             $extension = $request->archivo->extension();
@@ -722,12 +798,15 @@ public function guardarDocumento(Request $request, string $unidad){
        // return($tipovs);
         return redirect()->route('unidad.documentos', $unidad);
        // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
+       }else{
+             return redirect()->route('login');
+        }
         
     }
 
  public function distroyDocumento(Request $request, string $unidad)
     {
-       
+       if (auth()->check()) {
         $documento = $request['documento'];
 
 $documentos = Docu_unidad::find($documento);
@@ -742,6 +821,9 @@ if($documentos->documento){
         ]);
 
           return redirect()->route('unidad.documentos', $unidad);
+          }else{
+             return redirect()->route('login');
+        }
     }
 
 
@@ -749,6 +831,7 @@ if($documentos->documento){
     // ////////////. Estatus Unidad  //////////////
  public function estatus(string $unidad)
     {
+        if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
@@ -763,10 +846,13 @@ if($documentos->documento){
         $unidades = Unidad::find($unidad);
        // return($tipovs);
         return view('unidad.estatus', compact('unidades','areas','responsables','tipos','operadores','estatus','usuarios'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     public function guardarEstatus(Request $request, string $unidad){
-        
+        if (auth()->check()) {
         $unidads = Unidad::find($unidad);
         $unidads->estatus=$request['estatus'];
         $unidads->update(); 
@@ -782,13 +868,16 @@ if($documentos->documento){
   
        // return($tipovs);
         return redirect()->route('unidad.estatus', $unidad);
+        }else{
+             return redirect()->route('login');
+        }
        // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
         
     }
 
     public function distroyEstatus(Request $request, string $unidad)
         {
-        
+        if (auth()->check()) {
             $estatus = $request['estatusid'];
 
     $estatuss = Estatus_unidad::find($estatus);
@@ -801,11 +890,15 @@ if($documentos->documento){
             ]);
 
             return redirect()->route('unidad.estatus', $unidad);
+            }else{
+             return redirect()->route('login');
+        }
         }
 
 // ////////////. Recordatoris Unidad  //////////////
  public function recordatorios(string $unidad)
     {
+        if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
@@ -820,10 +913,13 @@ if($documentos->documento){
         $unidades = Unidad::find($unidad);
        // return($tipovs);
         return view('unidad.recordatorios', compact('unidades','areas','responsables','tipos','operadores','recordatorios','usuarios'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     public function guardarRecordatorio(Request $request, string $unidad){
-        
+        if (auth()->check()) {
      $request['fecha']=date('Y-m-d H:s:i');
         Recordatorio_Unidad::create($request->all());
         //
@@ -836,13 +932,16 @@ if($documentos->documento){
   
        // return($tipovs);
         return redirect()->route('unidad.recordatorios', $unidad);
+        }else{
+             return redirect()->route('login');
+        }
        // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
         
     }
 
 public function cerrarRecordatorio(Request $request, string $unidad)
     {
-        
+        if (auth()->check()) {
         $recordatorio = $request['id_recordatorio'];
         $request['estatus']=2;
         $inci = Recordatorio_Unidad::find($recordatorio);
@@ -855,13 +954,16 @@ public function cerrarRecordatorio(Request $request, string $unidad)
                 ]);
 
     return redirect()->route('unidad.recordatorios', $unidad);
+    }else{
+             return redirect()->route('login');
+        }
     
     }
 
 
     public function distroyRecordatorio(Request $request, string $unidad)
         {
-        
+        if (auth()->check()) {
             $recordatorio = $request['recordatorioid'];
 
     $recordatorios = Recordatorio_Unidad::find($recordatorio);
@@ -874,12 +976,16 @@ public function cerrarRecordatorio(Request $request, string $unidad)
             ]);
 
             return redirect()->route('unidad.recordatorios', $unidad);
+            }else{
+             return redirect()->route('login');
+        }
         }
 
 
         // ////////////. Operdaro Unidad  //////////////
  public function operadores(string $unidad)
     {
+        if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
@@ -894,11 +1000,14 @@ public function cerrarRecordatorio(Request $request, string $unidad)
         $unidades = Unidad::find($unidad);
        // return($tipovs);
         return view('unidad.operadores', compact('unidades','areas','responsables','tipos','operadores','operadores_uni','usuarios'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
 
 public function guardarOperador(Request $request, string $unidad){
-
+if (auth()->check()) {
         Operador_Unidad::create($request->all());
         //
         session()->flash('swal', [
@@ -910,6 +1019,9 @@ public function guardarOperador(Request $request, string $unidad){
   
        // return($tipovs);
         return redirect()->route('unidad.operadores', $unidad);
+        }else{
+             return redirect()->route('login');
+        }
        // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
         
     }
@@ -917,6 +1029,7 @@ public function guardarOperador(Request $request, string $unidad){
 
      public function distroyOperador(Request $request, string $unidad)
         {
+            if (auth()->check()) {
             $operador = $request['operadorid'];
             $operadors = Operador_Unidad::find($operador);
 
@@ -928,6 +1041,9 @@ public function guardarOperador(Request $request, string $unidad){
             ]);
 
             return redirect()->route('unidad.operadores', $unidad);
+            }else{
+             return redirect()->route('login');
+        }
         }
 
 }

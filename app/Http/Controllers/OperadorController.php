@@ -14,11 +14,15 @@ class OperadorController extends Controller
      */
     public function index()
     {
+        if (auth()->check()) {
          $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
          $operadores = Operador::where('deshabilitado',0)
         ->latest('id')->paginate();
         return view('operador.index', compact('operadores','areas'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -26,10 +30,14 @@ class OperadorController extends Controller
      */
     public function create()
     {
+        if (auth()->check()) {
           $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
         
          return view('operador.create', compact('areas'));
+         }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -38,7 +46,7 @@ class OperadorController extends Controller
     public function store(Request $request)
     {
       
-
+if (auth()->check()) {
 
         if($request->hasFile('fotos')){
 
@@ -78,6 +86,11 @@ $request['area'] = $request['area_id'];
             'text' => 'Creado Correctamente'
         ]);
        return redirect()->route('operador.index');
+
+       }else{
+             return redirect()->route('login');
+        }
+
     }
 
     /**
@@ -85,9 +98,13 @@ $request['area'] = $request['area_id'];
      */
     public function show(string $operador)
     {
+        if (auth()->check()) {
          $operadores = Operador::find($operador);
        // return($tipovs);
         return view('operador.show', compact('operadores'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -95,10 +112,14 @@ $request['area'] = $request['area_id'];
      */
     public function edit(string $operador)
     {
+        if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
          $operadores = Operador::find($operador);
         return view('operador.edit', compact('operadores','areas'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -106,10 +127,12 @@ $request['area'] = $request['area_id'];
      */
     public function update(Request $request, string $id)
     {
+        if (auth()->check()) {
         $request->validate([
             'nombre' => 'required'
         ]);
         $operador = Operador::find($id);
+
 
 
 
@@ -154,6 +177,9 @@ $request['area']=$request['area_id'];
             'text' => 'Actualizado Correctamente'
         ]);
         return redirect()->route('operador.index');
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -161,6 +187,7 @@ $request['area']=$request['area_id'];
      */
     public function destroy(string $id)
     {
+        if (auth()->check()) {
         $operador = Operador::find($id);
         $operador->delete();
         session()->flash('swal', [
@@ -169,6 +196,9 @@ $request['area']=$request['area_id'];
             'text' => 'Eliminado Correctamente'
         ]);
         return redirect()->route('operador.index');
+        }else{
+             return redirect()->route('login');
+        }
         
     }
 }

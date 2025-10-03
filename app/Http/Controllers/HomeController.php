@@ -24,6 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+         if (auth()->check()) {
         $disponibles = DB::table('unidad')
             ->where('deshabilitado',0)
             ->where('estatus',1)
@@ -69,5 +70,8 @@ class HomeController extends Controller
 
         //return($seguros);
         return view('home', compact('asignados','entallers','disponibles','fueras','incidentes','seguros'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 }

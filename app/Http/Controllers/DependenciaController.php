@@ -11,10 +11,14 @@ class DependenciaController extends Controller
      */
     public function index()
     {
+         if (auth()->check()) {
         //
         $dependencias = Dependencia::where('deshabilitado',0)
         ->latest('id')->paginate();
         return view('dependencia.index', compact('dependencias'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -22,8 +26,12 @@ class DependenciaController extends Controller
      */
     public function create()
     {
+         if (auth()->check()) {
         //
          return view('dependencia.create');
+         }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -31,6 +39,7 @@ class DependenciaController extends Controller
      */
     public function store(Request $request)
     {
+         if (auth()->check()) {
         //
         $request->validate([
             'dependencia' => 'required'
@@ -42,6 +51,9 @@ class DependenciaController extends Controller
             'text' => 'Creada Correctamente'
         ]);
        return redirect()->route('dependencia.index');
+       }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -49,10 +61,14 @@ class DependenciaController extends Controller
      */
     public function show(string $dependencia)
     {
+         if (auth()->check()) {
         //
          $dependencias = Dependencia::find($dependencia);
        // return($tipovs);
         return view('dependencia.show', compact('dependencias'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -60,9 +76,13 @@ class DependenciaController extends Controller
      */
     public function edit(string $dependencia)
     {
+         if (auth()->check()) {
         //
         $dependencias = Dependencia::find($dependencia);
         return view('dependencia.edit', compact('dependencias'));
+        }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -70,6 +90,7 @@ class DependenciaController extends Controller
      */
     public function update(Request $request, string $dependencia)
     {
+         if (auth()->check()) {
         //
         $request->validate([
             'dependencia' => 'required'
@@ -82,6 +103,9 @@ class DependenciaController extends Controller
             'text' => 'Modificada Correctamente'
         ]);
        return redirect()->route('dependencia.index');
+       }else{
+             return redirect()->route('login');
+        }
     }
 
     /**
@@ -89,6 +113,7 @@ class DependenciaController extends Controller
      */
     public function destroy(Request $request, string $dependencia)
     {
+         if (auth()->check()) {
         //
         $dependencias = Dependencia::find($dependencia);
         $dependencias->update($request->all());
@@ -101,5 +126,8 @@ class DependenciaController extends Controller
             'text' => 'Eliminada Correctamente'
         ]);
          return redirect()->route('dependencia.index');
+         }else{
+             return redirect()->route('login');
+        }
     }
 }

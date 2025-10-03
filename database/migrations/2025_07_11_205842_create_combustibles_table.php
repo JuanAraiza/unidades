@@ -46,8 +46,10 @@ return new class extends Migration
             $table->integer('estatus')->default(1);
             $table->text('mensaje_c')->nullable();
             $table->integer('deshabilitado')->default(0);
+            
             $table->date('fecha_c')->nullable();
             $table->date('fecha_p')->nullable();
+            $table->integer('vigencia')->nelleable();
             $table->timestamps();
         });
     }
