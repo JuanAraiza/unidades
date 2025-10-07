@@ -26,6 +26,10 @@ RUN apt-get install -y --no-install-recommends \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd
 
+RUN apt-get install -y libmagickwand-dev
+RUN apt-get install -y imagemagick
+RUN pecl install imagick
+
 # Copy Composer binary from another image layer to this image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
