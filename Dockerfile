@@ -26,9 +26,15 @@ RUN apt-get install -y --no-install-recommends \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd
 
-RUN apt-get install -y libmagickwand-dev
-RUN apt-get install -y imagemagick
-RUN pecl install imagick
+# Clone the imagick repository, build, and install the extension
+RUN git clone https://github.com/Imagick/imagick.git --depth 1 /tmp/imagick && \
+    cd /tmp/imagick && \
+    phpize && \
+    ./configure && \
+    make && \
+    make install && \
+    docker-php-ext-enable imagick && \
+    rm -rf /tmp/imagick
 
 # Copy Composer binary from another image layer to this image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
