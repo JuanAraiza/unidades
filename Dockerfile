@@ -26,6 +26,13 @@ RUN apt-get install -y --no-install-recommends \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        git \
+        libmagickwand-dev \
+        pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
 # Clone the imagick repository, build, and install the extension
 RUN git clone https://github.com/Imagick/imagick.git --depth 1 /tmp/imagick && \
     cd /tmp/imagick && \
@@ -35,6 +42,9 @@ RUN git clone https://github.com/Imagick/imagick.git --depth 1 /tmp/imagick && \
     make install && \
     docker-php-ext-enable imagick && \
     rm -rf /tmp/imagick
+
+# Clean up build dependencies
+RUN apt-get purge -y --auto-remove git libmagickwand-dev pkg-config
 
 # Copy Composer binary from another image layer to this image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
