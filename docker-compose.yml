@@ -20,7 +20,7 @@ services:
             - DB_PASSWORD=root
         depends_on:
             - db
-            - ftp    
+                
 
     # Database service configuration
     db:
@@ -51,13 +51,15 @@ services:
         - FTP_USER_HOME=/var/www/html/
         - FTP_PASSIVE_PORTS= 21010:21019
         volumes:
-        - ./ftp:/var/www/html # Mapea un directorio local a uno dentro del contenedor
+        - ./app:/var/www/html # Mapea un directorio local a uno dentro del contenedor
         ports:
         - "2101:21" # Puerto de control FTP
         - "21010-21019:21010-21019"
         expose:
         - "21010-21019" # Ejemplo de puerto pasivo, puede necesitar más [12]
         restart: unless-stopped
+        depends_on:
+            - app
         networks:
             - app_networkk # Create a database named "todos"
     phpmyadmin:
