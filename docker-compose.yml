@@ -39,21 +39,13 @@ services:
             - 3307
         networks:
             - app_networkk # Create a database named "todos"
-    ftpd-php-apache-1:
-        image: stilliard/pure-ftpd
-        ports:
-        - "2101:21"
-        - "21010-21019:21010-21019"
-        expose:
-        - "21010-21019"
+    sftp-php-apache-1:
+        image: atmoz/sftp:debian-stretch
         volumes:
-        - ./www/php-apache-1:/var/www/html/
-        environment:
-        PUBLICHOST: "localhost"  # Replace this with your server public IP
-        FTP_USER_NAME: admin
-        FTP_USER_PASS: adminpass
-        FTP_USER_HOME: /var/www/html/
-        FTP_PASSIVE_PORTS: "21010:21019"
+        - ./www/php-apache-1:/home/admin/php-apache-1
+        ports:
+        - "2201:22"
+        command: admin:passwordadmin:1000
         networks:
             - app_networkk # Create a database named "todos"
     phpmyadmin:
