@@ -72,7 +72,10 @@
                 <tr>
                     <td>
                         @foreach($unidades as $unidad)
-                            {{ $vale->unidad == $unidad->id ? $unidad->marca . ' ' . $unidad->modelo . ' ' . $unidad->color : '' }}
+                            {{ $vale->unidad == $unidad->id ? $unidad->marca  : '' }}
+                            {{ $vale->unidad == $unidad->id ? $unidad->modelo  : '' }}
+                            {{ $vale->unidad == $unidad->id ? $unidad->color  : '' }}
+                            {{ $vale->unidad == $unidad->id ? $unidad->no_economico : '' }}
                         @endforeach
                     </td>
                     <td>{{ $vale->folio }}</td>

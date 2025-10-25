@@ -113,6 +113,8 @@
 </div>
 </div>
 
+@php
+/*
 <div class="col-md-6">
 <div class="form-group">
             <label>Tipo Vehiculo</label>
@@ -122,9 +124,10 @@
              <p>{{ $tipo->tipo }}</p>
             @endif
             @endforeach
-
 </div>
 </div>
+*/
+@endphp
 
 
 <div class="col-md-6">
@@ -146,6 +149,12 @@
 </div>
 </div>
 
+<div class="col-md-6"> 
+        <div class="form-group">
+            <label>No. Serie</label>
+            <p>{{ $unidades->no_serie }}</p>
+        </div>
+    </div>
 
 
 </div>
@@ -158,12 +167,7 @@
     
 
 
-<div class="col-md-3"> 
-        <div class="form-group">
-            <label>No. Serie</label>
-            <p>{{ $unidades->no_serie }}</p>
-        </div>
-    </div>
+
 
 
 <div class="col-md-3">
@@ -197,6 +201,16 @@
 </div>
 </div>
 
+<div class="col-md-3">
+<div class="form-group">
+            <label>Dependencia</label>
+@foreach($dependencias as $dependencia)
+               @if ($dependencia->id == $unidades->dependencia )
+             <p>{{ $dependencia->dependencia }}</p>
+            @endif
+            @endforeach
+</div>
+</div>
 
 <div class="col-md-3">
 <div class="form-group">
@@ -215,6 +229,18 @@
             @foreach($responsables as $responsable)
                @if ($responsable->id == $unidades->responsable )
              <p>{{ $responsable->nombre }} {{ $responsable->paterno }} {{ $responsable->materno }}</p>
+            @endif
+            @endforeach
+
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="form-group">
+            <label>Operador</label>
+            @foreach($operadores as $operador)
+               @if ($operador->id == $unidades->operador )
+             <p>{{ $operador->nombre }} {{ $operador->paterno }} {{ $operador->materno }}</p>
             @endif
             @endforeach
 

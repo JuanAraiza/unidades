@@ -39,7 +39,21 @@ services:
             - 3307
         networks:
             - app_networkk # Create a database named "todos"
-
+    ftp:
+        image: ftpunidades
+        volumes:
+        - /path/to/project:/var/www/html
+        - /var/www/vendor/
+        - /var/www/public/
+        - /var/log/ftp.log
+        environment:
+        FTP_USER: admin
+        FTP_PASSWORD: Juarra1508!
+        FTP_GROUP: ftpuser
+        ports:
+            - "2121:21"
+        networks:
+            - app_networkk # Create a database named "todos"
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         container_name: phpmyadminunidades

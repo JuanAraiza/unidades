@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Area;
 use App\Models\Dependencia;
 use Illuminate\Http\Request;
 
@@ -15,7 +17,9 @@ class DependenciaController extends Controller
         //
         $dependencias = Dependencia::where('deshabilitado',0)
         ->latest('id')->paginate();
-        return view('dependencia.index', compact('dependencias'));
+        $areas = Area::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        return view('dependencia.index', compact('dependencias','areas'));
         }else{
              return redirect()->route('login');
         }
@@ -125,6 +129,49 @@ class DependenciaController extends Controller
             'title' => '¡Dependencia Eliminiada!',
             'text' => 'Eliminada Correctamente'
         ]);
+         return redirect()->route('dependencia.index');
+         }else{
+             return redirect()->route('login');
+        }
+    }
+
+
+     public function addArea(Request $request)
+        {
+            if (auth()->check()) {
+             $request->validate([
+            'area' => 'required'
+                ]);
+                Area::create($request->all());
+                session()->flash('swal', [
+                    'icon' => 'success',
+                    'title' => 'Area Creada!',
+                    'text' => 'Creada Correctamente'
+                ]);
+
+           return redirect()->route('dependencia.index');
+            }else{
+             return redirect()->route('login');
+        }
+        }
+
+
+        public function destroyArea(Request $request)
+    {
+       
+         if (auth()->check()) {
+                //
+                $area = $request->area_id;
+                $areas = Area::find($area);
+                $areas->update($request->all());
+                
+                //$dependencias->delete();
+                // return($tipovs);
+                session()->flash('swal', [
+                        'icon' => 'success',
+                        'title' => 'Area Eliminiada!',
+                        'text' => 'Eliminada Correctamente'
+                    ]);
          return redirect()->route('dependencia.index');
          }else{
              return redirect()->route('login');

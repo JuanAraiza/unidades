@@ -142,8 +142,9 @@
 </div>
 </div>
 
+@php
+/*
 <div class="col-md-6">
-
 <div class="form-group">
             <label>Tipo Vehiculo</label>
 {{-- Minimal --}}
@@ -151,12 +152,11 @@
     @foreach($tipos as $tipov)
         <option @selected(old('tipov', $unidades->tipov) == $tipov->id) value="{{ $tipov->id }}">{{ $tipov->tipo }}</option>
     @endforeach
-    
- 
 </x-adminlte-select2>
-
 </div>
 </div>
+*/
+@endphp
 
 
 
@@ -173,19 +173,7 @@
 </div>
 </div>
 
-
-
-</div>
-</div>
-
-<div class="row col-md-12">
-
-
-
-    
-
-
-<div class="col-md-3"> 
+<div class="col-md-6"> 
         <div class="form-group">
             <label>No. Serie</label>
             <input type="text" name="no_serie" value="{{ old('no_serie', $unidades->no_serie) }}" class="form-control"
@@ -199,6 +187,19 @@
             </span>
         @enderror
     </div>
+
+
+</div>
+</div>
+
+<div class="row col-md-12">
+
+
+
+    
+
+
+
 
 
 <div class="col-md-3">
@@ -233,6 +234,17 @@
 </div>
 </div>
 
+<div class="col-md-3">
+<div class="form-group">
+            <label>Dependencia</label>
+{{-- Minimal --}}
+<x-adminlte-select2 name="dependencia"  data-placeholder="Selecciona Area....">
+    @foreach($dependencias as $dependencia)
+        <option @selected(old('dependencia', $unidades->dependencia) == $dependencia->id) value="{{ $dependencia->id }}">{{ $dependencia->dependencia }}</option>
+    @endforeach
+</x-adminlte-select2>
+</div>
+</div>
 
 <div class="col-md-3">
 <div class="form-group">
@@ -253,6 +265,18 @@
 <x-adminlte-select2 name="responsable"  data-placeholder="Selecciona Responsable....">
     @foreach($responsables as $responsable)
         <option @selected(old('responsable', $unidades->responsable) == $responsable->id) value="{{ $responsable->id }}">{{ $responsable->nombre }} {{ $responsable->paterno }} {{ $responsable->materno }}</option>
+    @endforeach
+</x-adminlte-select2>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="form-group">
+            <label>Operador</label>
+{{-- Minimal --}}
+<x-adminlte-select2 name="operador"  data-placeholder="Selecciona Operador....">
+    @foreach($operadores as $operador)
+        <option @selected(old('operador', $unidades->operador) == $operador->id) value="{{ $operador->id }}">{{ $operador->nombre }} {{ $operador->paterno }} {{ $operador->materno }}</option>
     @endforeach
 </x-adminlte-select2>
 </div>

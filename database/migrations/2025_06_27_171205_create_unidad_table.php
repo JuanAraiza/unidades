@@ -30,6 +30,10 @@ return new class extends Migration
             $table->string('inicio_est')->nullable();
             $table->string('medida_usu')->nullable();
             $table->string('medida_con')->nullable();
+            $table->unsignedBigInteger('dependencia')->nullable();
+            $table->foreign('dependencia')
+            ->references('id')
+            ->on('dependencia');
             $table->unsignedBigInteger('area')->nullable();
             $table->foreign('area')
             ->references('id')
@@ -38,6 +42,10 @@ return new class extends Migration
             $table->foreign('responsable')
             ->references('id')
             ->on('responsable');
+            $table->unsignedBigInteger('operador')->nullable();
+            $table->foreign('operador')
+            ->references('id')
+            ->on('operador');
             $table->string('no_serie')->nullable();
             $table->string('cilindros')->nullable();
             $table->string('factura')->nullable();
@@ -51,6 +59,7 @@ return new class extends Migration
             $table->foreign('user')
             ->references('id')
             ->on('users');
+            
             $table->integer('deshabilitado')->default(0);
             $table->timestamps();
         });

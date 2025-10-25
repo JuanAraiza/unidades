@@ -59,8 +59,12 @@ class UnidadController extends Controller
         ->latest('id')->paginate();
         $tipos = Tipov::where('deshabilitado',0)
         ->latest('id')->paginate();
-      
-         return view('unidad.create', compact('areas','responsables','tipos'));
+        $dependencias = Dependencia::where('deshabilitado',0)
+        ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->latest('id')->paginate();
+
+         return view('unidad.create', compact('areas','responsables','tipos','dependencias','operadores'));
          }else{
              return redirect()->route('login');
         }
@@ -208,10 +212,14 @@ return redirect()->route('unidad.show', $unidad);
         ->latest('id')->paginate();
         $tipos = Tipov::where('deshabilitado',0)
         ->latest('id')->paginate();
+        $dependencias = Dependencia::where('deshabilitado',0)
+        ->latest('id')->paginate();
          //
+         $operadores = Operador::where('deshabilitado',0)
+        ->latest('id')->paginate();
         $unidades = Unidad::find($unidad);
        // return($tipovs);
-        return view('unidad.show', compact('unidades','areas','responsables','tipos'));
+        return view('unidad.show', compact('unidades','areas','responsables','tipos','dependencias','operadores'));
         }else{
              return redirect()->route('login');
         }
@@ -230,14 +238,16 @@ return redirect()->route('unidad.show', $unidad);
         
          $vales = combustible::where('unidad', $unidad)
          ->where('deshabilitado', 0)->latest('id')->paginate();
-        
+        /*
         $operadores_u = Operador_Unidad::where('unidad', $unidad)
          ->latest('id')->paginate();
         $operadores = Operador::whereIn('id',$operadores_u->pluck('operador'))
+        ->latest('id')->paginate();*/
+        $operadores = Operador::where('deshabilitado',0)
         ->latest('id')->paginate();
        // return($tipovs);
        $unidades = Unidad::find($unidad);
-        return view('unidad.combustible', compact('unidades','areas','responsables','tipos','operadores','vales','operadores_u'));
+        return view('unidad.combustible', compact('unidades','areas','responsables','tipos','operadores','vales'));
         }else{
              return redirect()->route('login');
         }
@@ -451,9 +461,13 @@ public function guardarinci(Request $request, string $unidad){
         ->latest('id')->paginate();
         $tipos = Tipov::where('deshabilitado',0)
         ->latest('id')->paginate();
+        $dependencias = Dependencia::where('deshabilitado',0)
+        ->latest('id')->paginate();
          //
+         $operadores = Operador::where('deshabilitado',0)
+        ->latest('id')->paginate();
         $unidades = Unidad::find($unidad);
-        return view('unidad.edit', compact('unidades','tipos','responsables','areas'));
+        return view('unidad.edit', compact('unidades','tipos','responsables','areas','dependencias','operadores'));
         }else{
              return redirect()->route('login');
         }
@@ -1045,6 +1059,8 @@ if (auth()->check()) {
              return redirect()->route('login');
         }
         }
+
+       
 
 }
 

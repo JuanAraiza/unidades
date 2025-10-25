@@ -9,6 +9,7 @@ use App\Http\Controllers\PreciogasController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\ResponsableController;
 use App\Http\Controllers\UnidadController;
+use App\Http\Controllers\UsuariosController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,11 +30,15 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::resource('tipov', TtipovController::class);
 
 Route::resource('dependencia', DependenciaController::class);
+Route::post('/dependencia/addArea', [DependenciaController::class, 'addArea'])->name('dependencia.addArea');
+Route::post('/dependencia/destroyArea', [DependenciaController::class, 'destroyArea'])->name('dependencia.destroyArea');
 Route::resource('area', AreaController::class);
 Route::resource('responsable', ResponsableController::class);
 Route::resource('operador', OperadorController::class);
 
 Route::resource('unidad', UnidadController::class);
+
+Route::resource('usuarios', UsuariosController::class);
 
 
 

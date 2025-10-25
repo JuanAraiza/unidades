@@ -61,13 +61,6 @@
     <a href="{{ route('unidad.incidente', $unidad->id) }}" class="btn bg-purple"><i class="fa-solid fa-car-burst"></i></a>
    
 </div>
-
-<div class="col-md-12" style="padding: 1px; text-align: center;">
-     <a href="{{ route('unidad.imagenes', $unidad->id) }}" class="btn bg-dark"><i class="fa-solid fa-images"></i></a>
-      <a href="{{ route('unidad.documentos', $unidad->id) }}" class="btn bg-pink"><i class="fa-solid fa-folder-open"></i></a>
-      <a href="{{ route('unidad.estatus', $unidad->id) }}" class="btn btn-default"><i class="fa-solid fa-bars-progress"></i></a>
-<a href="{{ route('unidad.operadores', $unidad->id) }}" class="btn btn-info"><i class="fa-solid fa-id-card"></i></a>
-</div>
 <div class="col-md-12" style="padding: 1px; text-align: center;">
 <form class="delete-form" action="{{ route('unidad.destroy', $unidad->id) }}" method="post">
                 @csrf

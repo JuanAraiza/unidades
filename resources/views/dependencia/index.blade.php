@@ -24,8 +24,9 @@
             <th>
 Dependencia
             </th>
-            <th></th>
-            <th></th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+             <th>Areas</th>
         </thead>
         @foreach($dependencias as $dependencia)
         <tr>
@@ -39,6 +40,85 @@ Dependencia
               <button class="btn btn-danger">  <span class="fas fa-trash"></span></button>
 </form>                   
 </td>
+
+<td>
+                         
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAreas{{ $dependencia->id }}">
+ <i class="fa-solid fa-building-columns"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modalAreas{{ $dependencia->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Dependencia: <strong>{{ $dependencia->dependencia }}</strong></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body row">
+        <h4>Areas</h4>
+<hr style="width: 100%;">
+
+ @foreach($areas as $area)
+@if($area->dependencia_id == $dependencia->id)
+    <div class="col-md-12 row">
+        <div class="col-md-8">
+            <p>{{ $area->area }}</p>
+        </div>
+        <div class="col-md-4">
+            <form class="delete-form" action="{{ route('dependencia.destroyArea') }}" method="post">
+                @csrf
+              <input type="hidden" name="area_id" value="{{ $area->id }}"  >
+                <input type="hidden" name="dependenci_id" value="{{ $dependencia->id }}"  >
+                <input type="hidden" name="area" value="{{ $area->area }}"  >
+                <input name="deshabilitado" value="1" type="hidden">
+              <button class="btn btn-danger">  <span class="fas fa-trash"></span></button>
+            </form>                   
+        </div>
+    </div>
+@endif
+ @endforeach
+
+<hr style="width: 100%;">
+      <form action="{{ route('dependencia.addArea', $dependencia->id) }}" class="col-md-12" method="POST">
+            @csrf
+        <div class="row col-md-12">
+            <input type="hidden" name="dependencia_id" value="{{ $dependencia->id }}"  >
+            <div class="col-md-8"> 
+                <div class="form-group">
+                    <label>Nueva Area</label>
+                    <input class="form-control" type="text" name="area"  >
+                </div>
+            </div>
+
+            <div class="col-md-4"> 
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <input type="submit" class="btn btn-success form-control" value="Guardar Area">
+                </div>
+            </div>
+
+        </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+      
+      </div>
+
+    
+    </div>
+  </div>
+</div>
+
+
+                    </td>
+
+
         </tr>
         @endforeach
     </table>

@@ -12,8 +12,8 @@ class Usuarios extends Model
         'name',
         'email',
         'password',
-        'role',
-        'created_at',
-        'updated_at',
+        'tipo',
+        'dependencia',
+        'deshabilitado',
     ];
 }

@@ -377,6 +377,11 @@ return [
                 ],
             ],
         ],
+        [
+            'text' => 'Usuarios',
+            'url' => 'usuarios/',
+            'icon' => 'fas fa-fw fa-users',
+        ],
         /*['header' => 'labels'],
         [
             'text' => 'important',

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('proveedor', function (Blueprint $table) {
             $table->id();
-            $table->string('gasolinera');
-            $table->string('rfc');
-            $table->string('razon_social');
+            $table->string('gasolinera')->nullable();
+            $table->string('rfc')->nullable();
+            $table->string('razon_social')->nullable();
             $table->string('nomenclatura')->nullable();
             $table->integer('deshabilitado')->default(0);
             $table->timestamps();
