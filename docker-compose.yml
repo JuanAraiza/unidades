@@ -42,19 +42,21 @@ services:
     ftp:
         image: stilliard/pure-ftpd:latest # o alguna otra imagen de servidor FTP
         container_name: mi_servidor_ftp
+        environment:
+        - FTP_USER_NAME=usuario_ftp
+        - FTP_USER_PASS=Juarra1508
+        - FTP_USER_UID=1000 # Asegúrate de que el UID/GID coincida con tu host
+        - FTP_USER_GID=1000
+        - FTP_USER_HOME=/var/www/html/
+        - FTP_PASSIVE_PORTS= 21010:21019
+        volumes:
+        - ./www/php-apache-1:/var/www/html/ # Mapea un directorio local a uno dentro del contenedor
         ports:
-        - "2101:21"
+        - "2101:21" # Puerto de control FTP
         - "21010-21019:21010-21019"
         expose:
-        - "21010-21019"
-        volumes:
-        - ./www/php-apache-1:/var/www/html/
-        environment:
-        PUBLICHOST: "localhost"  # Replace this with your server public IP
-        FTP_USER_NAME: admin
-        FTP_USER_PASS: adminpass
-        FTP_USER_HOME: /var/www/html/
-        FTP_PASSIVE_PORTS: "21010:21019"
+        - "21010-21019" # Ejemplo de puerto pasivo, puede necesitar más [12]
+        restart: unless-stopped
         networks:
             - app_networkk # Create a database named "todos"
     phpmyadmin:
