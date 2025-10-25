@@ -40,18 +40,20 @@ services:
         networks:
             - app_networkk # Create a database named "todos"
     ftp:
-        image: ftpunidades
-        volumes:
-        - /path/to/project:/var/www/html
-        - /var/www/vendor/
-        - /var/www/public/
-        - /var/log/ftp.log
+        image: stilliard/pure-ftpd:latest # o alguna otra imagen de servidor FTP
+        container_name: mi_servidor_ftp
         environment:
-        FTP_USER: admin
-        FTP_PASSWORD: Juarra1508!
-        FTP_GROUP: ftpuser
+        - FTP_USER_NAME=usuario_ftp
+        - FTP_USER_PASS=contraseña_segura
+        - FTP_USER_UID=1000 # Asegúrate de que el UID/GID coincida con tu host
+        - FTP_USER_GID=1000
+        - FTP_USER_HOME=/ftp_data
+        volumes:
+        - ./ftp_data:/ftp_data # Mapea un directorio local a uno dentro del contenedor
         ports:
-            - "2121:21"
+        - "2121:21" # Puerto de control FTP
+        # - "30000:30000" # Ejemplo de puerto pasivo, puede necesitar más [12]
+        restart: unless-stopped
         networks:
             - app_networkk # Create a database named "todos"
     phpmyadmin:
