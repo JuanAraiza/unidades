@@ -20,7 +20,7 @@ services:
             - DB_PASSWORD=root
         depends_on:
             - db
-            - mi_servidor_ftp   
+            - ftp 
 
     # Database service configuration
     db:
