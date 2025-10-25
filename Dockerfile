@@ -37,7 +37,8 @@ RUN apt install -y libmagickwand-dev && \
     make && \
     make install && \
     docker-php-ext-enable imagick 
-
+    
+RUN docker-php-ext-install ftp
 
 # Copy Composer binary from another image layer to this image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
