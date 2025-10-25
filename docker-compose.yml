@@ -8,6 +8,8 @@ services:
         container_name: unidades
         ports:
             - "8001:80"
+            - "2101:21" # Puerto de control FTP
+            - "21010-21019:21010-21019"
         networks:
             - app_networkk
         environment:
@@ -18,8 +20,17 @@ services:
             - DB_DATABASE=unisistom
             - DB_USERNAME=root
             - DB_PASSWORD=root
+            - FTP_USER_NAME=usuario_ftp
+            - FTP_USER_PASS=Juarra1508
+            - FTP_USER_UID=1000 # Asegúrate de que el UID/GID coincida con tu host
+            - FTP_USER_GID=1000
+            - FTP_USER_HOME=/var/www/html/
+            - FTP_PASSIVE_PORTS= 21010:21019
+        expose:
+            - "21010-21019"
         depends_on:
             - db
+            
 
     # Database service configuration
     db:
@@ -30,22 +41,14 @@ services:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: unisistom
             MYSQL_TCP_PORT: 3307
-            FTP_USER_NAME: usuario_ftp
-            FTP_USER_PASS: Juarra1508
-            FTP_USER_UID: 1000 # Asegúrate de que el UID/GID coincida con tu host
-            FTP_USER_GID: 1000
-            FTP_USER_HOME: /var/www/html/
-            FTP_PASSIVE_PORTS: 21010:21019
+            
         volumes:
             - db_datau:/var/lib/mysql
             
         ports:
             - 3307:3307
-            - 2101:21 # Puerto de control FTP
-            - 21010-21019:21010-21019
         expose:
             - 3307
-            - 21010-21019
         networks:
             - app_networkk # Create a database named "todos"
     
