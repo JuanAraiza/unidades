@@ -37,8 +37,15 @@ RUN apt install -y libmagickwand-dev && \
     make && \
     make install && \
     docker-php-ext-enable imagick 
-    
-RUN docker-php-ext-install ftp
+
+RUN docker run -d --name mi-ftp-server \
+    -p 2101:21 \
+    -v /path/to/ftp:/var/www/html \
+    -e FTP_USER=usuario \
+    -e FTP_PASSWORD=contraseña \
+    -e FTP_EXTENSION=ftp \
+    -e FTP_EXTENSION_CONFIG=ftp.ini \
+    stilliard/pure-ftpd:latest
 
 # Copy Composer binary from another image layer to this image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
