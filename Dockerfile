@@ -38,14 +38,8 @@ RUN apt install -y libmagickwand-dev && \
     make install && \
     docker-php-ext-enable imagick 
 
-RUN docker run -d --name mi-ftp-server \
-    -p 2101:21 \
-    -v /path/to/ftp:/var/www/html \
-    -e FTP_USER=usuario \
-    -e FTP_PASSWORD=contraseña \
-    -e FTP_EXTENSION=ftp \
-    -e FTP_EXTENSION_CONFIG=ftp.ini \
-    stilliard/pure-ftpd:latest
+RUN docker-php-ext-configure ftp --with-openssl-dir=/usr \
+	&& docker-php-ext-install ftp
 
 # Copy Composer binary from another image layer to this image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
@@ -70,6 +64,6 @@ RUN a2enmod rewrite && \
 
 # Expose port 80 for incoming HTTP traffic
 EXPOSE 80
-
+EXPOSE 21/tcp
 # Start the Apache web server in the foreground
 CMD ["apache2-foreground"]
