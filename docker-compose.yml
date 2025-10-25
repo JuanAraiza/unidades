@@ -39,13 +39,21 @@ services:
             - 3307
         networks:
             - app_networkk # Create a database named "todos"
-    sftp-php-apache-1:
-        image: atmoz/sftp:debian-stretch
+    ftp:
+        image: stilliard/pure-ftpd:latest # o alguna otra imagen de servidor FTP
+        container_name: mi_servidor_ftp
+        environment:
+        - FTP_USER_NAME=usuario_ftp
+        - FTP_USER_PASS=Juarra1508
+        - FTP_USER_UID=1000 # Asegúrate de que el UID/GID coincida con tu host
+        - FTP_USER_GID=1000
+        - FTP_USER_HOME=/ftp_data
         volumes:
-        - ./www/php-apache-1:/home/admin/php-apache-1
+        - ./ftp_data:/ftp_data # Mapea un directorio local a uno dentro del contenedor
         ports:
-        - "2201:22"
-        command: admin:passwordadmin:1000
+        - "2121:21" # Puerto de control FTP
+        - "30000:30000" # Ejemplo de puerto pasivo, puede necesitar más [12]
+        restart: unless-stopped
         networks:
             - app_networkk # Create a database named "todos"
     phpmyadmin:
