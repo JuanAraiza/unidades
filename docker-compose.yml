@@ -45,17 +45,22 @@ services:
         image: stilliard/pure-ftpd:latest # o alguna otra imagen de servidor FTP
         container_name: mi_servidor_ftp
         environment:
+        - PUBLICHOST=localhost
         - FTP_USER_NAME=www-data
         - FTP_USER_PASS=Juarra1508
         - FTP_USER_UID=1001 # Asegúrate de que el UID/GID coincida con tu host
         - FTP_USER_GID=1001
         - FTP_USER_HOME=/var/www/html/
         - FTP_PASSIVE_PORTS= 21010:21019
+        command: ["/usr/sbin/pure-ftpd", "-A", "-j", "-R", "-P", "localhost", "-E", "-l", "puredb:/etc/pure-ftpd/pureftpd.pdb", "-u", "1000", "-U", "1024:1024", "-G"] 
         volumes:
         - ./:/var/www/html:rw # Mapea un directorio local a uno dentro del contenedor
         ports:
         - "2101:21" # Puerto de control FTP
         - "21010-21019:21010-21019"
+        securityOpt:
+        - no-root
+        - privileged=false
         expose:
         - "21010-21019" # Ejemplo de puerto pasivo, puede necesitar más [12]
         restart: unless-stopped
