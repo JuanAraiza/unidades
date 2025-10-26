@@ -44,7 +44,6 @@ services:
     ftp:
         image: stilliard/pure-ftpd:latest # o alguna otra imagen de servidor FTP
         container_name: mi_servidor_ftp
-        command: /run.sh -l puredb:/etc/pure-ftpd/pureftpd.pdb -E -j -P localhost
         environment:
         - FTP_USER_NAME=www-data
         - FTP_USER_PASS=Juarra1508
@@ -54,6 +53,7 @@ services:
         - FTP_PASSIVE_PORTS= 21010:21019
         volumes:
         - ./:/var/www/html:rw # Mapea un directorio local a uno dentro del contenedor
+        command: chown -R ftp:ftp /var/www/html/
         ports:
         - "2101:21" # Puerto de control FTP
         - "21010-21019:21010-21019"
