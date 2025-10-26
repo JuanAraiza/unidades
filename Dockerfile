@@ -58,6 +58,7 @@ RUN chown -R www-data:www-data /var/www/html/storage \
 && chown -R www-data:www-data /var/www/html/bootstrap/cache \
 && chown -R www-data:www-data /var/www/html/
 
+RUN chown -R ftp:ftp /var/www/html
 
 ENV UID=1001
 ENV GID=1001
