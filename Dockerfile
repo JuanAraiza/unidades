@@ -57,6 +57,7 @@ RUN composer install --ignore-platform-reqs
 RUN chown -R www-data:www-data /var/www/html/storage \
 && chown -R www-data:www-data /var/www/html/bootstrap/cache 
 
+RUN usermod -u ${UID} www-data; groupmod -g ${GID} www-data
 # Enable the Apache rewrite module and update Apache's default site configuration
 RUN a2enmod rewrite && \
     sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf

@@ -44,12 +44,13 @@ services:
         image: stilliard/pure-ftpd:latest # o alguna otra imagen de servidor FTP
         container_name: mi_servidor_ftp
         environment:
-        - FTP_USER_NAME=usuarioftp
+        - FTP_USER_NAME=www-data
         - FTP_USER_PASS=Juarra1508
         - FTP_USER_HOME=/var/www/html/
         - FTP_PASSIVE_PORTS= 21010:21019
         volumes:
         - ./:/var/www/html:rw # Mapea un directorio local a uno dentro del contenedor
+        user: "${UID}"
         ports:
         - "2101:21" # Puerto de control FTP
         - "21010-21019:21010-21019"
