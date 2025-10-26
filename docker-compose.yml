@@ -18,6 +18,10 @@ services:
             - DB_DATABASE=unisistom
             - DB_USERNAME=root
             - DB_PASSWORD=root
+            - USERS=usuario_ftp|Juarra1508|/var/www/html
+            - FTP_USER_NAME=usuario_ftp
+            - FTP_USER_PASS=Juarra1508
+            
         depends_on:
             - db
                 
