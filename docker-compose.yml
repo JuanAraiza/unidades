@@ -58,9 +58,6 @@ services:
         ports:
         - "2101:21" # Puerto de control FTP
         - "21010-21019:21010-21019"
-        securityOpt:
-        - no-root
-        - privileged=false
         expose:
         - "21010-21019" # Ejemplo de puerto pasivo, puede necesitar más [12]
         restart: unless-stopped
