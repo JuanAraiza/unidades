@@ -55,7 +55,8 @@ RUN composer install --ignore-platform-reqs
 
 # Change ownership of certain directories to the www-data user (Apache)
 RUN chown -R www-data:www-data /var/www/html/storage \
-&& chown -R www-data:www-data /var/www/html/bootstrap/cache
+&& chown -R www-data:www-data /var/www/html/bootstrap/cache \
+&& chown -R www-data:www-data /var/www/html
 
 # Enable the Apache rewrite module and update Apache's default site configuration
 RUN a2enmod rewrite && \
