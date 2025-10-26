@@ -18,7 +18,6 @@ services:
             - DB_DATABASE=unisistom
             - DB_USERNAME=root
             - DB_PASSWORD=root
-            
         depends_on:
             - db
                 
@@ -45,7 +44,7 @@ services:
         image: stilliard/pure-ftpd:latest # o alguna otra imagen de servidor FTP
         container_name: mi_servidor_ftp
         environment:
-        - FTP_USER_NAME=www-data
+        - FTP_USER_NAME=usuarioftp
         - FTP_USER_PASS=Juarra1508
         - FTP_USER_UID=${UID:-0} # Asegúrate de que el UID/GID coincida con tu host
         - FTP_USER_GID=${GID:-0}
