@@ -57,7 +57,10 @@ RUN composer install --ignore-platform-reqs
 RUN chown -R www-data:www-data /var/www/html/storage \
 && chown -R www-data:www-data /var/www/html/bootstrap/cache 
 
+RUN -d --user=1001:1001 --group-add=ftpusers image:stilliard/pure-ftpd
+
 ENV UID=1001
+ENV GID=1001
 # Enable the Apache rewrite module and update Apache's default site configuration
 RUN a2enmod rewrite && \
     sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
