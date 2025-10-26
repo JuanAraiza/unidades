@@ -46,8 +46,6 @@ services:
         environment:
         - FTP_USER_NAME=usuarioftp
         - FTP_USER_PASS=Juarra1508
-        - FTP_USER_UID=${UID:-0} # Asegúrate de que el UID/GID coincida con tu host
-        - FTP_USER_GID=${GID:-0}
         - FTP_USER_HOME=/var/www/html/
         - FTP_PASSIVE_PORTS= 21010:21019
         volumes:
