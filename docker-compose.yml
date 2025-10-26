@@ -45,7 +45,7 @@ services:
         image: stilliard/pure-ftpd:latest # o alguna otra imagen de servidor FTP
         container_name: mi_servidor_ftp
         environment:
-        - FTP_USER_NAME=www-data
+        - FTP_USER_NAME=ftp-usuario
         - FTP_USER_PASS=Juarra1508
         - FTP_USER_UID=1001 # Asegúrate de que el UID/GID coincida con tu host
         - FTP_USER_GID=1001
@@ -53,7 +53,7 @@ services:
         - FTP_PASSIVE_PORTS= 21010:21019
         volumes:
         - ./:/var/www/html:rw # Mapea un directorio local a uno dentro del contenedor
-        command: bash -c "chown -R ftp:ftp /var/www/html/"
+        command: bash -c "chown -R ftp-usuario:ftp-usuario /var/www/html/"
         ports:
         - "2101:21" # Puerto de control FTP
         - "21010-21019:21010-21019"
