@@ -55,9 +55,10 @@ RUN composer install --ignore-platform-reqs
 
 # Change ownership of certain directories to the www-data user (Apache)
 RUN chown -R www-data:www-data /var/www/html/storage \
-&& chown -R www-data:www-data /var/www/html/bootstrap/cache 
+&& chown -R www-data:www-data /var/www/html/bootstrap/cache \
+&& chown -R www-data:www-data /var/www/html/
 
-RUN -d --user=1001:1001 --group-add=ftpusers image:stilliard/pure-ftpd
+RUN -d --user=1001:1001 --group-add=ftpusers
 
 ENV UID=1001
 ENV GID=1001
