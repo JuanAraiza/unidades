@@ -18,6 +18,7 @@ services:
             - DB_DATABASE=unisistom
             - DB_USERNAME=root
             - DB_PASSWORD=root
+            
         depends_on:
             - db
                 
@@ -46,11 +47,12 @@ services:
         environment:
         - FTP_USER_NAME=www-data
         - FTP_USER_PASS=Juarra1508
+        - FTP_USER_UID=1001 # Asegúrate de que el UID/GID coincida con tu host
+        - FTP_USER_GID=1001
         - FTP_USER_HOME=/var/www/html/
         - FTP_PASSIVE_PORTS= 21010:21019
         volumes:
         - ./:/var/www/html:rw # Mapea un directorio local a uno dentro del contenedor
-        user: "${UID}"
         ports:
         - "2101:21" # Puerto de control FTP
         - "21010-21019:21010-21019"
