@@ -51,7 +51,7 @@ services:
         - FTP_USER_HOME=/var/www/html/
         - FTP_PASSIVE_PORTS= 21010:21019
         volumes:
-        - ./:/var/www/html # Mapea un directorio local a uno dentro del contenedor
+        - ./:/var/www/html:rw # Mapea un directorio local a uno dentro del contenedor
         ports:
         - "2101:21" # Puerto de control FTP
         - "21010-21019:21010-21019"
