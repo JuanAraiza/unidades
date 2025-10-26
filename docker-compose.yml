@@ -53,7 +53,7 @@ services:
         - FTP_PASSIVE_PORTS= 21010:21019
         volumes:
         - ./:/var/www/html:rw # Mapea un directorio local a uno dentro del contenedor
-        user: "${UID:-0}:${GID:-0}"
+        user: "www-data:root"
         ports:
         - "2101:21" # Puerto de control FTP
         - "21010-21019:21010-21019"
