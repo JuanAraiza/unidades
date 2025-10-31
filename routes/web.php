@@ -27,18 +27,21 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-Route::resource('tipov', TtipovController::class);
 
-Route::resource('dependencia', DependenciaController::class);
-Route::post('/dependencia/addArea', [DependenciaController::class, 'addArea'])->name('dependencia.addArea');
-Route::post('/dependencia/destroyArea', [DependenciaController::class, 'destroyArea'])->name('dependencia.destroyArea');
-Route::resource('area', AreaController::class);
-Route::resource('responsable', ResponsableController::class);
-Route::resource('operador', OperadorController::class);
+
+
+Route::resource('tipov', TtipovController::class)->middleware('admin');
+
+Route::resource('dependencia', DependenciaController::class)->middleware('admin');
+Route::post('/dependencia/addArea', [DependenciaController::class, 'addArea'])->name('dependencia.addArea')->middleware('admin');
+Route::post('/dependencia/destroyArea', [DependenciaController::class, 'destroyArea'])->name('dependencia.destroyArea')->middleware('admin');
+Route::resource('area', AreaController::class)->middleware('admin');
+Route::resource('responsable', ResponsableController::class)->middleware('admin');
+Route::resource('operador', OperadorController::class)->middleware('admin');
 
 Route::resource('unidad', UnidadController::class);
 
-Route::resource('usuarios', UsuariosController::class);
+Route::resource('usuarios', UsuariosController::class)->middleware('admin');
 
 
 
@@ -63,34 +66,34 @@ Route::get('/unidad/{unidad}/documentos', [UnidadController::class, 'documentos'
 Route::get('/unidad/{unidad}/imagenes', [UnidadController::class, 'imagenes'])->name('unidad.imagenes');
 Route::get('/unidad/{unidad}/imvale', [UnidadController::class, 'imvale'])->name('unidad.imvale');
 
-Route::delete('/unidad/{unidad}/incidente/destroy', [UnidadController::class, 'distroyIncidente'])->name('incidente.destroyIncidente');
+Route::delete('/unidad/{unidad}/incidente/destroy', [UnidadController::class, 'distroyIncidente'])->name('incidente.destroyIncidente')->middleware('admin');
 Route::post('/unidad/{unidad}/incidente/edit', [UnidadController::class, 'editIncidente'])->name('incidente.editIncidente');
 Route::post('/unidad/{unidad}/incidente/update', [UnidadController::class, 'updateIncidente'])->name('incidente.updateIncidente');
-Route::post('/unidad/{unidad}/incidente/cerrar', [UnidadController::class, 'cerrarIncidente'])->name('incidente.cerrarIncidente');
-Route::post('/unidad/{unidad}/recordatorios/cerrar', [UnidadController::class, 'cerrarRecordatorio'])->name('recordatorios.cerrarRecordatorio');
-Route::delete('/unidad/{unidad}/imagenes/distroy', [UnidadController::class, 'distroyImagen'])->name('imagenesu.destroyImagen');
-Route::delete('/unidad/{unidad}/documentos/distroy', [UnidadController::class, 'distroyDocumento'])->name('documentosu.distroyDocumento');
-Route::delete('/unidad/{unidad}/estatus/distroy', [UnidadController::class, 'distroyEstatus'])->name('estatus.distroyEstatus');
-Route::delete('/unidad/{unidad}/recordatorios/distroy', [UnidadController::class, 'distroyRecordatorio'])->name('recordatorios.distroyRecordatorio');
-Route::delete('/unidad/{unidad}/operadores/distroy', [UnidadController::class, 'distroyOperador'])->name('operadores.distroyOperador');
-Route::resource('proveedor', ProveedorController::class);
-Route::resource('preciogas', PreciogasController::class);
+Route::post('/unidad/{unidad}/incidente/cerrar', [UnidadController::class, 'cerrarIncidente'])->name('incidente.cerrarIncidente')->middleware('admin');
+Route::post('/unidad/{unidad}/recordatorios/cerrar', [UnidadController::class, 'cerrarRecordatorio'])->name('recordatorios.cerrarRecordatorio')->middleware('admin');
+Route::delete('/unidad/{unidad}/imagenes/distroy', [UnidadController::class, 'distroyImagen'])->name('imagenesu.destroyImagen')->middleware('admin');
+Route::delete('/unidad/{unidad}/documentos/distroy', [UnidadController::class, 'distroyDocumento'])->name('documentosu.distroyDocumento')->middleware('admin');
+Route::delete('/unidad/{unidad}/estatus/distroy', [UnidadController::class, 'distroyEstatus'])->name('estatus.distroyEstatus')->middleware('admin');
+Route::delete('/unidad/{unidad}/recordatorios/distroy', [UnidadController::class, 'distroyRecordatorio'])->name('recordatorios.distroyRecordatorio')->middleware('admin');
+Route::delete('/unidad/{unidad}/operadores/distroy', [UnidadController::class, 'distroyOperador'])->name('operadores.distroyOperador')->middleware('admin');
+Route::resource('proveedor', ProveedorController::class)->middleware('admin');
+Route::resource('preciogas', PreciogasController::class)->middleware('admin');
 
 
-Route::resource('combustible', CombustibleController::class);
-Route::put('/combustible/{vale}/validar', [CombustibleController::class, 'validar'])->name('combustible.validar');
-Route::put('/combustible/{vale}/cancelar', [CombustibleController::class, 'cancelar'])->name('combustible.cancelar');
+Route::resource('combustible', CombustibleController::class)->middleware('admin');
+Route::put('/combustible/{vale}/validar', [CombustibleController::class, 'validar'])->name('combustible.validar')->middleware('admin');
+Route::put('/combustible/{vale}/cancelar', [CombustibleController::class, 'cancelar'])->name('combustible.cancelar')->middleware('admin');
 
-Route::get('/valesvalidados', [CombustibleController::class, 'validados'])->name('combustible.validados');
-Route::put('/combustible/{vale}/cancelarValidados', [CombustibleController::class, 'cancelarValidados'])->name('combustible.cancelarValidados');
-Route::get('/combustible/{unidad}/imvale', [CombustibleController::class, 'imvale'])->name('combustible.imvale');
+Route::get('/valesvalidados', [CombustibleController::class, 'validados'])->name('combustible.validados')->middleware('admin');
+Route::put('/combustible/{vale}/cancelarValidados', [CombustibleController::class, 'cancelarValidados'])->name('combustible.cancelarValidados')->middleware('admin');
+Route::get('/combustible/{unidad}/imvale', [CombustibleController::class, 'imvale'])->name('combustible.imvale')->middleware('admin');
 
-Route::get('/vervale/{vale}', [CombustibleController::class, 'show'])->name('combustible.show');
+Route::get('/vervale/{vale}', [CombustibleController::class, 'show'])->name('combustible.show')->middleware('admin');
 
-Route::post('/combustible/paracargar', [CombustibleController::class, 'paracargar'])->name('combustible.paracargar');
-Route::post('/combustible/cargados', [CombustibleController::class, 'cargados'])->name('combustible.cargados');
-Route::post('/combustible/pagogas', [CombustibleController::class, 'pagogas'])->name('combustible.pagogas');
-Route::post('/combustible/nuevoofi', [CombustibleController::class, 'nuevoofi'])->name('combustible.nuevoofi');
-Route::post('/combustible/oficios', [CombustibleController::class, 'oficios'])->name('combustible.oficios');
-Route::post('/combustible/cancelados', [CombustibleController::class, 'cancelados'])->name('combustible.cancelados');
-Route::post('/combustible/todos', [CombustibleController::class, 'todos'])->name('combustible.todos');
+Route::post('/combustible/paracargar', [CombustibleController::class, 'paracargar'])->name('combustible.paracargar')->middleware('admin');
+Route::post('/combustible/cargados', [CombustibleController::class, 'cargados'])->name('combustible.cargados')->middleware('admin');
+Route::post('/combustible/pagogas', [CombustibleController::class, 'pagogas'])->name('combustible.pagogas')->middleware('admin');
+Route::post('/combustible/nuevoofi', [CombustibleController::class, 'nuevoofi'])->name('combustible.nuevoofi')->middleware('admin');
+Route::post('/combustible/oficios', [CombustibleController::class, 'oficios'])->name('combustible.oficios')->middleware('admin');
+Route::post('/combustible/cancelados', [CombustibleController::class, 'cancelados'])->name('combustible.cancelados')->middleware('admin');
+Route::post('/combustible/todos', [CombustibleController::class, 'todos'])->name('combustible.todos')->middleware('admin');

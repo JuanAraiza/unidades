@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Area;
+use App\Models\Dependencia;
 use App\Models\Operador;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -17,9 +18,11 @@ class OperadorController extends Controller
         if (auth()->check()) {
          $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
+        $dependencias = Dependencia::where('deshabilitado',0)
+        ->latest('id')->paginate();
          $operadores = Operador::where('deshabilitado',0)
         ->latest('id')->paginate();
-        return view('operador.index', compact('operadores','areas'));
+        return view('operador.index', compact('operadores','areas','dependencias'));
         }else{
              return redirect()->route('login');
         }
@@ -33,8 +36,9 @@ class OperadorController extends Controller
         if (auth()->check()) {
           $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
-        
-         return view('operador.create', compact('areas'));
+        $dependencias = Dependencia::where('deshabilitado',0)
+        ->latest('id')->paginate();
+         return view('operador.create', compact('areas','dependencias'));
          }else{
              return redirect()->route('login');
         }
@@ -115,8 +119,10 @@ $request['area'] = $request['area_id'];
         if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->paginate();
+        $dependencias = Dependencia::where('deshabilitado',0)
+        ->latest('id')->paginate();
          $operadores = Operador::find($operador);
-        return view('operador.edit', compact('operadores','areas'));
+        return view('operador.edit', compact('operadores','areas','dependencias'));
         }else{
              return redirect()->route('login');
         }

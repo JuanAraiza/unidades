@@ -21,6 +21,12 @@ return new class extends Migration
             $table->foreign('area')
             ->references('id')
             ->on('area');
+            $table->unsignedBigInteger('dependencia')->nullable();
+            $table->foreign('dependencia')
+            ->references('id')
+            ->on('dependencia');
+            $table->string('telefono')->nullable();
+            $table->string('direccion')->nullable();
             $table->string('licencia')->nullable();
             $table->date('vigencia')->nullable();
             $table->string('foto')->nullable();

@@ -17,7 +17,10 @@ class Operador extends Model
         'licencia',
         'vigencia',
         'foto',
-        'deshabilitado'
+        'deshabilitado',
+        'dependencia',
+        'telefono',
+        'direccion'
     ];
 
   

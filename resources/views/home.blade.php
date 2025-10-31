@@ -8,8 +8,25 @@
 
 @section('content')
       
+
+
 <div class="row col-md-12 ">
 
+@php
+
+if (auth()->check()) {
+        $user = auth()->user();
+        if($user->tipo==2){
+          @endphp
+@section('js')
+    <script> location.href="/unidad"; </script>
+@stop
+
+@php
+        }
+    }
+    
+@endphp
 
 <section class="col-lg-6 connectedSortable ui-sortable">
 

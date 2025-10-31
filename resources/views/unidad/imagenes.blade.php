@@ -85,7 +85,10 @@
 
 </div>
 
-
+@php
+$user = auth()->user();
+if($user->tipo==1){
+@endphp
 <form action="{{ route('unidad.guardarimagen', $unidades->id ) }}" method="post" enctype="multipart/form-data">
     @csrf
 
@@ -122,6 +125,9 @@
 
 
 </form>
+@php
+} 
+@endphp
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
     @foreach ($imagenes as $imagen)

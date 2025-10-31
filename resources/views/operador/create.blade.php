@@ -70,8 +70,54 @@
     </div>
 
 
+<div class="col-md-6"> 
+        <div class="form-group">
+            <label>Teléfono</label>
+            <input type="text" name="telefono" value="{{ old('telefono') }}" class="form-control"
+               placeholder="Teléfono" autofocus >
+
+            
+        </div>
+        @error('telefono')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
+
+    <div class="col-md-6"> 
+        <div class="form-group">
+            <label>Domicilio</label>
+            <input type="text" name="direccion" value="{{ old('direccion') }}" class="form-control"
+               placeholder="Dirección" autofocus >
+
+            
+        </div>
+        @error('direccion')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
+
 
  
+    <div class="col-md-6">
+
+<div class="form-group">
+            <label>Dependencia</label>
+{{-- Minimal --}}
+<x-adminlte-select2 name="dependencia"  data-placeholder="Selecciona Dependencia....">
+    @foreach($dependencias as $dependencia)
+        <option @selected(old('dependencia') == $dependencia->id) value="{{ $dependencia->id }}">{{ $dependencia->dependencia }}</option>
+    @endforeach
+    
+ 
+</x-adminlte-select2>
+
+</div>
+</div>
+
     <div class="col-md-6">
 
 <div class="form-group">
@@ -87,6 +133,10 @@
 
 </div>
 </div>
+
+
+
+
           
   <div class="col-md-6"> 
         <div class="form-group">

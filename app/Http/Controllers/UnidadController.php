@@ -229,8 +229,28 @@ return redirect()->route('unidad.show', $unidad);
      public function combustible(string $unidad)
     {
         if (auth()->check()) {
-        $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+            $user = auth()->user();
+            if($user->tipo==2){
+                $fdependencias = Dependencia::find($user->dependencia);
+                $dependencias = Dependencia::where('deshabilitado',0)
+                ->where('id',$fdependencias->id)
+                ->latest('id')->paginate();
+                $areas = Area::where('deshabilitado',0)
+                ->where('dependencia_id',$fdependencias->id)
+                ->latest('id')->paginate();
+                $operadores = Operador::where('deshabilitado',0)
+                ->where('dependencia',$fdependencias->id)
+                ->latest('id')->paginate();
+            }else{
+                $dependencias = Dependencia::where('deshabilitado',0)
+                ->latest('id')->paginate();
+                $areas = Area::where('deshabilitado',0)
+                ->latest('id')->paginate();
+                $operadores = Operador::where('deshabilitado',0)
+                ->latest('id')->paginate();
+            }
+        
+        
         $responsables = Responsable::where('deshabilitado',0)
         ->latest('id')->paginate();
         $tipos = Tipov::where('deshabilitado',0)
@@ -243,11 +263,11 @@ return redirect()->route('unidad.show', $unidad);
          ->latest('id')->paginate();
         $operadores = Operador::whereIn('id',$operadores_u->pluck('operador'))
         ->latest('id')->paginate();*/
-        $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        
+       
        // return($tipovs);
        $unidades = Unidad::find($unidad);
-        return view('unidad.combustible', compact('unidades','areas','responsables','tipos','operadores','vales'));
+        return view('unidad.combustible', compact('unidades','areas','responsables','tipos','operadores','vales','dependencias'));
         }else{
              return redirect()->route('login');
         }
@@ -284,9 +304,8 @@ if (auth()->check()) {
 
         $folio='SF30-';
         $areas = Area::find($request['area']);
-        $dependencia = Dependencia::find($areas->dependencia_id);
-        $request['dependencia']=$dependencia->id;
-        $folio.=str_pad($dependencia->id, 2, "0", STR_PAD_LEFT).'-';
+    
+        $folio.=str_pad($request['dependencia'], 2, "0", STR_PAD_LEFT).'-';
         $folio.=str_pad($request['area'], 2, "0", STR_PAD_LEFT).'-';
 
         switch($request['combustible']){

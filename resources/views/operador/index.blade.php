@@ -14,8 +14,8 @@
 </div>
 
     <div class="row mt-1">
-<div class="col-md-2" />&nbsp;</div>
-<div class="card col-md-8" />
+
+<div class="card col-md-12" />
 
 <div class="card-body">
 
@@ -23,8 +23,11 @@
         <thead>
             <th></th>
             <th>Operador</th>
+            <th>Dependencia</th>
             <th>Area</th>
             <th>Puesto</th>
+            <th>Telefono</th>
+            <th>Domicilio</th>
             <th></th>
             <th></th>
         </thead>
@@ -33,6 +36,13 @@
              <td><img src="{{ Storage::url($operador->foto) }}" style="height:100px;" /></td>
             <td>{{ $operador->nombre }} {{ $operador->paterno }} {{ $operador->materno }}</td>
             <td> 
+             @foreach($dependencias as $dependencia)   
+             @if($dependencia->id == $operador->dependencia) 
+            {{ $dependencia->dependencia }}
+            @endif
+        @endforeach
+        </td>
+            <td> 
              @foreach($areas as $area)   
              @if($area->id == $operador->area) 
             {{ $area->area }}
@@ -40,6 +50,8 @@
         @endforeach
         </td>
         <td>{{ $operador->puesto }}</td>
+        <td>{{ $operador->telefono }}</td>
+        <td>{{ $operador->direccion }}</td>
             <td><a href="{{ route('operador.edit', $operador->id) }}" class="btn btn-warning"><span  class="fas fa-pencil"></span></a></td>
             <td><form class="delete-form" action="{{ route('operador.destroy', $operador->id) }}" method="post">
                 @csrf
@@ -60,7 +72,7 @@
 
 
 </div>
-<div class="col-md-2" />&nbsp;</div>
+
 </div>
 
 

@@ -7,13 +7,17 @@
 @stop
 
 @section('content')
+
+@php
+$user = auth()->user();
+if($user->tipo==1){
+@endphp
 <div class="col-md-12 row mt-1" >
 <div class="col-md-3" /><a class="btn btn-primary" href="{{ route('unidad.create') }}">Nueva Unidad</a></div>
-
-
 </div>
-
-  
+@php
+} 
+@endphp
 <div class="col-md-12 row" >
 &nbsp;
 </div>
@@ -56,11 +60,22 @@
     <div class="col-md-12" style="padding: 1px; text-align: center;">
     
     <a href="{{ route('unidad.show', $unidad->id) }}" class="btn btn-success"><i class="fa-solid fa-magnifying-glass"></i></a>
+    @php
+$user = auth()->user();
+if($user->tipo==1){
+@endphp
     <a href="{{ route('unidad.edit', $unidad->id) }}" class="btn btn-warning"><i class="fa-solid fa-pencil"></i></a>
+    @php
+} 
+@endphp
     <a href="{{ route('unidad.combustible', $unidad->id) }}" class="btn btn-primary"><i class="fa-solid fa-gas-pump"></i></a>
     <a href="{{ route('unidad.incidente', $unidad->id) }}" class="btn bg-purple"><i class="fa-solid fa-car-burst"></i></a>
    
 </div>
+@php
+$user = auth()->user();
+if($user->tipo==1){
+@endphp
 <div class="col-md-12" style="padding: 1px; text-align: center;">
 <form class="delete-form" action="{{ route('unidad.destroy', $unidad->id) }}" method="post">
                 @csrf
@@ -69,10 +84,10 @@
                 <input type="hidden" name="unidadId" value="{{ $unidad->id }}"  >
               <button class="btn btn-danger">  <span class="fas fa-trash"></span></button>
 </form>                   
-   
-
 </div>
-
+@php
+} 
+@endphp
     </div>
             <!-- /.card-body -->
           </div>

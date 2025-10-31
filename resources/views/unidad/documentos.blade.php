@@ -85,7 +85,10 @@
 
 </div>
 
-
+@php
+$user = auth()->user();
+if($user->tipo==1){
+@endphp
 <form action="{{ route('unidad.guardarDocumento', $unidades->id ) }}" method="post" enctype="multipart/form-data">
     @csrf
 
@@ -142,7 +145,9 @@
 
 
 </form>
-
+@php
+} 
+@endphp
 </x-adminlte-card>
 
 <div class="row col-md-4 ">

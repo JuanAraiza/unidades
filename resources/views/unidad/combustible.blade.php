@@ -154,8 +154,7 @@
       {{-- Minimal --}}
             <x-adminlte-select2 name="tipo_com"  data-placeholder="Selecciona Tipo....">
                    @if ( $unidades->combustible  == 'Gasolina' )
-                        <option @selected(old('tipo_com')) value="1">Gas 1</option>
-                        <option @selected(old('tipo_com')) value="2">Gas 2</option>
+                        <option @selected(old('tipo_com')) value="1">Gasolina</option>
                         @elseif ( $unidades->combustible  == 'Diesel')
                         <option @selected(old('tipo_com')) value="3">Diesel</option>
                           @else
@@ -180,6 +179,18 @@
       
     </div>
     
+
+<div class="col-md-3">
+<div class="form-group">
+            <label>Dependencia</label>
+{{-- Minimal --}}
+<x-adminlte-select2 name="dependencia"  data-placeholder="Selecciona Dependencia....">
+    @foreach($dependencias as $dependencia)
+        <option @selected(old('dependencia') == $dependencia->id) value="{{ $dependencia->id }}">{{ $dependencia->dependencia }}</option>
+    @endforeach
+</x-adminlte-select2>
+</div>
+</div>
 
 <div class="col-md-3">
 <div class="form-group">

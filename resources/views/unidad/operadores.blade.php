@@ -85,19 +85,14 @@
 
 </div>
 
-
+@php
+$user = auth()->user();
+if($user->tipo==1){
+@endphp
 <form action="{{ route('unidad.guardarOperador', $unidades->id ) }}" method="post" enctype="multipart/form-data">
     @csrf
-
-
-
-
     <div class="row col-md-12 mb-2">
 <input type="hidden" name="unidad" value="{{ $unidades->id }}">  
-
-
-
-
  <div class="col-md-8"> 
        <div class="form-group">
             <label>Operador</label>
@@ -110,7 +105,6 @@
         </div>
       
     </div>
-
 <div class="col-md-4"> 
         <div class="form-group">
             <label>&nbsp;</label>
@@ -120,14 +114,11 @@
                 </button>
         </div>
     </div>
-
-
 </div>
-
-
-
 </form>
-
+@php
+} 
+@endphp
 </x-adminlte-card>
 
 <div class="row col-md-4 ">

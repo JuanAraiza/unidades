@@ -331,6 +331,7 @@ return [
             'text' => 'CPANEL',
             'url' => 'home/',
             'icon' => 'fas fa-fw fa-solar-panel',
+            'can'  => 'Administradores',
         ],
         //['header' => 'Unidades'],
         [
@@ -342,10 +343,12 @@ return [
             'text' => 'Combustible',
             'url' => 'combustible/',
             'icon' => 'fas fa-fw fa-gas-pump',
+            'can'  => 'Administradores',
         ],
         [
             'text' => 'Catálogo',
             'icon' => 'fas fa-fw fa-share',
+            'can'  => 'Administradores',
             'submenu' => [
                 [
                     'text' => 'Tipo de Vehículo',
@@ -381,6 +384,7 @@ return [
             'text' => 'Usuarios',
             'url' => 'usuarios/',
             'icon' => 'fas fa-fw fa-users',
+            'can'  => 'Administradores',
         ],
         /*['header' => 'labels'],
         [
