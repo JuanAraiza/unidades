@@ -358,10 +358,7 @@ return [
                     'text' => 'Dependencias',
                     'url' => 'dependencia/',
                 ],
-                [
-                    'text' => 'Areas',
-                    'url' => 'area/',
-                ],
+                
                 [
                     'text' => 'Responsables',
                     'url' => 'responsable/',

@@ -11,28 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('incidentes', function (Blueprint $table) {
+        Schema::create('bitacora_usos', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha_reg')->nullable();
             $table->unsignedBigInteger('unidad')->nullable();
             $table->foreign('unidad')
             ->references('id')
             ->on('unidad');
-            $table->text('descripcion_c')->nullable();
-            $table->text('descripcion')->nullable();
-            $table->string('importancia')->nullable();
-            $table->string('imagen')->nullable();
-            $table->unsignedBigInteger('id_user')->nullable();
-            $table->foreign('id_user')
-            ->references('id')
-            ->on('users');
-            $table->date('fecha_ven')->nullable();
-            $table->string('odometro')->nullable();
+            $table->date('fecha_reg')->nullable();
+            $table->string('actividad')->nullable();
+            $table->string('evidencia1')->nullable();
+            $table->string('evidencia2')->nullable();
+            $table->string('evidencia3')->nullable();
+            $table->timestamp('fecha')->nullable();
             $table->unsignedBigInteger('operador')->nullable();
             $table->foreign('operador')
             ->references('id')
             ->on('operador');
-            $table->integer('estatus')->default(1);
+            $table->unsignedBigInteger('id_user')->nullable();
+            $table->foreign('id_user')
+            ->references('id')
+            ->on('users');
             $table->timestamps();
         });
     }
@@ -42,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('incidentes');
+        Schema::dropIfExists('bitacora_usos');
     }
 };

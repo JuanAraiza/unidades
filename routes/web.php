@@ -46,6 +46,7 @@ Route::resource('usuarios', UsuariosController::class)->middleware('admin');
 
 
 Route::get('/unidad/{unidad}/combustible', [UnidadController::class, 'combustible'])->name('unidad.combustible');
+Route::get('/unidad/{unidad}/bitacora', [UnidadController::class, 'bitacora'])->name('unidad.bitacora');
 Route::get('/unidad/{unidad}/incidente', [UnidadController::class, 'incidente'])->name('unidad.incidente');
 Route::get('/unidad/{unidad}/imagenes', [UnidadController::class, 'imagenes'])->name('unidad.imagenes');
 Route::get('/unidad/{unidad}/estatus', [UnidadController::class, 'estatus'])->name('unidad.estatus');
@@ -53,6 +54,7 @@ Route::get('/unidad/{unidad}/operadores', [UnidadController::class, 'operadores'
 Route::get('/unidad/{unidad}/recordatorios', [UnidadController::class, 'recordatorios'])->name('unidad.recordatorios');
 Route::post('/unidad/{unidad}/combustible/gvale', [UnidadController::class, 'guardarvale'])->name('unidad.guardarvale');
 Route::post('/unidad/{unidad}/incidente/ginci', [UnidadController::class, 'guardarinci'])->name('unidad.guardarinci');
+Route::post('/unidad/{unidad}/bitacora/gbita', [UnidadController::class, 'guardarbita'])->name('unidad.guardarbita');
 Route::post('/unidad/{unidad}/imagenes/gimagen', [UnidadController::class, 'guardarimagenu'])->name('unidad.guardarimagen');
 Route::post('/unidad/{unidad}/documentos/gdocu', [UnidadController::class, 'guardarDocumento'])->name('unidad.guardarDocumento');
 Route::post('/unidad/{unidad}/estatus/gestatus', [UnidadController::class, 'guardarEstatus'])->name('unidad.guardarEstatus');
@@ -67,6 +69,7 @@ Route::get('/unidad/{unidad}/imagenes', [UnidadController::class, 'imagenes'])->
 Route::get('/unidad/{unidad}/imvale', [UnidadController::class, 'imvale'])->name('unidad.imvale');
 
 Route::delete('/unidad/{unidad}/incidente/destroy', [UnidadController::class, 'distroyIncidente'])->name('incidente.destroyIncidente')->middleware('admin');
+Route::delete('/unidad/{unidad}/bitacora/destroy', [UnidadController::class, 'destroyBitacora'])->name('bitacora.destroyBitacora')->middleware('admin');
 Route::post('/unidad/{unidad}/incidente/edit', [UnidadController::class, 'editIncidente'])->name('incidente.editIncidente');
 Route::post('/unidad/{unidad}/incidente/update', [UnidadController::class, 'updateIncidente'])->name('incidente.updateIncidente');
 Route::post('/unidad/{unidad}/incidente/cerrar', [UnidadController::class, 'cerrarIncidente'])->name('incidente.cerrarIncidente')->middleware('admin');
@@ -76,6 +79,9 @@ Route::delete('/unidad/{unidad}/documentos/distroy', [UnidadController::class, '
 Route::delete('/unidad/{unidad}/estatus/distroy', [UnidadController::class, 'distroyEstatus'])->name('estatus.distroyEstatus')->middleware('admin');
 Route::delete('/unidad/{unidad}/recordatorios/distroy', [UnidadController::class, 'distroyRecordatorio'])->name('recordatorios.distroyRecordatorio')->middleware('admin');
 Route::delete('/unidad/{unidad}/operadores/distroy', [UnidadController::class, 'distroyOperador'])->name('operadores.distroyOperador')->middleware('admin');
+Route::post('/unidad/{unidad}/bitacora/edit', [UnidadController::class, 'editBitacora'])->name('bitacora.editIncidente');
+Route::post('/unidad/{unidad}/bitacora/update', [UnidadController::class, 'updateBitacora'])->name('bitacora.updateIncidente');
+
 Route::resource('proveedor', ProveedorController::class)->middleware('admin');
 Route::resource('preciogas', PreciogasController::class)->middleware('admin');
 

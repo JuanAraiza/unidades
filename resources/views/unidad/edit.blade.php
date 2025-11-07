@@ -258,29 +258,7 @@
 </div>
 </div>
 
-<div class="col-md-3">
-<div class="form-group">
-            <label>Responsable de la Unidad</label>
-{{-- Minimal --}}
-<x-adminlte-select2 name="responsable"  data-placeholder="Selecciona Responsable....">
-    @foreach($responsables as $responsable)
-        <option @selected(old('responsable', $unidades->responsable) == $responsable->id) value="{{ $responsable->id }}">{{ $responsable->nombre }} {{ $responsable->paterno }} {{ $responsable->materno }}</option>
-    @endforeach
-</x-adminlte-select2>
-</div>
-</div>
 
-<div class="col-md-3">
-<div class="form-group">
-            <label>Operador</label>
-{{-- Minimal --}}
-<x-adminlte-select2 name="operador"  data-placeholder="Selecciona Operador....">
-    @foreach($operadores as $operador)
-        <option @selected(old('operador', $unidades->operador) == $operador->id) value="{{ $operador->id }}">{{ $operador->nombre }} {{ $operador->paterno }} {{ $operador->materno }}</option>
-    @endforeach
-</x-adminlte-select2>
-</div>
-</div>
           
   <div class="col-md-3"> 
         <div class="form-group">

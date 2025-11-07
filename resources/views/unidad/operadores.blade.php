@@ -26,7 +26,7 @@
 <div class="row col-md-12 ">&nbsp; </div>
 <div class="row col-md-12 ">
     <div class="col-md-3">    
-        <a href="{{ route('unidad.operadores', $unidades->id) }}" class="btn bg-purple btn-block">Operadores</a>
+        <a href="{{ route('unidad.bitacora', $unidades->id) }}" class="btn bg-purple btn-block">Bitacora Usos</a>
     </div>
      <div class="col-md-3">    
         <a href="{{ route('unidad.estatus', $unidades->id) }}" class="btn btn-warning btn-block">Estatus</a>

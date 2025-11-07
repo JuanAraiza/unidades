@@ -3,7 +3,7 @@
 @section('title', 'Unidades')
 
 @section('content_header')
-    <h1>Incidentes Unidad</h1>
+    <h1>Bitacora de Uso Unidad</h1>
 @stop
 
 @section('content')
@@ -46,7 +46,7 @@
 
 <div class="row col-md-12 ">
 
-<x-adminlte-card  class="col-lg-8" title="REPORTAR INCIDENTE" theme="primary" style="padding-right: 0px; padding-left: 0px;" >
+<x-adminlte-card  class="col-lg-8" title="BITACORA DE USO" theme="primary" style="padding-right: 0px; padding-left: 0px;" >
 
 <div class="row col-md-12 ">
 
@@ -87,13 +87,13 @@
 
 
 @if(isset($inci))
-<form action="{{ route('incidente.updateIncidente', $unidades->id ) }}" method="post" enctype="multipart/form-data">
+<form action="{{ route('bitacora.updateBitacora', $unidades->id ) }}" method="post" enctype="multipart/form-data">
     
     @csrf
     @method('POST')
-<input type="hidden" name="id_incidente" value="{{ $inci->id }}"> 
+<input type="hidden" name="id_bitacora" value="{{ $bita->id }}"> 
 @else
-<form action="{{ route('unidad.guardarinci', $unidades->id ) }}" method="post" enctype="multipart/form-data">
+<form action="{{ route('unidad.guardarbita', $unidades->id ) }}" method="post" enctype="multipart/form-data">
     @csrf
 @endif
 
@@ -104,8 +104,8 @@
 
 <div class="col-md-3"> 
         <div class="form-group">
-            <label>Fecha de Reporte</label>
-            <input type="date" name="fecha_reg"  value="@if(isset($inci)){{ $inci->fecha_reg }}@else{{ old('fecha_reg') }} @endif" class="form-control">
+            <label>Fecha</label>
+            <input type="date" name="fecha_reg"  value="@if(isset($bita)){{ $bita->fecha_reg }}@else{{ old('fecha_reg') }} @endif" class="form-control">
         </div>
         @error('fecha_reg')
             <span style="color:crimson;">
@@ -115,104 +115,70 @@
     </div>
 
 
-<div class="col-md-6"> 
-        <div class="form-group">
-            <label>Descripcion corta</label>
-            <input type="text" name="descripcion_c"   value="@if(isset($inci)){{ $inci->descripcion_c }}@else{{ old('descripcion_c') }}@endif" class="form-control"
-               placeholder="Descripcion" autofocus >
-        </div>
-        @error('descripcion_c')
-            <span style="color:crimson;">
-                {{$message}}
-            </span>
-        @enderror
-    </div>
-
-
-    <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Importancia</label>
-             {{-- Minimal --}}
-            <x-adminlte-select2 name="importancia"  data-placeholder="Selecciona Importancia....">
-                        <option @if(isset($inci)) @selected($inci->importancia) @else @selected(old('Moredada')) @endif value="Moredada">Moredada</option>
-                        <option @if(isset($inci)) @selected($inci->importancia) @else @selected(old('Critica')) @endif value="Critica">Critica</option>
-                        <option @if(isset($inci)) @selected($inci->importancia) @else @selected(old('Baja')) @endif value="Baja">Baja</option>
-            </x-adminlte-select2>
-        </div>
-    </div>
-
-
-
-    <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Fotografia / Imagen</label>
-            @if(isset($inci))
-            <img style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded" src="{{ Storage::url($inci->imagen) }}" alt="">
-            @endif
-            <input type="file" name="foto"  class="form-control">
-        </div>
-    </div>
-
-
-    <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Fecha de Vencimiento</label>
-            <input type="date" name="fecha_ven"  value="@if(isset($inci)){{ $inci->fecha_ven }}@else{{ old('fecha_ven') }}@endif" class="form-control">
-        </div>
-        @error('fecha_ven')
-            <span style="color:crimson;">
-                {{$message}}
-            </span>
-        @enderror
-    </div>
-
-     <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Odómetro/Horómetro</label>
-            <input type="text" name="odometro"  onKeyPress="return valida(event)"  value="@if(isset($inci)){{ $inci->odometro }}@else{{ old('odometro') }}@endif" class="form-control"
-               placeholder="1000" maxlength="5" autofocus >
-        </div>
-        @error('odometro')
-            <span style="color:crimson;">
-                {{$message}}
-            </span>
-        @enderror
-    </div>
-
 <div class="col-md-3"> 
        <div class="form-group">
             <label>Operador</label>
       {{-- Minimal --}}
             <x-adminlte-select2 name="operador"  data-placeholder="Selecciona Operador....">
                     @foreach($operadores as $operador)
-                    @if(isset($inci))
-                        <option @selected(old('operador',  $inci->operador) == $operador->id) value="{{ $operador->id }}">{{ $operador->nombre }} {{ $operador->paterno }} {{ $operador->materno }}</option>
-                    @else
                         <option @selected(old('operador') == $operador->id) value="{{ $operador->id }}">{{ $operador->nombre }} {{ $operador->paterno }} {{ $operador->materno }}</option>
-                    @endif
-                        
                     @endforeach
             </x-adminlte-select2>
         </div>
       
     </div>
-
-    <div class="col-md-9"> 
+ 
+    <div class="col-md-6"> 
             <div class="form-group">
-                <label>Descripcion Detallada</label>
+                <label>Actividad</label>
     
-    <x-adminlte-textarea name="descripcion" >
-        @if(isset($inci)){{ $inci->descripcion }}@else{{ old('descripcion') }}@endif
+    <x-adminlte-textarea name="actividad" >
+        @if(isset($bita)){{ $bita->actividad }}@else{{ old('actividad') }}@endif
     </x-adminlte-textarea>
             </div>
     </div>
+
+    <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Evidencia 1</label>
+            @if(isset($bita))
+            <img style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded" src="{{ Storage::url($bita->evidencia1) }}" alt="">
+            @endif
+            <input type="file" name="evidencia11"  class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Evidencia 2</label>
+            @if(isset($bita))
+            <img style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded" src="{{ Storage::url($bita->evidencia2) }}" alt="">
+            @endif
+            <input type="file" name="evidencia12"  class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Evidencia 3</label>
+            @if(isset($bita))
+            <img style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded" src="{{ Storage::url($bita->evidencia3) }}" alt="">
+            @endif
+            <input type="file" name="evidencia13"  class="form-control">
+        </div>
+    </div>
+
+
+  
+
+
 
 <div class="col-md-3"> 
         <div class="form-group">
             <label>&nbsp;</label>
         <button type=submit class="btn btn-primary form-control">
                    <span class="fa fa-save"></span>&nbsp;
-                   @if(isset($inci))
+                   @if(isset($bita))
                     Actualizar
                     @else
                     Registrar
@@ -246,7 +212,6 @@
 
 
 
-
 <x-adminlte-card theme="primary" theme-mode="outline">
 
 
@@ -255,93 +220,120 @@
  <table id="tablaincidentes" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Reporte</th>
-                  <th>Vencimiento</th>
-                  <th>Incidente</th>
-                  <th>Estatus</th>
-                  <th>Imagen</th>
-                  <th>Reporto</th>
-                    <th>Editar</th>
-                    <th>Cerrar</th> 
-                    <th>Eliminar</th>       
+                  <th>Fecha</th>
+                  <th>No. Unidad</th>
+                  <th>Marca</th>
+                  <th>Color</th>
+                  <th>Año</th>
+                  <th>Placas</th>
+                  <th>Operador</th>
+                  <th>Acciones</th>
+                    @php
+                $user = auth()->user();
+            if($user->tipo==1){
+                @endphp
+                    <th>Eliminar</th>  
+                    @php
+            }
+                @endphp     
                 </tr>
                 </thead>
                 <tbody>
-               @foreach ($incidentes as $incidente)
+               @foreach ($bitacoras as $bitacora)
                 <tr>
-                    <td>{{ $incidente->id }}</td>
-                    <td>{{ $incidente->fecha_reg }}</td>
-                    <td>{{ $incidente->fecha_ven }}</td>
-                    <td>{{ $incidente->descripcion }}</td>
-                    <td>
-                        @switch($incidente->estatus)
-                            @case(1)
-                                <span class="badge badge-success">Cualquiera</span>
-                                @break
-                            @case(2)
-                                <span class="badge badge-warning">Pendiente</span>
-                                @break
-                            @case(3)
-                                <span class="badge badge-danger">Resuelto</span>
-                                @break
-                            @case(4)
-                                <span class="badge badge-danger">Cerrado</span>
-                                @break
-                        @endswitch
-                    <td>
-                        @if ($incidente->imagen)
-                            <img src="{{ Storage::url($incidente->imagen) }}" alt="Imagen" class="img-fluid" style="max-width: 100px;">
-                        @else
-                            <span class="text-muted">Sin imagen</span>
-                        @endif
-                    </td>
-                    
+                    <td>{{ $bitacora->fecha_reg }}</td>
+                    <td>{{ $unidades->no_economico }}</td>
+                    <td>{{ $unidades->marca }}</td>
+                    <td>{{ $unidades->color }}</td>
+                    <td>{{ $unidades->anio }}</td>
+                    <td>{{ $unidades->placas }}</td>
                     <td>
                         @foreach ($operadores as $operador)
-                            @if ($operador->id == $incidente->operador)
+                            @if ($operador->id == $bitacora->operador)
                                 {{ $operador->nombre }} {{ $operador->paterno }} {{ $operador->materno }}
                             @endif
-                    @endforeach
-                </td>
-                                                         
-      <td>
-        <form  action="{{ route('incidente.editIncidente', $unidades->id )}}" method="post">
-                @csrf
-                @method('POST')
-               <input type="hidden" name="unidad" value="{{ $unidades->id }}"  >
-                <input type="hidden" name="incidente" value="{{ $incidente->id }}"  >
-              <button  class="btn btn-warning"><span  class="fas fa-pencil"></span></button>
-</form>       
-    </td>
-      <td>
-@if($incidente->estatus != 4)
+                        @endforeach
+                    </td>
+                    <td>
 
-      <form class="cerrar-form" action="{{ route('incidente.cerrarIncidente', $unidades->id) }}" method="post">
-                @csrf
-                @method('POST')
-               <input type="hidden" name="unidad" value="{{ $unidades->id }}"  >
-                <input type="hidden" name="id_incidente" value="{{ $incidente->id }}"  >
-              <button class="btn bg-black">  <span class="fas fa-close"></span></button>
-</form>  
-@endif                 
-</td>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalEvid{{ $bitacora->id }}">
+<i class="fa-solid fa-car-tunnel"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modalEvid{{ $bitacora->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Evidencias</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body row">
+        
+      <div class="col-md-12"> 
+        <h5><strong>Actividad:</strong> {{ $bitacora->actividad }}</h5>
+</div>
+<div class="col-md-4"> 
+            <img style="width: 100%;" src="{{ Storage::url($bitacora->evidencia3) }}" alt="">
+    </div>
+
+    <div class="col-md-4"> 
+            <img style="width: 100%;" src="{{ Storage::url($bitacora->evidencia3) }}" alt="">
+    </div>
+
+    <div class="col-md-4"> 
+            <img style="width: 100%; " src="{{ Storage::url($bitacora->evidencia3) }}" alt="">
+    </div>
+        
+    
+    </div>
+
+
+      <div class="modal-footer">
+      
+      </div>
+
+    
+    </div>
+  </div>
+</div>
+
+
+                    </td>
+        
+
+                </td>
+                @php
+                $user = auth()->user();
+            if($user->tipo==1){
+                @endphp
      <td>
-      <form class="delete-form" action="{{ route('incidente.destroyIncidente', $unidades->id) }}" method="post">
+      <form class="delete-form" action="{{ route('bitacora.destroyBitacora', $unidades->id) }}" method="post">
                 @csrf
                 @method('DELETE')
                <input type="hidden" name="unidad" value="{{ $unidades->id }}"  >
-                <input type="hidden" name="incidente" value="{{ $incidente->id }}"  >
+                <input type="hidden" name="bitacora" value="{{ $bitacora->id }}"  >
               <button class="btn btn-danger">  <span class="fas fa-trash"></span></button>
 </form>                   
 </td>
                 
+                @php
+                } 
+                @endphp
             </tr>
                 @endforeach
                 </tbody>
                
               </table>
 </x-adminlte-card>
+
+
+<?php /*
 
 
 <x-adminlte-card theme="primary" theme-mode="outline">
@@ -401,6 +393,8 @@
 
 
 </x-adminlte-card>
+
+*/ ?>
 @stop
 
 @section('css')

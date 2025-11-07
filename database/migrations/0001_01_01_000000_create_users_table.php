@@ -18,10 +18,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->integer('tipo')->nullable();
-            $table->unsignedBigInteger('dependencia')->nullable();
-            $table->foreign('dependencia')
-            ->references('id')
-            ->on('dependencia');
+            $table->integer('dependencia')->nullable();
+            
             $table->integer('deshabilitado')->default(0);
             $table->rememberToken();
             $table->timestamps();

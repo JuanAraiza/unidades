@@ -51,6 +51,7 @@
 <table id="tablaincidentes" class="table table-bordered table-striped">
                 <thead>
                 <tr>
+                  <th></th>
                 <th>Unidad</th>
                   <th>Folio</th>
                   <th>Fecha</th>
@@ -69,6 +70,12 @@
                 <tbody>
     @foreach ($vales as $vale)
                 <tr>
+                  <td>
+                   @foreach($unidades as $unidad)
+                            <img style=" height:80px; "  src="{{ Storage::url($unidad->imagen) }}" alt="">
+                        @endforeach  
+                  
+                 </td>
                     <td>
                         @foreach($unidades as $unidad)
                             {{ $vale->unidad == $unidad->id ? $unidad->marca  : '' }}

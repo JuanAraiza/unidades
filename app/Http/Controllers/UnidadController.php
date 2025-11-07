@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Area;
+use App\Models\BitacoraUso;
 use App\Models\combustible;
 use App\Models\Dependencia;
 use App\Models\Docu_unidad;
@@ -33,9 +34,21 @@ class UnidadController extends Controller
     {
         if (auth()->check()) {
 
-        $unidades = Unidad::orderBy('id','desc')
+$user = auth()->user();
+            if($user->tipo==1){
+
+$unidades = Unidad::orderBy('id','desc')
             ->where('deshabilitado', 0)
             ->paginate();
+            }else{
+                $dependencias = Dependencia::find($user->dependencia);
+            $unidades = Unidad::orderBy('id','desc')
+            ->where('deshabilitado', 0)
+            ->where('dependencia',$dependencias->id)
+            ->paginate();
+            }
+
+        
 
         $areas = Area::all();
         $dependencias = Dependencia::all();
@@ -156,7 +169,7 @@ $upload = $request->file('image');
                 ->scale(width:800)
                 ->encodeByExtension($upload->getClientOriginalExtension(), quality: 70);
         Storage ::put('unidades/'.$nameFile,
-        $image
+     
 );
 $request['area']=$request['area_id'];
 
@@ -229,30 +242,17 @@ return redirect()->route('unidad.show', $unidad);
      public function combustible(string $unidad)
     {
         if (auth()->check()) {
-            $user = auth()->user();
-            if($user->tipo==2){
-                $fdependencias = Dependencia::find($user->dependencia);
-                $dependencias = Dependencia::where('deshabilitado',0)
-                ->where('id',$fdependencias->id)
-                ->latest('id')->paginate();
-                $areas = Area::where('deshabilitado',0)
-                ->where('dependencia_id',$fdependencias->id)
-                ->latest('id')->paginate();
-                $operadores = Operador::where('deshabilitado',0)
-                ->where('dependencia',$fdependencias->id)
-                ->latest('id')->paginate();
-            }else{
-                $dependencias = Dependencia::where('deshabilitado',0)
-                ->latest('id')->paginate();
-                $areas = Area::where('deshabilitado',0)
-                ->latest('id')->paginate();
-                $operadores = Operador::where('deshabilitado',0)
-                ->latest('id')->paginate();
-            }
-        
-        
-        $responsables = Responsable::where('deshabilitado',0)
+        $unidades = Unidad::find($unidad);
+        $dependencias = Dependencia::find($unidades->dependencia);
+        $areas = Area::where('deshabilitado',0)
+        ->where('dependencia_id',$dependencias->id)
         ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->where('dependencia',$dependencias->id)
+        ->latest('id')->paginate();
+        $responsables = Responsable::where('deshabilitado',0)
+        ->where('dependencia',$dependencias->id);
+
         $tipos = Tipov::where('deshabilitado',0)
          ->latest('id')->paginate();
         
@@ -265,8 +265,8 @@ return redirect()->route('unidad.show', $unidad);
         ->latest('id')->paginate();*/
         
        
-       // return($tipovs);
-       $unidades = Unidad::find($unidad);
+        //return($dependencias);
+       
         return view('unidad.combustible', compact('unidades','areas','responsables','tipos','operadores','vales','dependencias'));
         }else{
              return redirect()->route('login');
@@ -419,14 +419,7 @@ public function guardarinci(Request $request, string $unidad){
             'text' => 'Registrado Correctamente'
         ]);
        
-        $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
-        $incidentes = incidente::where('unidad', $unidad)
-         ->latest('id')->paginate();
-         //
-        $usuarios = Usuarios::All();
-
-        $unidades = Unidad::find($unidad);
+       
        // return($tipovs);
         return redirect()->route('unidad.incidente', $unidad);
        // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
@@ -437,17 +430,87 @@ public function guardarinci(Request $request, string $unidad){
     }
 
 
+ public function guardarbita(Request $request, string $unidad){
+    if (auth()->check()) {
+
+        if($request->hasFile('evidencia11')){
+            $extension = $request->evidencia11->extension();
+            $nameFile = $request['evidencia11'].date('YmdHsi').'-BITA1.'.$extension;
+            $upload = $request->file('evidencia11');
+                    $image = Image::read($upload)
+                            ->scale(width:800)
+                            ->encodeByExtension($upload->getClientOriginalExtension(), quality: 70);
+                    Storage ::put('fbitacora/'.$nameFile,
+                    $image
+            );
+            $request['evidencia1']='fbitacora/'.$nameFile;
+        }
+
+        if($request->hasFile('evidencia12')){
+            $extension = $request->evidencia12->extension();
+            $nameFile = $request['evidencia12'].date('YmdHsi').'-BITA2.'.$extension;
+            $upload = $request->file('evidencia12');
+                    $image = Image::read($upload)
+                            ->scale(width:800)
+                            ->encodeByExtension($upload->getClientOriginalExtension(), quality: 70);
+                    Storage ::put('fbitacora/'.$nameFile,
+                    $image
+            );
+            $request['evidencia2']='fbitacora/'.$nameFile;
+        }
+
+        if($request->hasFile('evidencia13')){
+            $extension = $request->evidencia13->extension();
+            $nameFile = $request['evidencia13'].date('YmdHsi').'-BITA3.'.$extension;
+            $upload = $request->file('evidencia13');
+                    $image = Image::read($upload)
+                            ->scale(width:800)
+                            ->encodeByExtension($upload->getClientOriginalExtension(), quality: 70);
+                    Storage ::put('fbitacora/'.$nameFile,
+                    $image
+            );
+            $request['evidencia3']='fbitacora/'.$nameFile;
+        }
+       $request['fecha']=date('Y-m-d H:i:s');
+        $request['id_user']=auth()->user('web')->id;         
+
+        BitacoraUso::create($request->all());
+        //
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Incidente Registrado!',
+            'text' => 'Registrado Correctamente'
+        ]);
+       
+        
+       // return($tipovs);
+        return redirect()->route('unidad.bitacora', $unidad);
+       // return view('unidad.incidente', compact('unidades','tipos','incidentes','usuarios'));
+       }else{
+             return redirect()->route('login');
+        }
+        
+    }   
+
+
  public function incidente(string $unidad)
     {
         if (auth()->check()) {
+        
+        $unidades = Unidad::find($unidad);
+        $dependencias = Dependencia::find($unidades->dependencia);
         $areas = Area::where('deshabilitado',0)
+        ->where('dependencia_id',$dependencias->id)
+        ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->where('dependencia',$dependencias->id)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->where('dependencia',$dependencias->id);
+
         $tipos = Tipov::where('deshabilitado',0)
          ->latest('id')->paginate();
-        $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        
         $incidentes = incidente::where('unidad', $unidad)
          ->latest('id')->paginate();
         $graincidentes = DB::table('incidentes')
@@ -459,9 +522,36 @@ public function guardarinci(Request $request, string $unidad){
           
 
           $usuarios = Usuarios::All();
-        $unidades = Unidad::find($unidad);
+    
        // return($graincidentes);
         return view('unidad.incidente', compact('unidades','areas','responsables','tipos','operadores','incidentes','usuarios','graincidentes'));
+        }else{
+             return redirect()->route('login');
+        }
+    }
+
+
+ public function bitacora(string $unidad)
+    {
+        if (auth()->check()) {
+        $unidades = Unidad::find($unidad);
+        $dependencias = Dependencia::find($unidades->dependencia);
+        $areas = Area::where('deshabilitado',0)
+        ->where('dependencia_id',$dependencias->id)
+        ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->where('dependencia',$dependencias->id)
+        ->latest('id')->paginate();
+        $responsables = Responsable::where('deshabilitado',0)
+        ->where('dependencia',$dependencias->id);
+        $bitacoras = BitacoraUso::where('unidad', $unidad)
+        ->latest('id')->paginate();
+         $tipos = Tipov::where('deshabilitado',0)
+         ->latest('id')->paginate();
+        $usuarios = Usuarios::All();
+       
+       // return($graincidentes);
+        return view('unidad.bitacora', compact('unidades','areas','responsables','tipos','operadores','bitacoras','usuarios'));
         }else{
              return redirect()->route('login');
         }
@@ -649,8 +739,14 @@ return redirect()->route('unidad.show', $unidad);
           $usuarios = Usuarios::All();
         $unidades = Unidad::find($unidad);
 
+         $graincidentes = DB::table('incidentes')
+            ->where('unidad', $unidad)
+            ->select(DB::raw('count(id) as cuenta'), DB::raw('concat(YEAR(fecha_reg),"-",MONTH(fecha_reg)) as fecha'))
+            ->groupBy('fecha')
+            ->get();
+
         
-        return view('unidad.incidente', compact('unidades','areas','responsables','tipos','operadores','incidentes','usuarios','inci'));
+        return view('unidad.incidente', compact('unidades','areas','responsables','tipos','operadores','incidentes','usuarios','inci','graincidentes'));
         }else{
              return redirect()->route('login');
         }
@@ -674,6 +770,36 @@ if($eincidentes->imagen){
         ]);
 
           return redirect()->route('unidad.incidente', $unidad);
+          }else{
+             return redirect()->route('login');
+        }
+    }
+
+
+public function destroyBitacora(Request $request)
+    {
+        if (auth()->check()) {
+        $unidad = $request['unidad'];
+        $bitacora = $request['bitacora'];
+
+$bitacoras = BitacoraUso::find($bitacora);
+if($bitacoras->evidencia1){
+    Storage::delete($bitacoras->evidencia1);
+}
+if($bitacoras->evidencia2){
+    Storage::delete($bitacoras->evidencia2);
+}
+if($bitacoras->evidencia3){
+    Storage::delete($bitacoras->evidencia3);
+}
+        $bitacoras->delete();
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Registro Eliminado!',
+            'text' => 'Eliminado Correctamente'
+        ]);
+
+          return redirect()->route('unidad.bitacora', $unidad);
           }else{
              return redirect()->route('login');
         }
@@ -708,18 +834,21 @@ public function cerrarIncidente(Request $request, string $unidad)
  public function imagenes(string $unidad)
     {
         if (auth()->check()) {
+        $unidades = Unidad::find($unidad);
+        $dependencias = Dependencia::find($unidades->dependencia);
         $areas = Area::where('deshabilitado',0)
+        ->where('dependencia_id',$dependencias->id)
+        ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->where('dependencia',$dependencias->id)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
-        $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
-        $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->where('dependencia',$dependencias->id);
         $imagenes = img_unidad::where('unidad', $unidad)
          ->latest('id')->paginate();
+        $tipos = Tipov::where('deshabilitado',0)
+         ->latest('id')->paginate();
           $usuarios = Usuarios::All();
-        $unidades = Unidad::find($unidad);
        // return($tipovs);
         return view('unidad.imagenes', compact('unidades','areas','responsables','tipos','operadores','imagenes','usuarios'));
         }else{
@@ -789,20 +918,94 @@ if($imagenes->imagen){
  public function documentos(string $unidad)
     {
         if (auth()->check()) {
-        $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
-        $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
-        $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
-        $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
-        $documentos = Docu_unidad::where('unidad', $unidad)
-         ->latest('id')->paginate();
-        $usuarios = Usuarios::All();
+        
         $unidades = Unidad::find($unidad);
-       // return($tipovs);
-        return view('unidad.documentos', compact('unidades','areas','responsables','tipos','operadores','documentos','usuarios'));
+        $dependencias = Dependencia::find($unidades->dependencia);
+        $areas = Area::where('deshabilitado',0)
+        ->where('dependencia_id',$dependencias->id)
+        ->get();
+        $operadores = Operador::where('deshabilitado',0)
+        ->where('dependencia',$dependencias->id)
+        ->get();
+        $responsables = Responsable::where('deshabilitado',0)
+        ->where('dependencia',$dependencias->id);
+        $tipos = Tipov::where('deshabilitado',0)
+         ->get();
+      
+        $documentos = Docu_unidad::where('unidad', $unidad)
+         ->get();
+
+         $refrendos = Docu_unidad::where('unidad', $unidad)
+         ->where('tipo', 1)
+         ->get();
+
+         $revistas = Docu_unidad::where('unidad', $unidad)
+         ->where('tipo', 2)
+         ->get();
+
+         $polizas = Docu_unidad::where('unidad', $unidad)
+         ->where('tipo', 3)
+         ->get();
+
+         $placas = Docu_unidad::where('unidad', $unidad)
+         ->where('tipo', 4)
+         ->get();
+
+         $altas = Docu_unidad::where('unidad', $unidad)
+         ->where('tipo', 5)
+        ->get();
+
+         $facturas = Docu_unidad::where('unidad', $unidad)
+         ->where('tipo', 6)
+         ->get();
+
+         $vrefrendos = Docu_unidad::select('tipo','fecha')
+         ->selectRaw('DATEDIFF (vencimiento, DATE(NOW())) as dias')
+         ->where('unidad', $unidad)
+         ->where('tipo', 1)
+         ->orderBy('fecha', 'DESC')
+         ->first();
+
+
+         $vrevistas = Docu_unidad::select('tipo','fecha')
+         ->selectRaw('DATEDIFF (vencimiento, DATE(NOW())) as dias')
+         ->where('unidad', $unidad)
+         ->where('tipo', 2)
+         ->orderBy('fecha', 'DESC')
+         ->first();
+
+         $vpolizas = Docu_unidad::select('tipo','fecha')
+         ->selectRaw('DATEDIFF (vencimiento, DATE(NOW())) as dias')
+         ->where('unidad', $unidad)
+         ->where('tipo', 3)
+         ->orderBy('fecha', 'DESC')
+         ->first();
+
+         $vplacas = Docu_unidad::select('tipo','fecha')
+         ->selectRaw('DATEDIFF (vencimiento, DATE(NOW())) as dias')
+         ->where('unidad', $unidad)
+         ->where('tipo', 4)
+         ->orderBy('fecha', 'DESC')
+         ->first();
+
+         $valtas = Docu_unidad::select('tipo','fecha')
+         ->selectRaw('DATEDIFF (vencimiento, DATE(NOW())) as dias')
+         ->where('unidad', $unidad)
+         ->where('tipo', 5)
+         ->orderBy('fecha', 'DESC')
+         ->first();
+
+         $vfacturas = Docu_unidad::select('tipo','fecha')
+         ->selectRaw('DATEDIFF (vencimiento, DATE(NOW())) as dias')
+         ->where('unidad', $unidad)
+         ->where('tipo', 6)
+         ->orderBy('fecha', 'DESC')
+         ->first();
+        
+
+        $usuarios = Usuarios::All();
+            //return($vrevisatas);
+        return view('unidad.documentos', compact('unidades','areas','responsables','tipos','operadores','refrendos','documentos','usuarios','revistas','polizas','placas','altas','facturas','vrefrendos','vrevistas','vpolizas','vplacas','valtas','vfacturas'));
         }else{
              return redirect()->route('login');
         }
@@ -818,6 +1021,7 @@ public function guardarDocumento(Request $request, string $unidad){
             $request['documento'] = Storage::putFileAs('documentosUnidad', $request->archivo, $nameFile);
 
         }
+        $request['fecha'] = date('Y-m-d'); 
      
         Docu_unidad::create($request->all());
         //
@@ -865,18 +1069,22 @@ if($documentos->documento){
  public function estatus(string $unidad)
     {
         if (auth()->check()) {
+        $unidades = Unidad::find($unidad);
+        $dependencias = Dependencia::find($unidades->dependencia);
         $areas = Area::where('deshabilitado',0)
+        ->where('dependencia_id',$dependencias->id)
+        ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->where('dependencia',$dependencias->id)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->where('dependencia',$dependencias->id);
         $tipos = Tipov::where('deshabilitado',0)
          ->latest('id')->paginate();
-        $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+    
         $estatus = Estatus_unidad::where('unidad', $unidad)
          ->latest('id')->paginate();
         $usuarios = Usuarios::All();
-        $unidades = Unidad::find($unidad);
        // return($tipovs);
         return view('unidad.estatus', compact('unidades','areas','responsables','tipos','operadores','estatus','usuarios'));
         }else{
@@ -932,18 +1140,21 @@ if($documentos->documento){
  public function recordatorios(string $unidad)
     {
         if (auth()->check()) {
+        $unidades = Unidad::find($unidad);
+        $dependencias = Dependencia::find($unidades->dependencia);
         $areas = Area::where('deshabilitado',0)
+        ->where('dependencia_id',$dependencias->id)
+        ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->where('dependencia',$dependencias->id)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->where('dependencia',$dependencias->id);
         $tipos = Tipov::where('deshabilitado',0)
          ->latest('id')->paginate();
-        $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
         $recordatorios = Recordatorio_Unidad::where('unidad', $unidad)
          ->latest('id')->paginate();
         $usuarios = Usuarios::All();
-        $unidades = Unidad::find($unidad);
        // return($tipovs);
         return view('unidad.recordatorios', compact('unidades','areas','responsables','tipos','operadores','recordatorios','usuarios'));
         }else{
@@ -1019,18 +1230,23 @@ public function cerrarRecordatorio(Request $request, string $unidad)
  public function operadores(string $unidad)
     {
         if (auth()->check()) {
+        $unidades = Unidad::find($unidad);
+        $dependencias = Dependencia::find($unidades->dependencia);
         $areas = Area::where('deshabilitado',0)
+        ->where('dependencia_id',$dependencias->id)
+        ->latest('id')->paginate();
+        $operadores = Operador::where('deshabilitado',0)
+        ->where('dependencia',$dependencias->id)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->where('dependencia',$dependencias->id);
         $tipos = Tipov::where('deshabilitado',0)
          ->latest('id')->paginate();
-        $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        
         $operadores_uni = Operador_Unidad::where('unidad', $unidad)
          ->latest('id')->paginate();
         $usuarios = Usuarios::All();
-        $unidades = Unidad::find($unidad);
+        
        // return($tipovs);
         return view('unidad.operadores', compact('unidades','areas','responsables','tipos','operadores','operadores_uni','usuarios'));
         }else{

@@ -13,5 +13,8 @@ class Docu_unidad extends Model
         'documento',
         'titulo',
         'vencimiento',
+        'usuario',
+        'tipo',
+        'fecha',
     ];
 }

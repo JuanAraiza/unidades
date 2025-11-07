@@ -18,6 +18,7 @@ class incidente extends Model
         'id_user',
         'fecha_ven',
         'odometro',
+        'operador',
         'estatus',
     ];
 }

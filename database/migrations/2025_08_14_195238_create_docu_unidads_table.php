@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('documento')->nullable();
             $table->string('titulo')->nullable();
             $table->date('vencimiento')->nullable();
+            $table->string('usuario')->nullable();
+            $table->integer('tipo')->nullable();
             $table->timestamps();
         });
     }

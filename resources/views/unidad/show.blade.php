@@ -26,7 +26,7 @@
 <div class="row col-md-12 ">&nbsp; </div>
 <div class="row col-md-12 ">
     <div class="col-md-3">    
-        <a href="{{ route('unidad.operadores', $unidades->id) }}" class="btn bg-purple btn-block">Operadores</a>
+        <a href="{{ route('unidad.bitacora', $unidades->id) }}" class="btn bg-purple btn-block">Bitacora Usos</a>
     </div>
      <div class="col-md-3">    
         <a href="{{ route('unidad.estatus', $unidades->id) }}" class="btn btn-warning btn-block">Estatus</a>
@@ -223,29 +223,7 @@
 </div>
 </div>
 
-<div class="col-md-3">
-<div class="form-group">
-            <label>Responsable de la Unidad</label>
-            @foreach($responsables as $responsable)
-               @if ($responsable->id == $unidades->responsable )
-             <p>{{ $responsable->nombre }} {{ $responsable->paterno }} {{ $responsable->materno }}</p>
-            @endif
-            @endforeach
 
-</div>
-</div>
-
-<div class="col-md-3">
-<div class="form-group">
-            <label>Operador</label>
-            @foreach($operadores as $operador)
-               @if ($operador->id == $unidades->operador )
-             <p>{{ $operador->nombre }} {{ $operador->paterno }} {{ $operador->materno }}</p>
-            @endif
-            @endforeach
-
-</div>
-</div>
           
   <div class="col-md-3"> 
         <div class="form-group">

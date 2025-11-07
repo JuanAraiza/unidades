@@ -42,10 +42,7 @@ return new class extends Migration
             $table->foreign('responsable')
             ->references('id')
             ->on('responsable');
-            $table->unsignedBigInteger('operador')->nullable();
-            $table->foreign('operador')
-            ->references('id')
-            ->on('operador');
+            $table->integer('operador')->nullable();
             $table->string('no_serie')->nullable();
             $table->string('cilindros')->nullable();
             $table->string('factura')->nullable();

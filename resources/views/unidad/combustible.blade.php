@@ -26,7 +26,7 @@
 <div class="row col-md-12 ">&nbsp; </div>
 <div class="row col-md-12 ">
     <div class="col-md-3">    
-        <a href="{{ route('unidad.operadores', $unidades->id) }}" class="btn bg-purple btn-block">Operadores</a>
+        <a href="{{ route('unidad.bitacora', $unidades->id) }}" class="btn bg-purple btn-block">Bitacora Usos</a>
     </div>
      <div class="col-md-3">    
         <a href="{{ route('unidad.estatus', $unidades->id) }}" class="btn btn-warning btn-block">Estatus</a>
@@ -56,22 +56,29 @@
         </div>
         
     </div>
+    <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Numero Eco.</label>
+            <p>{{ $unidades->no_economico }}</p>
+        </div>
+        
+    </div>
 
-  <div class="col-md-3"> 
+  <div class="col-md-2"> 
        <div class="form-group">
             <label>Marca</label>
             <p>{{ $unidades->marca }}</p>
         </div>
     </div>
 
-     <div class="col-md-3"> 
+     <div class="col-md-2"> 
         <div class="form-group">
             <label>Color / Año</label>
             <p>{{ $unidades->color }} / {{ $unidades->anio }}</p>
         </div>
     </div>
 
-    <div class="col-md-3"> 
+    <div class="col-md-2"> 
         <div class="form-group">
             <label>Placas</label>
             <p>{{ $unidades->placas }}</p>
@@ -183,12 +190,9 @@
 <div class="col-md-3">
 <div class="form-group">
             <label>Dependencia</label>
-{{-- Minimal --}}
-<x-adminlte-select2 name="dependencia"  data-placeholder="Selecciona Dependencia....">
-    @foreach($dependencias as $dependencia)
-        <option @selected(old('dependencia') == $dependencia->id) value="{{ $dependencia->id }}">{{ $dependencia->dependencia }}</option>
-    @endforeach
-</x-adminlte-select2>
+            <p>{{ $dependencias->dependencia }}</p>
+            <input type="hidden" name="dependencia" value="{{ $dependencias->id }}">
+
 </div>
 </div>
 
