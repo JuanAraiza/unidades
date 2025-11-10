@@ -25,7 +25,9 @@ RUN apt-get install -y --no-install-recommends \
         libpng-dev \
         libwebp-dev \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-configure gd --with-webp
+
 
 RUN apt install -y libmagickwand-dev && \
     git clone https://github.com/Imagick/imagick.git --depth 1 /tmp/imagick && \
