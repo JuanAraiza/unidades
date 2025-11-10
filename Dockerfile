@@ -24,9 +24,8 @@ RUN apt-get install -y --no-install-recommends \
         libjpeg62-turbo-dev \
         libpng-dev \
         libwebp-dev \
-    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-configure gd --with-webp
+    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ --with-webp=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd
 
 
 RUN apt install -y libmagickwand-dev && \
