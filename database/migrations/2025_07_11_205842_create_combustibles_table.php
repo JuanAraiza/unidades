@@ -49,7 +49,7 @@ return new class extends Migration
             
             $table->date('fecha_c')->nullable();
             $table->date('fecha_p')->nullable();
-            $table->integer('vigencia')->nelleable();
+            $table->integer('vigencia')->nulleable();
             $table->timestamps();
         });
     }

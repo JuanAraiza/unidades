@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dependencia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -57,7 +58,7 @@ class HomeController extends Controller
 
         $incidentes = DB::table('incidentes')
             ->join('unidad', 'incidentes.unidad', '=', 'unidad.id')
-            ->select('unidad.id', 'unidad.modelo','unidad.marca', 'incidentes.descripcion_c')
+            ->select('unidad.id', 'unidad.modelo','unidad.marca','unidad.no_economico','unidad.dependencia', 'incidentes.descripcion_c')
             ->where('incidentes.estatus',1)
             ->get();
 
@@ -68,8 +69,11 @@ class HomeController extends Controller
             ->where('vigencia', '<=', $date)
             ->get();
 
-        //return($seguros);
-        return view('home', compact('asignados','entallers','disponibles','fueras','incidentes','seguros'));
+        $dependencias = Dependencia::where('deshabilitado',0)
+            ->get();
+
+        //return($dependencias);
+        return view('home', compact('asignados','entallers','disponibles','fueras','incidentes','seguros','dependencias'));
         }else{
              return redirect()->route('login');
         }

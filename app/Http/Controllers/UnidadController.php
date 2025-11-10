@@ -169,7 +169,7 @@ $upload = $request->file('image');
                 ->scale(width:800)
                 ->encodeByExtension($upload->getClientOriginalExtension(), quality: 70);
         Storage ::put('unidades/'.$nameFile,
-     
+        $image
 );
 $request['area']=$request['area_id'];
 
@@ -257,7 +257,9 @@ return redirect()->route('unidad.show', $unidad);
          ->latest('id')->paginate();
         
          $vales = combustible::where('unidad', $unidad)
-         ->where('deshabilitado', 0)->latest('id')->paginate();
+         ->where('deshabilitado', 0)
+         ->orderBy('id', 'ASC')
+         ->get();
         /*
         $operadores_u = Operador_Unidad::where('unidad', $unidad)
          ->latest('id')->paginate();
@@ -512,7 +514,8 @@ public function guardarinci(Request $request, string $unidad){
          ->latest('id')->paginate();
         
         $incidentes = incidente::where('unidad', $unidad)
-         ->latest('id')->paginate();
+         ->orderBy('id', 'DESC')
+        ->get();
         $graincidentes = DB::table('incidentes')
             ->where('unidad', $unidad)
             ->select(DB::raw('count(id) as cuenta'), DB::raw('concat(YEAR(fecha_reg),"-",MONTH(fecha_reg)) as fecha'))
@@ -545,7 +548,8 @@ public function guardarinci(Request $request, string $unidad){
         $responsables = Responsable::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id);
         $bitacoras = BitacoraUso::where('unidad', $unidad)
-        ->latest('id')->paginate();
+        ->orderBy('id', 'DESC')
+        ->get();
          $tipos = Tipov::where('deshabilitado',0)
          ->latest('id')->paginate();
         $usuarios = Usuarios::All();

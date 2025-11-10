@@ -175,12 +175,29 @@ if (auth()->check()) {
 <p><i class="fa-solid fa-bolt"></i>&nbsp;Incidentes</p>
 <hr>
 <table class="table">
+  <tr>
+    <th>Unidad</th>
+    <th>No. Económico</th>
+    <th>Dependencia</th>
+    <th>Descripción</th>
+  </tr>
  @foreach ($incidentes as $incidente)
 
 <tr>
   <td>
     <a href="{{ route('unidad.incidente', $incidente->id) }}#tablaincidentes" >{{ $incidente->modelo }} {{ $incidente->marca }}</a>
   </td>
+   <td>
+    <a  >{{ $incidente->no_economico }} </a>
+  </td>
+   <td>
+    @foreach ($dependencias as $dependencia)
+      @if($dependencia->id==$incidente->dependencia)
+        <a  >{{ $dependencia->dependencia }} </a>
+      @endif
+    @endforeach
+  </td>
+ 
   <td>
 {{ $incidente->descripcion_c }}
   </td>
@@ -204,18 +221,38 @@ if (auth()->check()) {
 <p><i class="fa-solid fa-truck"></i>&nbsp;Renovaciones de Seguros</p>
 <hr>
 <table class="table">
-  
+    <tr>
+        <th>Unidad</th>
+        <th>Dep.</th>
+        <th>No. Eco.</th>
+        <th>Aseguradora</th>
+      
+        
+        
+        <th>Vigencia</th>
+        <th>Estatus</th>
+    </tr>
       @foreach ($seguros as $seguro)
       <tr>
         <td>
-          <a href="{{ route('unidad.edit', $seguro->id) }}" >{{ $seguro->modelo }} {{ $seguro->marca }}</a>
+          <a href="{{ route('unidad.edit', $seguro->id) }}" >{{ $seguro->modelo }}<br>{{ $seguro->marca }}<br>{{ $seguro->placas }}</a>
+        </td>
+        <td>
+    @foreach ($dependencias as $dependencia)
+      @if($dependencia->id==$seguro->dependencia)
+        <a  >{{ $dependencia->dependencia }} </a>
+      @endif
+    @endforeach
+  </td>
+  <td>
+          {{ $seguro->no_economico }}
         </td>
         <td>
       {{ $seguro->aseguradora }}
         </td>
-        <td>
-      {{ $seguro->placas }}
-        </td>
+      
+        
+         
         <td>
       {{ substr($seguro->vigencia,8,2).'/'.substr($seguro->vigencia,5,2).'/'.substr($seguro->vigencia,0,4) }}
         </td>

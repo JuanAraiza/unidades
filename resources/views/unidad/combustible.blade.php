@@ -279,9 +279,9 @@
                     <td>{{ $vale->km }}</td>
                     <td> 
                         @foreach($areas as $area)
-                        {{ $vale->area == $area->id ? $area->area : '' }}
-    @endforeach
-                         </td>
+                            {{ $vale->area == $area->id ? $area->area : '' }}
+                        @endforeach
+                    </td>
           
 
 
@@ -304,6 +304,83 @@
 </x-adminlte-card>
 
 
+
+<x-adminlte-card theme="primary" theme-mode="outline">
+
+  
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@php
+    $km=0;
+    $km2=0;
+    $litros=0;
+@endphp
+<script>
+  const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [ @foreach ($vales as $vale)
+    @if($km2==0)
+    @php    
+    $km2=1;
+    @endphp
+    @else
+        '{{ $vale->created_at->format('d/m/Y') }}',
+    @endif
+    
+  @endforeach],
+      datasets: [{
+        label: '# Rendimiento Km/Litro',
+        data: [
+            @foreach ($vales as $vale)
+
+             @if($km==0)
+
+    @php
+            $km=$vale->km;
+            $litros=$vale->litros;
+        @endphp
+    @else
+        @php
+            $km3=$vale->km - $km;
+            $km=$vale->km;
+            if($litros==0){
+                $litros=10000;
+            }
+            $rendimiento= $km3 / $litros;
+            $litros=$vale->litros;
+
+        @endphp
+
+    {{ $rendimiento }},
+        
+        
+    @endif
+    
+  @endforeach
+ ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+
+
+</x-adminlte-card>
+
+
 @stop
 
 @section('css')
@@ -319,6 +396,9 @@
 
 $("#tablacombustible").dataTable().fnDestroy();
 $('#tablacombustible').DataTable({
+    order: [
+            [0, 'desc'],
+        ],
     "language": {
         "sProcessing":    "Procesando...",
         "sLengthMenu":    "Mostrar _MENU_ registros",

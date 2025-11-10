@@ -19,12 +19,6 @@ RUN apt-get update && \
     && docker-php-ext-enable \
     pdo_mysql
     
-RUN apt-get install -y --no-install-recommends \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libpng-dev \
-    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd
 
 RUN apt install -y libmagickwand-dev && \
     git clone https://github.com/Imagick/imagick.git --depth 1 /tmp/imagick && \
@@ -40,6 +34,9 @@ RUN apt install -y libmagickwand-dev && \
 
 RUN docker-php-ext-configure ftp --with-openssl-dir=/usr \
 	&& docker-php-ext-install ftp
+
+RUN docker-php-ext-configure gd --with-freetype=/usr --with-jpeg=/usr
+RUN docker-php-ext-install gd
 
 # Copy Composer binary from another image layer to this image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
