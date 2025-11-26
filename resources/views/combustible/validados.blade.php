@@ -3,7 +3,7 @@
 @section('title', 'Unidades')
 
 @section('content_header')
-    <h1>Solicitados</h1>
+    <h1>Aceptados</h1>
 @stop
 
 @section('content')
@@ -11,33 +11,29 @@
 <x-adminlte-card theme="primary" theme-mode="outline">
 
 <div class="row col-md-12 ">
-    <div class="col-md-3">    
+    <div class="col-md-4">    
         <a href="{{ route('combustible.index') }}" class="btn btn-primary btn-block">Solicitados</a>
     </div>
-     <div class="col-md-3">    
-        <a href="{{ route('combustible.validados') }}" class="btn btn-default btn-block">Validados</a>
+     <div class="col-md-4">    
+        <a href="{{ route('combustible.validados') }}" class="btn btn-info btn-block">Aceptados</a>
     </div>
-     <div class="col-md-3">    
-        <a href="{{ route('combustible.paracargar') }}" class="btn btn-info btn-block">Para Cargar</a>
+     <div class="col-md-4">    
+        <a href="{{ route('combustible.cancelados') }}" class="btn btn-danger btn-block">Cancelados</a>
     </div>
-     <div class="col-md-3">    
-        <a href="{{ route('combustible.cargados') }}" class="btn btn-success btn-block">Gasolina Cargada</a>
-    </div>
+     
 </div>
 <div class="row col-md-12 ">&nbsp; </div>
 <div class="row col-md-12 ">
-    <div class="col-md-3">    
-        <a href="{{ route('combustible.pagogas') }}" class="btn bg-purple btn-block">Pago Gasolina</a>
+  <div class="col-md-4">    
+        <a href="{{ route('combustible.comprometidos') }}" class="btn btn-success btn-block">Comprometidos</a>
     </div>
-     <div class="col-md-3">    
-        <a href="{{ route('combustible.cancelados') }}" class="btn btn-warning btn-block">Cancelados</a>
+    <div class="col-md-4">    
+        <a href="{{ route('combustible.formalizado') }}" class="btn bg-purple btn-block">Formalizado</a>
     </div>
-     <div class="col-md-3">    
-        <a href="{{ route('combustible.oficios') }}" class="btn btn-danger btn-block">Oficios</a>
+     <div class="col-md-4">    
+        <a href="{{ route('combustible.completados') }}" class="btn btn-warning btn-block">Tramite Completado para Pago</a>
     </div>
-     <div class="col-md-3">    
-        <a href="{{ route('combustible.todos') }}" class="btn bg-navy btn-block">Todos</a>
-    </div>
+     
 </div>
 
 </x-adminlte-card>
@@ -59,6 +55,7 @@
                   <th>Justificación</th>
                   <th>Destino</th>
                   <th>Tipo Combustible</th>
+                  <th>Proveedor</th>
                   <th>Kilometraje</th>
                   <th>Área</th>
                   <th></th> 
@@ -89,6 +86,11 @@
                     <td>{{ $vale->justificacion }}</td>
                     <td>{{ $vale->destino }}</td>
                     <td>{{ $vale->tipo_com == 1 ? 'Gas 1' : ($vale->tipo_com == 2 ? 'Gas 2' : ($vale->tipo_com == 3 ? 'Diesel' : 'Gas LP')) }}</td>
+                    <td> 
+                        @foreach($proveedores as $proveedor)
+                        {{ $vale->proveedor == $proveedor->id ? $proveedor->gasolinera : '' }}
+    @endforeach
+                         </td>
                     <td>{{ $vale->km }}</td>
                     <td> 
                         @foreach($areas as $area)
@@ -309,7 +311,13 @@
     <script>
 //$("#tablaRegistros").dataTable().fnDestroy();
 
-$('#tablaincidentes').DataTable({
+var table = $('#tablaincidentes').DataTable({
+    "scrollX": true,
+    "scrollY": "50vh",
+        //Esto sirve que se auto ajuste la tabla al aplicar un filtro
+    "scrollCollapse": true,
+    order: [[ 2, 'desc' ]],
+    columnDefs: [{ type: 'date', targets: 2 }],
     "language": {
         "sProcessing":    "Procesando...",
         "sLengthMenu":    "Mostrar _MENU_ registros",
@@ -335,6 +343,8 @@ $('#tablaincidentes').DataTable({
         }
     }
 });
+
+table.columns.adjust();
       </script>
 
 

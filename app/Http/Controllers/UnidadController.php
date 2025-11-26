@@ -722,7 +722,7 @@ return redirect()->route('unidad.show', $unidad);
     }
 
 
-      public function editIncidente(Request $request, string $unidad)
+public function editIncidente(Request $request, string $unidad)
     {
         if (auth()->check()) {
         $unidad = $request['unidad'];
@@ -756,7 +756,7 @@ return redirect()->route('unidad.show', $unidad);
         }
     }
 
-     public function distroyIncidente(Request $request)
+public function distroyIncidente(Request $request)
     {
         if (auth()->check()) {
         $unidad = $request['unidad'];

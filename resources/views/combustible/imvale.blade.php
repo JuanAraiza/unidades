@@ -14,8 +14,8 @@
 <!--<div class="page-break"></div>-->
 @php
 
-
-$ruta_publica = url('/vervale').'/'.$vales->id;
+//$ruta_publica = url('/vervale').'/'.$vales->id;
+$ruta_publica = url('/cargarvale').'/'.$vales->id;
 $my_qr_content = $ruta_publica;
     $qr = null;
     if (extension_loaded('imagick')) {

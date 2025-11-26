@@ -326,8 +326,6 @@ if($user->tipo==1){
       <div class="modal-body col-md-12" style="background-color: #f7f7f7ff;">
         
     
-
-      
       <div class="col-md-12"> 
         <div class="form-group">
             <label>Nombre del Documento</label>

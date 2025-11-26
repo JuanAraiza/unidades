@@ -29,7 +29,10 @@ class combustible extends Model
         'mensaje_c',
         'deshabilitado',
         'fecha_c',
-        'fecha_p'
+        'fecha_p',
+        'vigencia',
+        'precio_unitario',
+        'folio_sat',
         
     ];
 

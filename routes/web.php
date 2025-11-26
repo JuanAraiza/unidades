@@ -94,12 +94,24 @@ Route::get('/valesvalidados', [CombustibleController::class, 'validados'])->name
 Route::put('/combustible/{vale}/cancelarValidados', [CombustibleController::class, 'cancelarValidados'])->name('combustible.cancelarValidados')->middleware('admin');
 Route::get('/combustible/{unidad}/imvale', [CombustibleController::class, 'imvale'])->name('combustible.imvale')->middleware('admin');
 
-Route::get('/vervale/{vale}', [CombustibleController::class, 'show'])->name('combustible.show')->middleware('admin');
+Route::get('/vervale/{vale}', [CombustibleController::class, 'show'])->name('combustible.show');
+Route::get('/cargarvale/{vale}', [CombustibleController::class, 'cargarvale'])->name('combustible.cargarvale');
+Route::post('/cargarvaledos/{vale}', [CombustibleController::class, 'cargarvaledos'])->name('combustible.cargarvaledos');
+Route::post('/crearfactura', [CombustibleController::class, 'crearfactura'])->name('combustible.crearFactura');
+
 
 Route::post('/combustible/paracargar', [CombustibleController::class, 'paracargar'])->name('combustible.paracargar')->middleware('admin');
 Route::post('/combustible/cargados', [CombustibleController::class, 'cargados'])->name('combustible.cargados')->middleware('admin');
 Route::post('/combustible/pagogas', [CombustibleController::class, 'pagogas'])->name('combustible.pagogas')->middleware('admin');
 Route::post('/combustible/nuevoofi', [CombustibleController::class, 'nuevoofi'])->name('combustible.nuevoofi')->middleware('admin');
 Route::post('/combustible/oficios', [CombustibleController::class, 'oficios'])->name('combustible.oficios')->middleware('admin');
-Route::post('/combustible/cancelados', [CombustibleController::class, 'cancelados'])->name('combustible.cancelados')->middleware('admin');
+Route::get('/cancelados', [CombustibleController::class, 'cancelados'])->name('combustible.cancelados')->middleware('admin');
 Route::post('/combustible/todos', [CombustibleController::class, 'todos'])->name('combustible.todos')->middleware('admin');
+Route::get('/comprometidos', [CombustibleController::class, 'comprometidos'])->name('combustible.comprometidos')->middleware('admin');
+Route::post('/crearFactura', [CombustibleController::class, 'crearFactura'])->name('combustible.crearFactura')->middleware('admin');
+Route::get('/formalizado', [CombustibleController::class, 'formalizado'])->name('combustible.formalizado')->middleware('admin');
+Route::post('/combustible/completados', [CombustibleController::class, 'completados'])->name('combustible.completados')->middleware('admin');
+
+Route::post('combustible/{tramite}/addFacturaCom', [CombustibleController::class, 'addFacturaCom'])->name('combustible.addFacturaCom')->middleware('admin');
+Route::put('combustible/{tramite}/changeFactura', [CombustibleController::class, 'changeFactura'])->name('combustible.changeFactura')->middleware('admin');
+Route::get('/exportFoliosExcel/{tramite}', [CombustibleController::class, 'exportFoliosExcel'])->name('combustible.exportFoliosExcel')->middleware('admin');

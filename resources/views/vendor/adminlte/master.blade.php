@@ -92,6 +92,18 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="{{ asset('vendor/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+<style>
+table.dataTable {
+    font-size: 14px !important; /* Adjust as needed */
+}
+
+table.dataTable > tbody > tr > td {
+  padding: 3px 5px !important; 
+}
+
+
+    </style>
+
 </head>
 
 <body class="@yield('classes_body')  sidebar-collapse" @yield('body_data')>

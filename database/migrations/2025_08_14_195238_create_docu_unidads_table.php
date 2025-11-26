@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('vencimiento')->nullable();
             $table->string('usuario')->nullable();
             $table->integer('tipo')->nullable();
+            $table->date('fecha')->nullable();
             $table->timestamps();
         });
     }

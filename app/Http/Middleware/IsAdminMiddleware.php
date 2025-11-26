@@ -16,9 +16,13 @@ class IsAdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+         if (Auth::user()) {
         if(Auth::user()->tipo==1)
         {
             return $next($request);
+        }
+        }else{
+             return redirect()->route('login');
         }
 
         abort(401);

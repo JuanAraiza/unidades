@@ -218,29 +218,27 @@ if (auth()->check()) {
 <x-adminlte-card   title="Próximos Eventos"  theme="info" style="padding-right: 0px; padding-left: 0px;" >
 <div class="col-md-12 row">
 
-<p><i class="fa-solid fa-truck"></i>&nbsp;Renovaciones de Seguros</p>
+<p><i class="fa-solid fa-truck"></i>&nbsp;Renovaciones de Documentos</p>
 <hr>
 <table class="table">
     <tr>
         <th>Unidad</th>
         <th>Dep.</th>
         <th>No. Eco.</th>
-        <th>Aseguradora</th>
-      
-        
-        
+        <th>Cocumento</th>
         <th>Vigencia</th>
         <th>Estatus</th>
     </tr>
       @foreach ($seguros as $seguro)
+      @if($seguro->dias <=30)
       <tr>
         <td>
-          <a href="{{ route('unidad.edit', $seguro->id) }}" >{{ $seguro->modelo }}<br>{{ $seguro->marca }}<br>{{ $seguro->placas }}</a>
+          <a href="{{ route('unidad.documentos', $seguro->unidad) }}" >{{ $seguro->modelo }}<br>{{ $seguro->marca }}<br>{{ $seguro->placas }}</a>
         </td>
         <td>
-    @foreach ($dependencias as $dependencia)
-      @if($dependencia->id==$seguro->dependencia)
-        <a  >{{ $dependencia->dependencia }} </a>
+    @foreach ($areas as $area)
+      @if($area->id==$seguro->area)
+        <a  >{{ $area->area }} </a>
       @endif
     @endforeach
   </td>
@@ -248,7 +246,29 @@ if (auth()->check()) {
           {{ $seguro->no_economico }}
         </td>
         <td>
-      {{ $seguro->aseguradora }}
+          @switch($seguro->tipo)
+            @case(1)
+                Refrendos
+                @break
+            @case(2)
+                Revista Vehicular
+                @break
+            @case(3)
+                Poliza de Seguro
+                @break
+            @case(4)
+                Placas
+                @break
+            @case(5)
+                Alta Vehicular
+                @break
+            @case(6)
+                Facturas
+                @break
+            @default
+                Otro
+                @endswitch
+      
         </td>
       
         
@@ -257,13 +277,14 @@ if (auth()->check()) {
       {{ substr($seguro->vigencia,8,2).'/'.substr($seguro->vigencia,5,2).'/'.substr($seguro->vigencia,0,4) }}
         </td>
         <td>
-          @if($seguro->vigencia<=date('Y-m-d'))
+          @if($seguro->dias>=1)
             <span class="bg-yellow" style="border-radius:5px; padding:5px 10px 5px 10px;">por vencer</span>
           @else
             <span class="bg-red" style="border-radius:5px; padding:5px 10px 5px 10px;">vencido</span>
           @endif
         </td>
       </tr>
+      @endif
       @endforeach
 </table>
 </div>

@@ -275,13 +275,6 @@
         @enderror
     </div>
 
-  <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Factura</label>
-            <input type="file" name="facturas"  class="form-control">
-        </div>
-     
-    </div>
 
 
      <div class="col-md-3"> 
@@ -307,21 +300,6 @@
                 {{$message}}
             </span>
         @enderror
-    </div>
-<div class="col-md-3"> 
-        <div class="form-group">
-            <label>Poliza Seguro</label>
-            <input type="file" name="polizas"  class="form-control">
-        </div>
-     
-    </div>
-
-    <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Vigencia</label>
-            <input type="date" name="vigencia"  class="form-control">
-        </div>
-     
     </div>
 
 

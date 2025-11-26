@@ -3,7 +3,7 @@
 @section('title', 'Unidades')
 
 @section('content_header')
-    <h1>Solicitados</h1>
+    <h1>Cancelados</h1>
 @stop
 
 @section('content')
@@ -47,7 +47,6 @@
 <table id="tablaincidentes" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th></th>
                 <th>Unidad</th>
                   <th>Folio</th>
                   <th>Fecha</th>
@@ -58,20 +57,14 @@
                   <th>Tipo Combustible</th>
                   <th>Kilometraje</th>
                   <th>Área</th>
-                  <th></th> 
+                  <th>Justificación</th> 
                   <th></th>
-                  <th></th>  
+          
                 </tr>
                 </thead>
                 <tbody>
     @foreach ($vales as $vale)
                 <tr>
-                  <td>
-                   @foreach($unidades as $unidad)
-                            <img style=" height:80px; "  src="{{ $vale->unidad == $unidad->id ? Storage::url($unidad->imagen) : '' }}" alt="">
-                        @endforeach  
-                  
-                 </td>
                     <td>
                         @foreach($unidades as $unidad)
                             {{ $vale->unidad == $unidad->id ? $unidad->marca  : '' }}
@@ -80,7 +73,6 @@
                             {{ $vale->unidad == $unidad->id ? $unidad->no_economico : '' }}
                         @endforeach
                     </td>
-                    
                     <td>{{ $vale->folio }}</td>
                     <td>{{ $vale->created_at->format('d/m/Y') }}</td>
                     <td>{{ $vale->litros }}</td>
@@ -98,7 +90,7 @@
                         {{ $vale->area == $area->id ? $area->area : '' }}
     @endforeach
                          </td>
-          
+           <td>{{ $vale->mensaje_c }}</td>
                          <td>
                          
 
@@ -189,7 +181,12 @@
                 @endforeach 
             </div>
 </div>
-        
+         <div class="col-md-4">
+            <div class="form-group">
+            <strong>Justificación:</strong> <br>
+            {{ $vale->mensaje_c }}
+</div>
+        </div>
 
       </div>
       <div class="modal-footer">
@@ -205,126 +202,7 @@
                     </td>
 
 
-                    <td>
-                         
-
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalValiteVale{{ $vale->id }}">
- <i class="fa-solid fa-circle-check"></i>
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="modalValiteVale{{ $vale->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Folio Vale: {{ $vale->folio }}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form action="{{ route('combustible.validar', $vale->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-      <div class="modal-body row">
-        
-
-        
-        <div class="col-md-6"> 
-            <div class="form-group">
-                <label>Vigencia</label>
-                {{-- Minimal --}}
-                <x-adminlte-select2 name="vigencia"  data-placeholder="Selecciona vigencia....">
-                            <option value="2">2 horas</option>
-                            <option value="4">4 horas</option>
-                            <option value="24">24 horas</option>
-                            <option value="48">48 horas</option>
-                </x-adminlte-select2>
-            </div>
-        </div>
-
-        <div class="col-md-6"> 
-            <div class="form-group">
-                <label>Proveedor</label>
-                {{-- Minimal --}}
-                <x-adminlte-select2 name="proveedor"  data-placeholder="Selecciona proveedor....">
-                    @foreach($proveedores as $proveedor)
-                            <option value="{{ $proveedor->id }}">{{ $proveedor->gasolinera }}</option>
-                    @endforeach
-                </x-adminlte-select2>
-            </div>
-        </div>
-
-      </div>
-      <div class="modal-footer">
-        <input type="submit" class="btn btn-success" value="Validar">
-      </div>
-
-      </form>
-    </div>
-  </div>
-</div>
-
-
-                    </td>
-
-
-                     <td>
-                         
-
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalCancelVale{{ $vale->id }}">
- <i class="fa-solid fa-circle-xmark"></i>
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="modalCancelVale{{ $vale->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Cancelar Folio Vale: {{ $vale->folio }}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form action="{{ route('combustible.cancelar', $vale->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-      <div class="modal-body row">
-        
-
-        
-        <div class="col-md-12"> 
-            <div class="form-group">
-                <label>Motivo Cancelación</label>
-                <x-adminlte-textarea name="mensajec" placeholder="Motivo..."/>
-            </div>
-        </div>
-
-        
-
-      </div>
-      <div class="modal-footer">
-        <input type="submit" class="btn btn-danger" value="Cancelar Vale">
-      </div>
-
-      </form>
-    </div>
-  </div>
-</div>
-
-
-                    </td>
-
-<!--
-                      <td>
-
-
-                        <a type="button" class="btn btn-warning" href="{{ route('unidad.imvale', $vale->id) }}" target="_blank">
-<i class="fa-solid fa-print"></i>
-</a>
-</td>
--->
+                  
 
                 </tr>
                 @endforeach
@@ -378,8 +256,6 @@ var table = $('#tablaincidentes').DataTable({
     "scrollY": "50vh",
         //Esto sirve que se auto ajuste la tabla al aplicar un filtro
     "scrollCollapse": true,
-    order: [[ 3, 'desc' ]],
-    columnDefs: [{ type: 'date', targets: 3 }],
     "language": {
         "sProcessing":    "Procesando...",
         "sLengthMenu":    "Mostrar _MENU_ registros",
@@ -407,7 +283,6 @@ var table = $('#tablaincidentes').DataTable({
 });
 
 table.columns.adjust();
-
       </script>
 
 

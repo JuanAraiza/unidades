@@ -236,15 +236,6 @@
 
 
 
-  <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Factura</label>
-            @if($unidades->factura!='')
-            <p><a href="{{ Storage::url($unidades->factura) }}" target="_blank" class="btn btn-warning">Ver Factura</a></p>
-            @endif
-    </div>
-     
-    </div>
 
 
      <div class="col-md-3"> 
@@ -259,22 +250,11 @@
             <p>{{ $unidades->aseguradora }}</p>
         </div>
     </div>
-  <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Poliza Seguros</label>
-            @if($unidades->poliza!='')
-            <p><a href="{{ Storage::url($unidades->poliza) }}" target="_blank" class="btn btn-warning">Ver Poliza</a></p>
-            @endif
-    </div>
+
      
     </div>
 
- <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Vigencia</label>
-            <p>{{ substr($unidades->vigencia,8,2).'-'.substr($unidades->vigencia,5,2).'-'.substr($unidades->vigencia,0,4) }}</p>
-        </div>
-    </div>
+
 
 
     <div class="col-md-12"> 
