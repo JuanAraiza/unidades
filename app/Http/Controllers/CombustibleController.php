@@ -162,9 +162,32 @@ class CombustibleController extends Controller
         $dependencias = Dependencia::where('deshabilitado',0)
         ->get();
         $formalizados = factura_ga::orderBy('id', 'DESC')
+        ->where('oficio',0)
         ->get();
         
         return view('combustible.formalizado', compact('areas','proveedores','dependencias','formalizados'));
+     }else{
+             return redirect()->route('login');
+        }
+    
+    }
+
+
+     public function completados()
+    {
+         if (auth()->check()) {
+        //
+        $areas = Area::where('deshabilitado',0)
+        ->latest('id')->get();
+        $proveedores = Proveedor::where('deshabilitado',0)
+        ->latest('id')->get();
+        $dependencias = Dependencia::where('deshabilitado',0)
+        ->get();
+        $formalizados = factura_ga::orderBy('id', 'DESC')
+        ->where('oficio',0)
+        ->get();
+        
+        return view('combustible.completados', compact('areas','proveedores','dependencias','formalizados'));
      }else{
              return redirect()->route('login');
         }
@@ -236,6 +259,78 @@ class CombustibleController extends Controller
         return view('combustible.cargarvale', compact('unidades','areas','responsables','tipos','operadores','vales','operadores_u','proveedores'));
     }
 
+
+  public function actualizarFolios(string $id,Request $request)
+    {
+        if (auth()->check()) {
+
+                $factura = factura_ga::find($id);
+                $vls = explode(",", $factura->folios);
+                $vales = DB::table('combustibles')
+                    ->whereIn('id', $vls)
+                    ->get();
+
+                foreach($vales as $vale){
+
+                    // Actualizar Costos
+
+                    $valec = combustible::find($vale->id);
+                    $precigas = PregcioGas::where('proveedor', $valec->proveedor)
+                    ->where('fecha',$valec->fecha_c)
+                    ->orderBy('id', 'DESC')
+                    ->first();
+
+                    switch ($valec->tipo_com) {
+                        case 1:
+                            if(isset($precigas->gas1)){
+                            $valec->precio_unitario = $precigas->gas1;
+                            }else{
+                                $valec->precio_unitario = 0;
+                            } 
+                            break;
+                        case 2:
+                            if(isset($precigas->gas2)){
+                            $valec->precio_unitario = $precigas->gas2;
+                            }else{
+                                $valec->precio_unitario = 0;
+                            } 
+                            break;
+                        case 3:
+                            if(isset($precigas->diesel)){
+                            $valec->precio_unitario = $precigas->diesel;
+                            }else{
+                                $valec->precio_unitario = 0;
+                            } 
+                            break;
+                        case 4:
+                            if(isset($precigas->lp)){
+                            $valec->precio_unitario = $precigas->lp;
+                            }else{
+                                $valec->precio_unitario = 0;
+                            } 
+                            break;
+                        default:
+                            $valec->precio_unitario = 0;
+                    }
+
+                    $costototal = $valec->litros * $valec->precio_unitario;
+                    $valec->costo = $costototal;
+                    $valec->save();
+
+                    // Fin Actualizar Costos
+
+                       
+                        /*$arch = archivos_gas::find($archivo->id);
+                        $arch->delete();*/
+                }
+
+                //return($vales);
+        return redirect()->route('combustible.formalizado');
+        }else{
+            return redirect()->route('login');
+        }
+
+    }
 
 
      public function cargarvaledos(string $id,Request $request)
@@ -497,7 +592,37 @@ $msn='Litros deben ser menos o igual a: '.$request['olitros'].' Litros';
 
     public function exportFoliosExcel(string $id)
         {
+             if (auth()->check()) {
+
            return Excel::download(new ValesExport($id), 'vales'.date('YmdHis').'.xlsx');
+           }else{
+             return redirect()->route('login');
+            }
+        }
+
+
+         public function descargarWord(string $id)
+        {
+           if (auth()->check()) {
+           // return(public_path());
+         $archwod = public_path().'/formato_combustible.docx';
+           $template = new \PhpOffice\PhpWord\TemplateProcessor($archwod);
+
+
+           $template->setValue('no_fiscal','123');
+
+           $tempFile = tempnam(sys_get_temp_dir(), 'PHPWord');
+           $template->saveAs($tempFile);
+
+           $headers =[
+                "Content-Type: application/octet-stream",
+           ];
+           //return($tempFile);
+           return response()->download($tempFile, 'Formato-Gas.docx')->deleteFileAfterSend(true);
+
+           }else{
+             return redirect()->route('login');
+             }
         }
     /**
      * Show the form for editing the specified resource.
@@ -513,6 +638,44 @@ $msn='Litros deben ser menos o igual a: '.$request['olitros'].' Litros';
     public function update(Request $request, string $id)
     {
         //
+    }
+
+
+       public function destroyFactura(Request $request, string $id)
+    {
+        //
+        if (auth()->check()) {
+        //
+        $factura = factura_ga::find($id);
+
+        $vls = explode(",", $factura->folios);
+            DB::table('combustibles')
+            ->whereIn('id', $vls)
+            ->update(['estatus'=> 3]);
+
+        $archivos = DB::table('archivos_gas')
+                    ->where('tramite', $id)
+                    ->get();
+
+       foreach($archivos as $archivo){
+            storage::delete($archivo->archivo); 
+            $arch = archivos_gas::find($archivo->id);
+            $arch->delete();
+       }
+        //$archivos->each->delete();
+        $factura->delete();
+
+
+        session()->flash('swal', [
+            'icon' => 'Eliminada',
+            'title' => 'Factura Eliminada!',
+            'text' => 'Eliminada Correctamente'
+        ]);
+
+        return redirect()->route('combustible.formalizado');
+        }else{
+             return redirect()->route('login');
+        }
     }
 
 

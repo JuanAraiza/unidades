@@ -67,7 +67,6 @@
             <th>Excel</th>
             <th>Expediente Completo</th>
             <th></th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -124,8 +123,12 @@
                 
                 {{ $formalizado->factura }}</td>
                 <td>{{ $formalizado->tramite }}</td>
-                <td>{{ substr($formalizado->fecha,8,2).'-'.substr($formalizado->fecha,5,2).'-'.substr($formalizado->fecha,0,4) }}</td>
-                <td>{{ $formalizado->gasolinera }}</td>
+                <td>{{ substr($formalizado->fecha,0,10) }}</td>
+                <td>
+                     @foreach($proveedores as $proveedor)
+                        {{ $formalizado->gasolinera == $proveedor->id ? $proveedor->gasolinera : '' }}
+                    @endforeach
+                </td>
                 
                 <td> 
                     @foreach($dependencias as $dependencia)
@@ -133,10 +136,10 @@
                     @endforeach
                 </td>
                 <td>
-
+// Folios
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalVerFactu{{ $formalizado->id }}">
- VER FOLIOS
+FOLIOS
 </button>
 
 <!-- Modal -->
@@ -151,7 +154,11 @@
       </div>
      
       <div class="modal-body row">
+
+
         <h4>{{ $formalizado->folios2 }}</h4>
+      
+      
       </div>
       <div class="modal-footer">
        
@@ -163,9 +170,10 @@
 </div>
 
 
-
+// Fin Folios
                 </td>
                 <td>
+                  <a href="{{ route('combustible.actualizarFolios', $formalizado->id) }}"  class="btn bg-blue "><i class="fa-solid fa-arrows-rotate"></i></a><br>
                     @php
                         $vls = explode(",", $formalizado->folios);
                         $costots = \DB::table('combustibles')->selectRaw('SUM(costo) as costo')->whereIn('id', $vls)->get();
@@ -318,7 +326,7 @@
 </td>
 <!-- tabla excel -->
 <td>
-<a href="{{ route('combustible.exportFoliosExcel', $formalizado->id) }}" target="_blank" class="btn btn-info btn-lg btn-block">Excel</a>
+<a href="{{ route('combustible.exportFoliosExcel', $formalizado->id) }}" target="_blank" class="btn btn-info ">Excel</a>
 </td>
 <!--   Archivo Expediente Completo -->      
 <td style="text-align:center;">
@@ -355,7 +363,7 @@
     <div class="col-md-12 row">
         <div class="col-md-12">
                    @if(isset($archivosfacs->archivo))
-                       <a href="{{ Storage::url($archivosfacs->archivo) }}" target="_blank" class="btn btn-info btn-lg btn-block">Ver Factura</a>
+                       <a href="{{ Storage::url($archivosfacs->archivo) }}" target="_blank" class="btn btn-info  ">Ver Factura</a>
                     @endif
           
         </div>
@@ -389,7 +397,19 @@
 </div>
 
 </td>
+<!--
+<td>
+  <a href="{{ route('combustible.descargarWord', $formalizado->id) }}" target="_blank" class="btn bg-blue"><i class="fa-solid fa-file-word"></i></a>
+</td> -->
 
+<!-- tabla eliminar -->
+  <td><form class="delete-form" action="{{ route('combustible.destroyFactura', $formalizado->id) }}" method="post">
+                @csrf
+                @method('DELETE')
+               
+              <button class="btn btn-danger">  <span class="fas fa-trash"></span></button>
+</form>                   
+</td>
             </tr>
                 @endforeach
           </tbody>
@@ -437,11 +457,9 @@
     <script>
 
 var table = $('#tablaformailzados').DataTable({
-    "scrollX": true,
-        "scrollY": "50vh",
-        //Esto sirve que se auto ajuste la tabla al aplicar un filtro
+    
          "scrollCollapse": true,
-     
+     order: [[ 2, 'desc' ]],
         language: {
             "decimal": "",
             "emptyTable": "No hay información",
@@ -463,69 +481,7 @@ var table = $('#tablaformailzados').DataTable({
             }
         },
         
-        initComplete: function() {
-            this.api().columns([6,7,12]).every( function () {
-            //this.api().columns().every(function() {
-                var column = this;
-
-                var select = $('<select><option value=""></option></select>')
-                    .appendTo($(column.header()))
-                    .on('change', function() {
-                        var val = $.fn.dataTable.util.escapeRegex(
-                            $(this).val()
-                        );
-                         
-                            column
-                            .search(val ? '^' + val + '$' : '', true, false)
-                            .draw();
-                            /*
-                            var valorcol=$(this).val();
-                            console.log('Valor seleccionado:', valorcol);
-                            var indexcol=$(column.index());
-                            console.log('Columna:', indexcol[0]);
-                            let sindexcol = indexcol[0];
-
-                        switch(sindexcol){
-                            case 6:
-                                document.getElementById('ftipogas').value= valorcol ;
-                            break;
-                            case 7:
-                                document.getElementById('fproveedor').value= valorcol ;
-                            break;
-                            case 12:
-                                document.getElementById('fdependencia').value= valorcol ;
-                            break;
-
-                        }
-*/
-                        
-                    });
-
-
-
-                    //Este codigo sirve para que no se active el ordenamiento junto con el filtro
-                $(select).click(function(e) {
-                    e.stopPropagation();
-                });
-                //===================
-
-                column.data().unique().sort().each(function(d, j) {
-                    // select.append('<option value="' + d + '">' + d + '</option>')
-                        
-                        select.append('<option value="' + d + '">' + d + '</option>')
-                    
-                });
-
-                
-
-            });
-
-
-            
-        },
-        "aoColumnDefs": [
-         { "bSearchable": false, "aTargets": [ 1 ] }
-       ] 
+     
       
     });
     //********Esta bendita linea hace la magia, adjusta el header de la tabla con el body 

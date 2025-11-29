@@ -51,7 +51,12 @@ class PreciogasController extends Controller
             'lp' => 'required',
             
         ]);
-        $request['fecha'] = date('Y-m-d');
+        if(isset($request['fecha']) and $request['fecha']!=''){
+
+        }else{
+            $request['fecha'] = date('Y-m-d');
+        }
+       
         $request['hora'] = date('H:i:s');
         PregcioGas::create($request->all());
         session()->flash('swal', [

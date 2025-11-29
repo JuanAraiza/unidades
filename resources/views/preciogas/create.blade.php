@@ -52,7 +52,7 @@
 
             
         </div>
-        @error('materno')
+        @error('diesel')
             <span style="color:crimson;">
                 {{$message}}
             </span>
@@ -73,7 +73,7 @@
     </div>
 
  
-    <div class="col-md-4">
+    <div class="col-md-2">
 
 <div class="form-group">
             <label>Proveedor</label>
@@ -88,7 +88,18 @@
 
 </div>
 </div>
-          
+        
+<div class="col-md-2"> 
+        <div class="form-group">
+            <label>Fecha</label>
+            <input type="date" name="fecha" class="form-control">
+        </div>
+        @error('fecha')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
 
 
      <div class="col-md-4"> 

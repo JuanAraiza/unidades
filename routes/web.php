@@ -110,8 +110,11 @@ Route::post('/combustible/todos', [CombustibleController::class, 'todos'])->name
 Route::get('/comprometidos', [CombustibleController::class, 'comprometidos'])->name('combustible.comprometidos')->middleware('admin');
 Route::post('/crearFactura', [CombustibleController::class, 'crearFactura'])->name('combustible.crearFactura')->middleware('admin');
 Route::get('/formalizado', [CombustibleController::class, 'formalizado'])->name('combustible.formalizado')->middleware('admin');
-Route::post('/combustible/completados', [CombustibleController::class, 'completados'])->name('combustible.completados')->middleware('admin');
 
 Route::post('combustible/{tramite}/addFacturaCom', [CombustibleController::class, 'addFacturaCom'])->name('combustible.addFacturaCom')->middleware('admin');
 Route::put('combustible/{tramite}/changeFactura', [CombustibleController::class, 'changeFactura'])->name('combustible.changeFactura')->middleware('admin');
 Route::get('/exportFoliosExcel/{tramite}', [CombustibleController::class, 'exportFoliosExcel'])->name('combustible.exportFoliosExcel')->middleware('admin');
+Route::delete('/destroyFactura/{tramite}', [CombustibleController::class, 'destroyFactura'])->name('combustible.destroyFactura')->middleware('admin');
+Route::get('/descargarWord/{tramite}', [CombustibleController::class, 'descargarWord'])->name('combustible.descargarWord')->middleware('admin');
+Route::get('/actualizarFolios/{tramite}', [CombustibleController::class, 'actualizarFolios'])->name('combustible.actualizarFolios')->middleware('admin');
+Route::get('/completados', [CombustibleController::class, 'completados'])->name('combustible.completados')->middleware('admin');

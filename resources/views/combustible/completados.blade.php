@@ -3,7 +3,7 @@
 @section('title', 'Unidades')
 
 @section('content_header')
-    <h1>Comprometidos</h1>
+    <h1>Formalizados</h1>
 @stop
 
 @section('content')
@@ -51,6 +51,8 @@
 
 
 <x-adminlte-card theme="primary" theme-mode="outline">
+
+
 
 <form action="{{ route('combustible.crearFactura') }}" method="POST">
             @csrf
@@ -119,75 +121,101 @@
     </div>
 
 
-<div class="col-md-12 " >
-<hr style="border: 1px solid #333;  width:100%;">
+
+<table id="tablaformailzados"  class="display table">
+    <thead>
+        <tr>
+            <th>Factura</th>
+            <th>No. Tramite</th>
+            <th>Fecha</th>
+            <th>Gasolinera</th>
+            <th>Dependencia</th>
+            <th>Costo</th>
+            <th>Folios</th>
+            
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach ($formalizados as $formalizado)
+            <tr>
+                <td>{{ $formalizado->factura }}</td>
+                <td>{{ $formalizado->tramite }}</td>
+                <td>{{ substr($formalizado->fecha,0,10) }}</td>
+                <td>
+                     @foreach($proveedores as $proveedor)
+                        {{ $formalizado->gasolinera == $proveedor->id ? $proveedor->gasolinera : '' }}
+                    @endforeach
+                </td>
+                
+                <td> 
+                    @foreach($dependencias as $dependencia)
+                        {{ $formalizado->dependencia == $dependencia->id ? $dependencia->dependencia : '' }}
+                    @endforeach
+                </td>
+  <td>
+                    @php
+                        $vls = explode(",", $formalizado->folios);
+                        $costots = \DB::table('combustibles')->selectRaw('SUM(costo) as costo')->whereIn('id', $vls)->get();
+                    @endphp
+
+
+                    @foreach ($costots as $costot)
+                        $ {{ number_format($costot->costo,2) }}
+                    @endforeach
+                </td>
+
+
+                <td>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalVerFactu{{ $formalizado->id }}">
+ VER FOLIOS
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modalVerFactu{{ $formalizado->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Folios Tramite: {{ $formalizado->tramite }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+     
+      <div class="modal-body row">
+        <h4>{{ $formalizado->folios2 }}</h4>
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+
+      
+    </div>
+  </div>
 </div>
 
-</div>
 
 
+                </td>
+              
 
-</form>
-<table id="tablacomprometidos"  class="display">
-                <thead>
-                <tr>
-                    <th></th>
-                <th>Unidad</th>
-                  <th>Folio</th>
-                  <th>Fecha</th>
-                  <th>Litros</th>
-                  <th>Costo</th>
-                  <th>Combustible</th>
-                  <th>Proveedor</th>
-                  
-                  <th>Justificación</th>
-                  <th>Destino</th>
-                  
-                  <th>Kilometraje</th>
-                  <th>Área</th>
-                  <th>Dependencia</th>
-                  <th>Folio SAT</th>
-                </tr>
-                </thead>
-                <tbody>
-    @foreach ($vales as $vale)
-                <tr>
-                    <td>{{ $vale->id }}</td>
-                    <td>
-                        @foreach($unidades as $unidad)
-                            {{ $vale->unidad == $unidad->id ? $unidad->marca  : '' }}
-                            {{ $vale->unidad == $unidad->id ? $unidad->modelo  : '' }}
-                            {{ $vale->unidad == $unidad->id ? $unidad->color  : '' }}
-                            {{ $vale->unidad == $unidad->id ? $unidad->no_economico : '' }}
-                        @endforeach
-                    </td>
-                    <td>{{ $vale->folio }}</td>
-                    <td>{{ $vale->updated_at->format('Y/m/d') }}</td>
-                    <td>{{ $vale->litros }}</td>
-                     <td>$ {{ number_format($vale->costo,2) }}</td>
-                     <td>{{ $vale->tipo_com == 1 ? 'Gas 1' : ($vale->tipo_com == 2 ? 'Gas 2' : ($vale->tipo_com == 3 ? 'Diesel' : 'Gas LP')) }}</td>
-                    <td>
-                        @foreach($proveedores as $proveedor)
-                            {{ $vale->proveedor == $proveedor->id ? $proveedor->gasolinera  : '' }}
-                        @endforeach
-                    </td>
-                    <td>{{ $vale->justificacion }}</td>
-                    <td>{{ $vale->destino }}</td>
-                    
-                    <td>{{ $vale->km }}</td>
-                    <td> 
-                        @foreach($areas as $area)
-                        {{ $vale->area == $area->id ? $area->area : '' }}
-    @endforeach
-                         </td>
-                    <td> 
-                        @foreach($dependencias as $dependencia)
-                        {{ $vale->dependencia == $dependencia->id ? $dependencia->dependencia : '' }}
-    @endforeach
-                         </td>
-                    <td>{{ $vale->folio_sat }}</td>
-                    
-                </tr>
+<!--
+<td>
+  <a href="{{ route('combustible.descargarWord', $formalizado->id) }}" target="_blank" class="btn bg-blue"><i class="fa-solid fa-file-word"></i></a>
+</td> -->
+
+<!-- tabla eliminar -->
+  <td><form class="delete-form" action="{{ route('combustible.destroyFactura', $formalizado->id) }}" method="post">
+                @csrf
+                @method('DELETE')
+               
+              <button class="btn btn-danger">  <span class="fas fa-trash"></span></button>
+</form>                   
+</td>
+            </tr>
                 @endforeach
           </tbody>
 </table>
@@ -232,20 +260,11 @@
     </script>
 
     <script>
-//$("#tablaRegistros").dataTable().fnDestroy();
-  document.getElementById('selectedRows').value = '';
-  document.getElementById('selectedRowsFolios').value = '';
 
-var table = $('#tablacomprometidos').DataTable({
-order: [
-        [0, 'desc'],
-    
-    ],
+var table = $('#tablaformailzados').DataTable({
     "scrollX": true,
-        //"scrollY": "50vh",
-        //Esto sirve que se auto ajuste la tabla al aplicar un filtro
          "scrollCollapse": true,
-     
+     order: [[ 2, 'desc' ]],
         language: {
             "decimal": "",
             "emptyTable": "No hay información",
@@ -267,73 +286,15 @@ order: [
             }
         },
         
-        initComplete: function() {
-            this.api().columns([6,7,12]).every( function () {
-            //this.api().columns().every(function() {
-                var column = this;
-
-                var select = $('<select><option value=""></option></select>')
-                    .appendTo($(column.header()))
-                    .on('change', function() {
-                        var val = $.fn.dataTable.util.escapeRegex(
-                            $(this).val()
-                        );
-                         
-                            column
-                            .search(val ? '^' + val + '$' : '', true, false)
-                            .draw();
-                            var valorcol=$(this).val();
-                            console.log('Valor seleccionado:', valorcol);
-                            var indexcol=$(column.index());
-                            console.log('Columna:', indexcol[0]);
-                            let sindexcol = indexcol[0];
-
-                        switch(sindexcol){
-                            case 6:
-                                document.getElementById('ftipogas').value= valorcol ;
-                            break;
-                            case 7:
-                                document.getElementById('fproveedor').value= valorcol ;
-                            break;
-                            case 12:
-                                document.getElementById('fdependencia').value= valorcol ;
-                            break;
-
-                        }
-
-                        
-                    });
-
-
-
-                    //Este codigo sirve para que no se active el ordenamiento junto con el filtro
-                $(select).click(function(e) {
-                    e.stopPropagation();
-                });
-                //===================
-
-                column.data().unique().sort().each(function(d, j) {
-                    // select.append('<option value="' + d + '">' + d + '</option>')
-                        
-                        select.append('<option value="' + d + '">' + d + '</option>')
-                    
-                });
-
-                
-
-            });
-
-
-            
-        },
-        "aoColumnDefs": [
-         { "bSearchable": false, "aTargets": [ 1 ] }
-       ] 
+     
       
     });
     //********Esta bendita linea hace la magia, adjusta el header de la tabla con el body 
     table.columns.adjust();
 
+
+  document.getElementById('selectedRows').value = '';
+  document.getElementById('selectedRowsFolios').value = '';
 
 
 table.on('click', 'tbody tr', function (e) {
@@ -358,7 +319,6 @@ table.on('click', 'tbody tr', function (e) {
 document.querySelector('#button').addEventListener('click', function () {
     alert(table.rows('.selected').data().length + ' row(s) selected');
 });
-
 
 
   

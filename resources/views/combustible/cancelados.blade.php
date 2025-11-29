@@ -74,7 +74,7 @@
                         @endforeach
                     </td>
                     <td>{{ $vale->folio }}</td>
-                    <td>{{ $vale->created_at->format('d/m/Y') }}</td>
+                    <td>{{ $vale->updated_at->format('d/m/Y') }}</td>
                     <td>{{ $vale->litros }}</td>
                     <td>
                         @foreach($operadores as $operador)
@@ -253,9 +253,9 @@
 
 var table = $('#tablaincidentes').DataTable({
     "scrollX": true,
-    "scrollY": "50vh",
         //Esto sirve que se auto ajuste la tabla al aplicar un filtro
     "scrollCollapse": true,
+    order: [[ 2, 'desc' ]],
     "language": {
         "sProcessing":    "Procesando...",
         "sLengthMenu":    "Mostrar _MENU_ registros",

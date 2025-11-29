@@ -50,7 +50,7 @@ return new class extends Migration
             $table->date('fecha_c')->nullable();
             $table->date('fecha_p')->nullable();
             $table->integer('vigencia')->nullable();
-            $table->integer('precio_unitario')->nullable();
+            $table->decimal('precio_unitario')->nullable();
              $table->string('folio_sat')->nullable();
             $table->timestamps();
         });
