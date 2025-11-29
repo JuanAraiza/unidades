@@ -20,7 +20,7 @@ services:
             - DB_PASSWORD=Ulis2025!tom
             
         depends_on:
-            - db_unidades
+            - db
                 
 
     # Database service configuration
@@ -52,7 +52,7 @@ services:
         ports:
             - "8181:80"
         depends_on:
-            - db_unidades
+            - db
         networks:
             - app_networkk
         volumes:
