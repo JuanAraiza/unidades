@@ -20,13 +20,13 @@ services:
             - DB_PASSWORD=Ulis2025!tom
             
         depends_on:
-            - db
+            - db_unidades
                 
 
     # Database service configuration
     db:
         image: mysql:8.0
-        container_name: db
+        container_name: db_unidades
         restart: always
         environment:
             MYSQL_ROOT_PASSWORD: Ulis2025!tom
@@ -43,7 +43,7 @@ services:
             - app_networkk # Create a database named "todos"
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
-        container_name: phpmyadminunidades
+        container_name: phpmyadminunidadesnew
         environment:
             PMA_HOST: db
             PMA_PORT: 3307
@@ -52,7 +52,7 @@ services:
         ports:
             - "8181:80"
         depends_on:
-            - db
+            - db_unidades
         networks:
             - app_networkk
         volumes:
