@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('dependencia');
              $table->integer('deshabilitado')->default(0);
+             $table->string('director')->nullable();
             $table->timestamps();
         });
     }

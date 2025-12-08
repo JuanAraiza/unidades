@@ -30,24 +30,61 @@ class UnidadController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index( Request $request)
     {
         if (auth()->check()) {
 
+$filter = $request->only(['dependencia', 'placas','no_economico']);
+
+
+
 $user = auth()->user();
+
+if(isset($request['placas'])){
             if($user->tipo==1){
+               
 
 $unidades = Unidad::orderBy('id','desc')
             ->where('deshabilitado', 0)
-            ->paginate();
+            ->when($filter['dependencia'], function ($query, $dependencia) {
+            return $query->where('dependencia', $dependencia);
+            })
+            ->when($filter['placas'], function ($query, $placas) {
+            return $query->where('placas', 'like', "%{$placas}%");
+            })
+            ->when($filter['no_economico'], function ($query, $no_economico) {
+            return $query->where('no_economico', 'like', "%{$no_economico}%");
+            })
+            ->get();
             }else{
                 $dependencias = Dependencia::find($user->dependencia);
             $unidades = Unidad::orderBy('id','desc')
             ->where('deshabilitado', 0)
             ->where('dependencia',$dependencias->id)
-            ->paginate();
+            ->when($filter['placas'], function ($query, $placas) {
+            return $query->where('placas', 'like', "%{$placas}%");
+            })
+            ->when($filter['no_economico'], function ($query, $no_economico) {
+            return $query->where('no_economico', 'like', "%{$no_economico}%");
+            })
+            ->get();
             }
 
+        }else{
+            if($user->tipo==1){
+               
+
+$unidades = Unidad::orderBy('id','desc')
+            ->where('deshabilitado', 0)
+            ->get();
+            }else{
+                $dependencias = Dependencia::find($user->dependencia);
+            $unidades = Unidad::orderBy('id','desc')
+            ->where('deshabilitado', 0)
+            ->where('dependencia',$dependencias->id)
+            ->get();
+            }
+        }
         
 
         $areas = Area::all();

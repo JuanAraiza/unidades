@@ -164,8 +164,10 @@ class CombustibleController extends Controller
         $formalizados = factura_ga::orderBy('id', 'DESC')
         ->where('oficio',0)
         ->get();
+        $unidades = Unidad::where('deshabilitado',0)
+        ->latest('id')->get();
         
-        return view('combustible.formalizado', compact('areas','proveedores','dependencias','formalizados'));
+        return view('combustible.formalizado', compact('areas','proveedores','dependencias','formalizados','unidades'));
      }else{
              return redirect()->route('login');
         }
@@ -177,17 +179,19 @@ class CombustibleController extends Controller
     {
          if (auth()->check()) {
         //
+        $completados = DB::select('select * from factura_gas where id in(select tramite from archivos_gas where tipo=4)');
+        
         $areas = Area::where('deshabilitado',0)
         ->latest('id')->get();
         $proveedores = Proveedor::where('deshabilitado',0)
         ->latest('id')->get();
         $dependencias = Dependencia::where('deshabilitado',0)
         ->get();
-        $formalizados = factura_ga::orderBy('id', 'DESC')
-        ->where('oficio',0)
-        ->get();
+        $unidades = Unidad::where('deshabilitado',0)
+        ->latest('id')->get();
         
-        return view('combustible.completados', compact('areas','proveedores','dependencias','formalizados'));
+        
+        return view('combustible.completados', compact('areas','proveedores','dependencias','completados','unidades'));
      }else{
              return redirect()->route('login');
         }
@@ -421,7 +425,7 @@ $msn='Litros deben ser menos o igual a: '.$request['olitros'].' Litros';
             if(isset($request['fproveedor']) and $request['fproveedor']!=''){
                 $proveedores = Proveedor::where('gasolinera',$request['fproveedor'])->first();
                 $request['gasolinera']=$proveedores->gasolinera;
-                $request['gasolinera']=$proveedores->id;
+                $request['proveedor']=$proveedores->id;
             }else{
                 session()->flash('swal', [
             'icon' => 'search',
@@ -465,6 +469,31 @@ $msn='Litros deben ser menos o igual a: '.$request['olitros'].' Litros';
         }
         
         $fc++;
+
+        $request['presupuestado']=str_replace(',', '', $request['presupuestado']); 
+        $request['presupuestado']=str_replace(' ', '', $request['presupuestado']);
+        $request['presupuestado']=str_replace('$', '', $request['presupuestado']); 
+        $request['presupuestado']=floatval($request['presupuestado']);
+
+        $request['por_ejercer']=str_replace(',', '', $request['por_ejercer']); 
+        $request['por_ejercer']=str_replace(' ', '', $request['por_ejercer']);
+        $request['por_ejercer']=str_replace('$', '', $request['por_ejercer']); 
+        $request['por_ejercer']=floatval($request['por_ejercer']);
+
+        $request['saldo_nuevo']=str_replace(',', '', $request['saldo_nuevo']); 
+        $request['saldo_nuevo']=str_replace(' ', '', $request['saldo_nuevo']);
+        $request['saldo_nuevo']=str_replace('$', '', $request['saldo_nuevo']); 
+        $request['saldo_nuevo']=floatval($request['saldo_nuevo']);
+
+        $request['ejercido']=str_replace(',', '', $request['ejercido']); 
+        $request['ejercido']=str_replace(' ', '', $request['ejercido']);
+        $request['ejercido']=str_replace('$', '', $request['ejercido']); 
+        $request['ejercido']=floatval($request['ejercido']);
+
+        $request['importea_afectar']=str_replace(',', '', $request['importea_afectar']); 
+        $request['importea_afectar']=str_replace(' ', '', $request['importea_afectar']);
+        $request['importea_afectar']=str_replace('$', '', $request['importea_afectar']); 
+        $request['importea_afectar']=floatval($request['importea_afectar']);
 
 
 
@@ -605,11 +634,30 @@ $msn='Litros deben ser menos o igual a: '.$request['olitros'].' Litros';
         {
            if (auth()->check()) {
            // return(public_path());
-         $archwod = public_path().'/formato_combustible.docx';
+         $archwod = public_path().'/formatos/formato_teso.docx';
            $template = new \PhpOffice\PhpWord\TemplateProcessor($archwod);
 
+           $factura = factura_ga::find($id);
 
-           $template->setValue('no_fiscal','123');
+
+            $template->setValue('folio',$factura->folio);
+            $template->setValue('fecha',date('d/m/Y'));
+            $dependencias = Dependencia::find($factura->dependencia);
+            $template->setValue('dependencia',$dependencias->dependencia);
+            $template->setValue('director',$dependencias->director);
+            $template->setValue('gasolinera',$factura->gasolinera);
+            $template->setValue('factura',$factura->factura);
+            $template->setValue('folio_fiscal',$factura->folio_fiscal);
+            $template->setValue('costo_total',number_format($factura->costo_t,2));
+            $template->setValue('datos_generales',$factura->datos_g);
+            $template->setValue('no_partida',$factura->nom_partida);
+            $template->setValue('presupuestado',number_format($factura->presupuestado,2));
+            $template->setValue('ejercido',number_format($factura->ejercido,2));
+            $template->setValue('por_ejercer',number_format($factura->por_ejercer,2));
+            $template->setValue('importe_afectar',number_format($factura->importea_afectar,2));
+            $template->setValue('saldo_nuevo',number_format($factura->saldo_nuevo,2));
+
+
 
            $tempFile = tempnam(sys_get_temp_dir(), 'PHPWord');
            $template->saveAs($tempFile);

@@ -9,7 +9,8 @@ class Dependencia extends Model
     //
     protected $fillable=[
         'dependencia',
-        'deshabilitado'
+        'deshabilitado',
+        'director'
     ];
 
     protected $table = 'dependencia';

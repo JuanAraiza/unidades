@@ -19,7 +19,9 @@ class BitacoraUso extends Model
         'dependencia',
         'fecha',
         'operador',
-        'id_user'
+        'id_user',
+        'destino',
+        'km'
 
 
     ];

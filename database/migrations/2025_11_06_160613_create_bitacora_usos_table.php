@@ -31,6 +31,8 @@ return new class extends Migration
             $table->foreign('id_user')
             ->references('id')
             ->on('users');
+            $table->string('destino')->nullable();
+            $table->string('km')->nullable();
             $table->timestamps();
         });
     }

@@ -56,14 +56,14 @@
             @csrf
 <div class="row">
 
-<div class="col-md-3"> 
+<div class="col-md-2"> 
         <div class="form-group">
             <label>Dependencia</label>
             <input type="text" name="fdependencia" id="fdependencia" class="form-control" readonly  >
         </div>
     </div>
 
-    <div class="col-md-3"> 
+    <div class="col-md-2"> 
         <div class="form-group">
             <label>Proveedor</label>
             <input type="text" name="fproveedor" id="fproveedor" class="form-control" readonly  >
@@ -90,12 +90,19 @@
 
     <div class="col-md-2"> 
         <div class="form-group">
-            <label>Otros Datos</label>
-            <input type="text" name="otros_datos" value="{{ old('otros_datos') }}" class="form-control"
-               placeholder="Otro Dato"  >
+            <label>Folio Fiscal</label>
+            <input type="text" name="folio_fiscal" value="{{ old('folio_fiscal') }}" class="form-control"
+               placeholder="Folio Fiscal"  >
         </div>
     </div>
 
+
+   <div class="col-md-2"> 
+        <div class="form-group">
+            <label>Costo Total</label>
+            <input type="text" name="costo_t" id="costo_t" class="form-control" readonly  >
+        </div>
+    </div>
 
 
 <div class="col-md-12"> 
@@ -106,6 +113,86 @@
 </div>
 
 <input type="hidden" id="selectedRows" name="folios" class="form-control" />
+
+<div class="col-md-12">
+     <hr style="border: 1px solid #333;">
+     
+     <h4>Datos Formato Tramite</h4>
+
+
+</div>
+
+ <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Folio</label>
+            <input type="text" name="folio" value="{{ old('folio') }}" class="form-control"
+               placeholder="SF30-05-00-TPC001-0006757"  >
+        </div>
+    </div>
+<div class="col-md-6"> 
+        <div class="form-group">
+            <label>Datos de generales</label>
+            <input type="text" name="datos_g" value="{{ old('datos_g') }}" class="form-control"
+               placeholder="2524822100/M290160000/GTM029E0016/226/31111M290160000"  >
+        </div>
+    </div>
+
+<div class="col-md-3"> 
+        <div class="form-group">
+            <label>Nombre de la Partida</label>
+            <input type="text" name="nom_partida" value="{{ old('nom_partida', 'COMBUSTIBLES LUBRICANTES Y ADITIVOS') }}" class="form-control"
+               placeholder="COMBUSTIBLES LUBRICANTES Y ADITIVOS"  >
+        </div>
+    </div>
+
+<div class="col-md-2"> 
+        <div class="form-group">
+            <label>No. de Partida</label>
+            <input type="text" name="no_partida" value="{{ old('no_partida','2610') }}"  onKeyPress="return valida(event)"  class="form-control"
+               placeholder="2610"    >
+        </div>
+    </div>
+
+    <div class="col-md-2"> 
+        <div class="form-group">
+            <label>Presupuestado</label>
+            <input type="text" name="presupuestado" value="{{ old('presupuestado') }}" onKeyPress="return valida(event)"  class="form-control"
+               placeholder="Presupuestado"  >
+        </div>
+    </div>
+
+    <div class="col-md-2"> 
+        <div class="form-group">
+            <label>Ejercido</label>
+            <input type="text" name="ejercido" value="{{ old('ejercido') }}" onKeyPress="return valida(event)"  class="form-control"
+               placeholder="Ejercido"  >
+        </div>
+    </div>
+
+    <div class="col-md-2"> 
+        <div class="form-group">
+            <label>Por Ejercer</label>
+            <input type="text" name="por_ejercer" value="{{ old('por_ejercer') }}" onKeyPress="return valida(event)"  class="form-control"
+               placeholder="Por Ejercer"  >
+        </div>
+    </div>
+
+
+    <div class="col-md-2"> 
+        <div class="form-group">
+            <label>Importe para Afectar</label>
+            <input type="text" name="importea_afectar" value="{{ old('importea_afectar') }}" onKeyPress="return valida(event)"  class="form-control"
+               placeholder="Importe"  >
+        </div>
+    </div>
+
+    <div class="col-md-2"> 
+        <div class="form-group">
+            <label>Saldo Nuevo por Ejercer</label>
+            <input type="text" name="saldo_nuevo" value="{{ old('saldo_nuevo') }}" onKeyPress="return valida(event)"  class="form-control"
+               placeholder="Saldo"  >
+        </div>
+    </div>
 
 
 <div class="col-md-12"> 
@@ -196,10 +283,6 @@
 
 </x-adminlte-card>
 
-
-
-
-
    <!-- <p>Welcome to this beautiful admin panel. bla bla</p>-->
 @stop
 
@@ -235,13 +318,14 @@
 //$("#tablaRegistros").dataTable().fnDestroy();
   document.getElementById('selectedRows').value = '';
   document.getElementById('selectedRowsFolios').value = '';
+  document.getElementById('costo_t').value = '0.0';
 
 var table = $('#tablacomprometidos').DataTable({
-order: [
-        [0, 'desc'],
-    
-    ],
-    "scrollX": true,
+        order: [
+            [0, 'desc'],
+        
+        ],
+        "scrollX": true,
         //"scrollY": "50vh",
         //Esto sirve que se auto ajuste la tabla al aplicar un filtro
          "scrollCollapse": true,
@@ -340,12 +424,23 @@ table.on('click', 'tbody tr', function (e) {
     e.currentTarget.classList.toggle('selected');
     document.getElementById('selectedRows').value = '0';
     document.getElementById('selectedRowsFolios').value = '';
+    document.getElementById('costo_t').value = '0.0';
+    var costo = 0.0;
+  
     const selectedData = table.rows('.selected').data();
     for (let i = 0; i < selectedData.length; i++) {
         document.getElementById('selectedRows').value += ','+selectedData[i][0];
         document.getElementById('selectedRowsFolios').value += selectedData[i][2]+',';
+        var dcosto='';
+        dcosto = selectedData[i][5].replace("$", "");
+        dcosto = dcosto.replace(",", "");
+        dcosto = dcosto.replace(" ", "");
+        
+        costo = costo + parseFloat(dcosto);
     };
     document.getElementById('selectedRows').value += ',0';
+    
+    document.getElementById('costo_t').value = Math.round(costo * 100) / 100;
         // alert(table.rows('.selected').data().length + ' row(s) selected');
  
     //alert('You clicked on '+table.row(this).data()[0]+'\'s row');

@@ -23,6 +23,17 @@ class factura_ga extends Model
         'deshabilitado',
         'listo',
         'oculto',
-        'folios2'
+        'folios2',
+        'costo_t',
+        'folio',
+        'datos_g',
+        'nom_partida',
+        'no_partida',
+        'presupuestado',
+        'ejercido',
+        'por_ejercer',
+        'importea_afectar',
+        'saldo_nuevo',
+        'folio_fiscal'
     ];
 }

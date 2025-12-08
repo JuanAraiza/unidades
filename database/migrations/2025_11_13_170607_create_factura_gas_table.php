@@ -37,6 +37,18 @@ return new class extends Migration
             $table->integer('listo')->default(0);
             $table->integer('oculto')->default(0);
             $table->text('folios2')->nullable();
+
+            $table->double('costo_t')->nullable();
+            $table->text('folio')->nullable();
+            $table->text('datos_g')->nullable();
+            $table->text('nom_partida')->nullable();
+            $table->integer('no_partida')->nullable();
+            $table->double('presupuestado')->nullable();
+            $table->double('ejercido')->nullable();
+            $table->double('por_ejercer')->nullable();
+            $table->double('importea_afectar')->nullable();
+            $table->double('saldo_nuevo')->nullable();
+            $table->text('folio_fiscal')->nullable();
             $table->timestamps();
         });
     }

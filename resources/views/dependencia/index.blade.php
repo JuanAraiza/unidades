@@ -24,6 +24,9 @@
             <th>
 Dependencia
             </th>
+            <th>
+Director(a)
+            </th>
             <th>Editar</th>
             <th>Eliminar</th>
              <th>Areas</th>
@@ -31,6 +34,7 @@ Dependencia
         @foreach($dependencias as $dependencia)
         <tr>
             <td> {{ $dependencia->dependencia }}</td>
+            <td> {{ $dependencia->director }}</td>
             <td><a href="{{ route('dependencia.edit', $dependencia->id) }}" class="btn btn-warning"><span  class="fas fa-pencil"></span></a></td>
             <td><form class="delete-form" action="{{ route('dependencia.destroy', $dependencia->id) }}" method="post">
                 @csrf

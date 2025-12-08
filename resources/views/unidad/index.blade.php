@@ -3,21 +3,76 @@
 @section('title', 'Unidades')
 
 @section('content_header')
-    <h1>Padron</h1>
+    <div class="col-md-12 row" >
+    <div class="col-md-2">
+<h1>Padron</h1>
+</div>
+<div class="col-md-8">&nbsp;</div>
+<div class="col-md-2" style="text-align: end;">
+    @php
+    $user = auth()->user();
+if($user->tipo==1){
+@endphp
+<a class="btn btn-primary" href="{{ route('unidad.create') }}">Nueva Unidad</a>
+@php
+} 
+@endphp
+</div>
+</div>
 @stop
 
 @section('content')
 
-@php
-$user = auth()->user();
+
+
+
+<form action="{{ route('unidad.index') }}" method="get">
+@csrf
+
+<div class="col-md-12 row" >
+
+    <div class="col-md-3">
+    <div class="form-group">
+         @php
 if($user->tipo==1){
 @endphp
-<div class="col-md-12 row mt-1" >
-<div class="col-md-3" /><a class="btn btn-primary" href="{{ route('unidad.create') }}">Nueva Unidad</a></div>
-</div>
-@php
+                <label>Dependencia</label>
+    {{-- Minimal --}}
+    <x-adminlte-select2 name="dependencia"  data-placeholder="Selecciona Dependencia....">
+        <option @selected(old('depdnencia') == '--') value="--">Seleccionar...</option>
+        @foreach($dependencias as $dependencia)
+            <option @selected(old('depdnencia') == $dependencia->id) value="{{ $dependencia->id }}">{{ $dependencia->dependencia }}</option>
+        @endforeach
+    </x-adminlte-select2>
+    @php
 } 
 @endphp
+    </div>
+    </div>
+    <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Placas</label>
+            <input type="text" name="placas" value="{{ old('placas') }}" class="form-control"
+               placeholder="Placas"  >
+        </div>
+    </div>
+    <div class="col-md-3"> 
+        <div class="form-group">
+            <label>No. Económico</label>
+            <input type="text" name="no_economico" value="{{ old('no_economico') }}" class="form-control"
+               placeholder="No. Económico"  >
+        </div>
+    </div>
+<div class="col-md-3"> 
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <input type="submit" name="buscar" value="Buscar" class="btn btn-success form-control">
+        </div>
+    </div>
+
+
+</div>
+</form>
 <div class="col-md-12 row" >
 &nbsp;
 </div>
@@ -39,15 +94,10 @@ if($user->tipo==1){
                 <br>
               No. Económico: {{ $unidad->no_economico }}
               <br>
-              @foreach($areas as $area)
-               @if ($area->id == $unidad->area)
-
+          
                @foreach($dependencias as $dependencia)
-               @if ($dependencia->id == $area->dependencia_id)
+               @if ($dependencia->id == $unidad->dependencia)
               {{  $dependencia->dependencia }}
-            @endif
-            @endforeach
-
             @endif
             @endforeach
               <br>

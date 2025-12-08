@@ -19,6 +19,11 @@ RUN apt-get update && \
     && docker-php-ext-enable \
     pdo_mysql
     
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN apt-get install -y --no-install-recommends \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
@@ -42,6 +47,9 @@ RUN apt install -y libmagickwand-dev && \
 
 RUN docker-php-ext-configure ftp --with-openssl-dir=/usr \
 	&& docker-php-ext-install ftp
+
+    # Habilita la extensión zip
+RUN docker-php-ext-install zip
 
 # Copy Composer binary from another image layer to this image
 COPY --from=composer /usr/bin/composer /usr/bin/composer

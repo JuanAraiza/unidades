@@ -131,14 +131,13 @@
     <div class="col-md-6"> 
             <div class="form-group">
                 <label>Actividad</label>
+     <input type="text" name="actividad" value="@if(isset($bita)){{ $bita->actividad }}@else{{ old('actividad') }} @endif" class="form-control"
+               placeholder="Aseguradora"  >
     
-    <x-adminlte-textarea name="actividad" >
-        @if(isset($bita)){{ $bita->actividad }}@else{{ old('actividad') }}@endif
-    </x-adminlte-textarea>
             </div>
     </div>
 
-    <div class="col-md-3"> 
+    <div class="col-md-4"> 
         <div class="form-group">
             <label>Evidencia 1</label>
             @if(isset($bita))
@@ -148,7 +147,7 @@
         </div>
     </div>
 
-    <div class="col-md-3"> 
+    <div class="col-md-4"> 
         <div class="form-group">
             <label>Evidencia 2</label>
             @if(isset($bita))
@@ -158,7 +157,7 @@
         </div>
     </div>
 
-    <div class="col-md-3"> 
+    <div class="col-md-4"> 
         <div class="form-group">
             <label>Evidencia 3</label>
             @if(isset($bita))
@@ -168,12 +167,36 @@
         </div>
     </div>
 
+<div class="col-md-4"> 
+        <div class="form-group">
+            <label>Destino</label>
+            <input type="text" name="destino" value="@if(isset($bita)){{ $bita->destino }}@else{{ old('destino') }} @endif" class="form-control"
+               placeholder="Destino"  >
+        </div>
+        @error('destino')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
 
-  
+
+  <div class="col-md-4"> 
+        <div class="form-group">
+            <label>Kilometraje</label>
+            <input type="text" name="km"  onKeyPress="return valida(event)"  value="@if(isset($bita)){{ $bita->km }}@else{{ old('km') }} @endif" class="form-control"
+               placeholder="Kilometraje"  >
+        </div>
+        @error('km')
+            <span style="color:crimson;">
+                {{$message}}
+            </span>
+        @enderror
+    </div>
 
 
 
-<div class="col-md-3"> 
+<div class="col-md-4"> 
         <div class="form-group">
             <label>&nbsp;</label>
         <button type=submit class="btn btn-primary form-control">
@@ -227,6 +250,8 @@
                   <th>Año</th>
                   <th>Placas</th>
                   <th>Operador</th>
+                  <th>Destino</th>
+                  <th>KM</th>
                   <th>Acciones</th>
                     @php
                 $user = auth()->user();
@@ -254,6 +279,8 @@
                             @endif
                         @endforeach
                     </td>
+                    <td>{{ $bitacora->destino }}</td>
+                    <td>{{ $bitacora->km }}</td>
                     <td>
 
 
@@ -279,11 +306,11 @@
         <h5><strong>Actividad:</strong> {{ $bitacora->actividad }}</h5>
 </div>
 <div class="col-md-4"> 
-            <img style="width: 100%;" src="{{ Storage::url($bitacora->evidencia3) }}" alt="">
+            <img style="width: 100%;" src="{{ Storage::url($bitacora->evidencia1) }}" alt="">
     </div>
 
     <div class="col-md-4"> 
-            <img style="width: 100%;" src="{{ Storage::url($bitacora->evidencia3) }}" alt="">
+            <img style="width: 100%;" src="{{ Storage::url($bitacora->evidencia2) }}" alt="">
     </div>
 
     <div class="col-md-4"> 

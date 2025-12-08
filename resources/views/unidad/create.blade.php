@@ -116,7 +116,7 @@
 
 <div class="col-md-6"> 
         <div class="form-group">
-            <label>No. Económicos</label>
+            <label>No. Económico</label>
             <input type="text" name="no_economico" value="{{ old('no_economico') }}" class="form-control"
                placeholder="No. Económico"  >
 

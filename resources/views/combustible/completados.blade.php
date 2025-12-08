@@ -3,7 +3,7 @@
 @section('title', 'Unidades')
 
 @section('content_header')
-    <h1>Formalizados</h1>
+    <h1>Tramites Completos para Pago</h1>
 @stop
 
 @section('content')
@@ -54,144 +54,158 @@
 
 
 
-<form action="{{ route('combustible.crearFactura') }}" method="POST">
-            @csrf
-<div class="row">
 
-<div class="col-md-3"> 
-        <div class="form-group">
-            <label>Dependencia</label>
-            <input type="text" name="fdependencia" id="fdependencia" class="form-control" readonly  >
-        </div>
-    </div>
 
-    <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Proveedor</label>
-            <input type="text" name="fproveedor" id="fproveedor" class="form-control" readonly  >
-        </div>
-    </div>
-
-    <div class="col-md-2"> 
-        <div class="form-group">
-            <label>Tipo Gasolina</label>
-            <input type="text" name="ftipogas" id="ftipogas" class="form-control" readonly  >
-        </div>
-    </div>
+ 
 
 
 
-    <div class="col-md-2"> 
-        <div class="form-group">
-            <label>No. Factura</label>
-            <input type="text" name="factura" value="{{ old('factura') }}" class="form-control"
-               placeholder="00000"  >
-        </div>
-    </div>
-
-
-    <div class="col-md-2"> 
-        <div class="form-group">
-            <label>Otros Datos</label>
-            <input type="text" name="otros_datos" value="{{ old('otros_datos') }}" class="form-control"
-               placeholder="Otro Dato"  >
-        </div>
-    </div>
-
-
-
-<div class="col-md-12"> 
-        <div class="form-group">
-            <label>Folios</label>
-            <textarea id="selectedRowsFolios" name="folios2" class="form-control" rows="2" cols="50" readonly></textarea>
-        </div>
-</div>
-
-<input type="hidden" id="selectedRows" name="folios" class="form-control" />
-
-
-<div class="col-md-12"> 
-        <div class="form-group">
-        
-        <button type=submit class="btn btn-primary form-control">
-                   <span class="fa fa-save"></span>&nbsp;
-                    Guardar Factura
-                </button>
-        </div>
-    </div>
 
 
 
 <table id="tablaformailzados"  class="display table">
     <thead>
         <tr>
-            <th>Factura</th>
-            <th>No. Tramite</th>
+            <th>No. Folio</th>
+            <th>No. Fiscal</th>
+            <th>No.Tramite</th>
             <th>Fecha</th>
-            <th>Gasolinera</th>
+            <th>Proveedor</th>
             <th>Dependencia</th>
-            <th>Costo</th>
+            <th>Monto a<br>Afectar</th>
             <th>Folios</th>
+            <th>Expediente<br>Completo</th>
             
-            
-            <th></th>
         </tr>
     </thead>
     <tbody>
-    @foreach ($formalizados as $formalizado)
+    @foreach ($completados as $completado)
             <tr>
-                <td>{{ $formalizado->factura }}</td>
-                <td>{{ $formalizado->tramite }}</td>
-                <td>{{ substr($formalizado->fecha,0,10) }}</td>
-                <td>
-                     @foreach($proveedores as $proveedor)
-                        {{ $formalizado->gasolinera == $proveedor->id ? $proveedor->gasolinera : '' }}
-                    @endforeach
-                </td>
-                
-                <td> 
-                    @foreach($dependencias as $dependencia)
-                        {{ $formalizado->dependencia == $dependencia->id ? $dependencia->dependencia : '' }}
-                    @endforeach
-                </td>
-  <td>
-                    @php
-                        $vls = explode(",", $formalizado->folios);
-                        $costots = \DB::table('combustibles')->selectRaw('SUM(costo) as costo')->whereIn('id', $vls)->get();
-                    @endphp
-
-
-                    @foreach ($costots as $costot)
-                        $ {{ number_format($costot->costo,2) }}
-                    @endforeach
-                </td>
-
+                <td>{{ $completado->folio }}</td>
+                <td>{{ $completado->folio_fiscal  }}</td>
+                <td>{{ $completado->tramite  }}</td>
+                <td>{{ substr($completado->fecha,0,10)  }}</td>
+               @php
+                                  $gasolineria = \DB::table('proveedor')->find($completado->proveedor);
+                              @endphp
+                <td>{{ $gasolineria->gasolinera }}</td>
+                @php
+                    $dependencia = \DB::table('dependencia')->find($completado->dependencia);
+                @endphp
+                <td>{{ $dependencia->dependencia }}</td>
+                <td>{{ $completado->importea_afectar  }}</td>
 
                 <td>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalVerFactu{{ $formalizado->id }}">
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalVerFactu{{ $completado->id }}">
  VER FOLIOS
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="modalVerFactu{{ $formalizado->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="modalVerFactu{{ $completado->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" style="width: 90%;">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Folios Tramite: {{ $formalizado->tramite }}</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Folios Tramite: {{ $completado->tramite }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
      
       <div class="modal-body row">
-        <h4>{{ $formalizado->folios2 }}</h4>
-      </div>
-      <div class="modal-footer">
        
-      </div>
 
+@php
+                        $vls = explode(",", $completado->folios);
+                        $vales = \DB::table('combustibles')->whereIn('id', $vls)->get();
+                    @endphp
+
+                   
+      <!--    tabla folios. -->
+              <table class="table" style="font-size:10px;">
+                  <thead>
+                      <tr>
+                        <th></th>
+                          <th>DEPENDENCIA</th>
+                          <th>FECHA</th>
+                          <th>NO. ECONOMICO</th>
+                          <th>COMBUSTIBLE</th>
+                          <th>FOLIO</th>
+                          <th>USO</th>
+                          <th>LITROS</th>
+                          <th>CHOFER</th>
+                          <th>KILOMETRAJE</th>
+                          <th>DESTINO</th>
+                          <th>AREA ASIGNADA</th>
+                          <th>GASOLINERA</th>
+                          <th>COSTO</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      @foreach ($vales as $vale)
+                          <tr>
+                            <td>
+                            @foreach($unidades as $unidad)
+                                        <img style=" height:80px; "  src="{{ $vale->unidad == $unidad->id ? Storage::url($unidad->imagen) : '' }}" alt="">
+                                    @endforeach  
+                            
+                            </td>
+                              @php
+                                  $dependencia = \DB::table('dependencia')->find($vale->dependencia);
+                              @endphp
+                              <td>{{ $dependencia->dependencia }}</td>
+                              <td>{{ $vale->fecha }}</td>
+                              @php
+                                  $unidad = \DB::table('unidad')->find($vale->unidad);
+                              @endphp
+                              <td>{{ $unidad->no_economico }}</td>
+                              @php
+                                  switch ($vale->tipo_com) {
+                                      case 1:
+                                          $combust='GAS 1';
+                                          break;
+                                      case 2:
+                                          $combust='GAS 2';
+                                          break;
+                                      case 3:
+                                          $combust='DIESEL';
+                                          break;
+                                      case 4:
+                                          $combust='GAS LP';
+                                          break;
+                                      default:
+                                          $combust='';
+                                  }
+                              @endphp
+                              <td>{{ $combust }}</td>
+                              <td>{{ $vale->folio }}</td>
+                              <td>{{ $vale->justificacion }}</td>
+                              <td>{{ $vale->litros }}</td>
+                              @php
+                                  $chofer = \DB::table('operador')->find($vale->operador);
+                              @endphp
+                              <td>{{ $chofer->nombre }} {{ $chofer->paterno }} {{ $chofer->materno }}</td>
+                              <td>{{ $vale->km }}</td>
+                              <td>{{ $vale->destino }}</td>
+                              @php
+                                  $area = \DB::table('area')->find($vale->area);
+                              @endphp
+                              <td>{{ $area->area }}</td>
+                              @php
+                                  $gasolineria = \DB::table('proveedor')->find($vale->proveedor);
+                              @endphp
+                              <td>{{ $gasolineria->gasolinera }}</td>
+                              <td>{{ $vale->costo }}</td>
+                          </tr>
+                      @endforeach
+                  </tbody>
+              </table>
+
+
+
+      </div>
+     
       
     </div>
   </div>
@@ -200,21 +214,11 @@
 
 
                 </td>
-              
+              <td>
+  <a href="{{ route('combustible.descargarWord', $completado->id) }}" target="_blank" class="btn bg-blue"><i class="fa-solid fa-file-word"></i></a>
+</td> 
 
-<!--
-<td>
-  <a href="{{ route('combustible.descargarWord', $formalizado->id) }}" target="_blank" class="btn bg-blue"><i class="fa-solid fa-file-word"></i></a>
-</td> -->
 
-<!-- tabla eliminar -->
-  <td><form class="delete-form" action="{{ route('combustible.destroyFactura', $formalizado->id) }}" method="post">
-                @csrf
-                @method('DELETE')
-               
-              <button class="btn btn-danger">  <span class="fas fa-trash"></span></button>
-</form>                   
-</td>
             </tr>
                 @endforeach
           </tbody>
@@ -262,8 +266,7 @@
     <script>
 
 var table = $('#tablaformailzados').DataTable({
-    "scrollX": true,
-         "scrollCollapse": true,
+    
      order: [[ 2, 'desc' ]],
         language: {
             "decimal": "",
@@ -293,32 +296,8 @@ var table = $('#tablaformailzados').DataTable({
     table.columns.adjust();
 
 
-  document.getElementById('selectedRows').value = '';
-  document.getElementById('selectedRowsFolios').value = '';
 
-
-table.on('click', 'tbody tr', function (e) {
-    e.currentTarget.classList.toggle('selected');
-    document.getElementById('selectedRows').value = '0';
-    document.getElementById('selectedRowsFolios').value = '';
-    const selectedData = table.rows('.selected').data();
-    for (let i = 0; i < selectedData.length; i++) {
-        document.getElementById('selectedRows').value += ','+selectedData[i][0];
-        document.getElementById('selectedRowsFolios').value += selectedData[i][2]+',';
-    };
-    document.getElementById('selectedRows').value += ',0';
-        // alert(table.rows('.selected').data().length + ' row(s) selected');
  
-    //alert('You clicked on '+table.row(this).data()[0]+'\'s row');
-
-    //alert('You clicked on '+table.row(this).data()[1]+'\'s row');
-
-     
-});
- 
-document.querySelector('#button').addEventListener('click', function () {
-    alert(table.rows('.selected').data().length + ' row(s) selected');
-});
 
 
   

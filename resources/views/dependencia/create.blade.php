@@ -17,7 +17,8 @@
     @csrf
 
 <div class="row col-md-12">
-   <div class="col-md-6"> 
+   
+<div class="col-md-4"> 
         <div class="input-group mb-3">
             <input type="text" name="dependencia" value="{{ old('dependencia') }}" class="form-control"
                placeholder="dependencia" autofocus >
@@ -31,6 +32,18 @@
         @error('dependencia')
             <span style="color:crimson;">
                 {{$message}}
+            </span>
+        @enderror
+    </div>
+
+    <div class="col-md-4"> 
+        <div class="input-group mb-3">
+            <input type="text" name="director" value="{{ old('director') }}" class="form-control"
+               placeholder="Nombre Director"  >
+        </div>
+        @error('director')
+            <span style="color:crimson;">
+                {{$director}}
             </span>
         @enderror
     </div>

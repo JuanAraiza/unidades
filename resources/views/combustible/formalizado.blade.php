@@ -66,6 +66,8 @@
             <th>Factura XML</th>
             <th>Excel</th>
             <th>Expediente Completo</th>
+            <th>Carátula</th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -120,7 +122,6 @@
   </div>
 </div>
     <br>
-                
                 {{ $formalizado->factura }}</td>
                 <td>{{ $formalizado->tramite }}</td>
                 <td>{{ substr($formalizado->fecha,0,10) }}</td>
@@ -136,7 +137,7 @@
                     @endforeach
                 </td>
                 <td>
-// Folios
+<!--  // Folios. -->
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalVerFactu{{ $formalizado->id }}">
 FOLIOS
@@ -144,7 +145,7 @@ FOLIOS
 
 <!-- Modal -->
 <div class="modal fade" id="modalVerFactu{{ $formalizado->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" style="width: 90%;">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Folios Tramite: {{ $formalizado->tramite }}</h5>
@@ -154,11 +155,94 @@ FOLIOS
       </div>
      
       <div class="modal-body row">
+ @php
+                        $vls = explode(",", $formalizado->folios);
+                        $vales = \DB::table('combustibles')->whereIn('id', $vls)->get();
+                    @endphp
 
+                   
+      <!--    tabla folios. -->
+              <table class="table" style="font-size:10px;">
+                  <thead>
+                      <tr>
+                        <th></th>
+                          <th>DEPENDENCIA</th>
+                          <th>FECHA</th>
+                          <th>NO. ECONOMICO</th>
+                          <th>COMBUSTIBLE</th>
+                          <th>FOLIO</th>
+                          <th>USO</th>
+                          <th>LITROS</th>
+                          <th>CHOFER</th>
+                          <th>KILOMETRAJE</th>
+                          <th>DESTINO</th>
+                          <th>AREA ASIGNADA</th>
+                          <th>GASOLINERA</th>
+                          <th>COSTO</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      @foreach ($vales as $vale)
+                          <tr>
+                            <td>
+                            @foreach($unidades as $unidad)
+                                        <img style=" height:80px; "  src="{{ $vale->unidad == $unidad->id ? Storage::url($unidad->imagen) : '' }}" alt="">
+                                    @endforeach  
+                            
+                            </td>
+                              @php
+                                  $dependencia = \DB::table('dependencia')->find($vale->dependencia);
+                              @endphp
+                              <td>{{ $dependencia->dependencia }}</td>
+                              <td>{{ $vale->fecha }}</td>
+                              @php
+                                  $unidad = \DB::table('unidad')->find($vale->unidad);
+                              @endphp
+                              <td>{{ $unidad->no_economico }}</td>
+                              @php
+                                  switch ($vale->tipo_com) {
+                                      case 1:
+                                          $combust='GAS 1';
+                                          break;
+                                      case 2:
+                                          $combust='GAS 2';
+                                          break;
+                                      case 3:
+                                          $combust='DIESEL';
+                                          break;
+                                      case 4:
+                                          $combust='GAS LP';
+                                          break;
+                                      default:
+                                          $combust='';
+                                  }
+                              @endphp
+                              <td>{{ $combust }}</td>
+                              <td>{{ $vale->folio }}</td>
+                              <td>{{ $vale->justificacion }}</td>
+                              <td>{{ $vale->litros }}</td>
+                              @php
+                                  $chofer = \DB::table('operador')->find($vale->operador);
+                              @endphp
+                              <td>{{ $chofer->nombre }} {{ $chofer->paterno }} {{ $chofer->materno }}</td>
+                              <td>{{ $vale->km }}</td>
+                              <td>{{ $vale->destino }}</td>
+                              @php
+                                  $area = \DB::table('area')->find($vale->area);
+                              @endphp
+                              <td>{{ $area->area }}</td>
+                              @php
+                                  $gasolineria = \DB::table('proveedor')->find($vale->proveedor);
+                              @endphp
+                              <td>{{ $gasolineria->gasolinera }}</td>
+                              <td>{{ $vale->costo }}</td>
+                          </tr>
+                      @endforeach
+                  </tbody>
+              </table>
 
-        <h4>{{ $formalizado->folios2 }}</h4>
-      
-      
+                               
+      <!--   fin tabla folios. -->
       </div>
       <div class="modal-footer">
        
@@ -170,7 +254,7 @@ FOLIOS
 </div>
 
 
-// Fin Folios
+<!--  // Fin Folios. -->
                 </td>
                 <td>
                   <a href="{{ route('combustible.actualizarFolios', $formalizado->id) }}"  class="btn bg-blue "><i class="fa-solid fa-arrows-rotate"></i></a><br>
@@ -290,7 +374,7 @@ FOLIOS
     <div class="col-md-12 row">
         <div class="col-md-12">
                    @if(isset($archivosfacs->archivo))
-                       <a href="{{ Storage::url($archivosfacs->archivo) }}" target="_blank" class="btn btn-info btn-lg btn-block">Ver Factura</a>
+                       <a href="{{ Storage::url($archivosfacs->archivo) }}" target="_blank" class="btn btn-info btn-lg btn-block">Ver XML</a>
                     @endif
             
         </div>
@@ -363,7 +447,7 @@ FOLIOS
     <div class="col-md-12 row">
         <div class="col-md-12">
                    @if(isset($archivosfacs->archivo))
-                       <a href="{{ Storage::url($archivosfacs->archivo) }}" target="_blank" class="btn btn-info  ">Ver Factura</a>
+                       <a href="{{ Storage::url($archivosfacs->archivo) }}" target="_blank" class="btn btn-info  ">Ver Expediente</a>
                     @endif
           
         </div>
@@ -397,10 +481,80 @@ FOLIOS
 </div>
 
 </td>
-<!--
+
+<!--   Archivo  Caratula -->      
+<td style="text-align:center;">
+<!-- Button trigger modal -->
+ @php
+                        $archivosfacs = \DB::table('archivos_gas')->where('tramite', $formalizado->id )->where('tipo', 4 )->first();
+                    @endphp
+
+                    @if(isset($archivosfacs->archivo))
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalupCara{{ $formalizado->id }}">
+                    @else
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalupCara{{ $formalizado->id }}">
+                    @endif
+
+ <i class="fa-solid fa-upload"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modalupCara{{ $formalizado->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Carátula Tramite: <strong>{{ $formalizado->tramite }}</strong></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body row">
+
+      
+        
+
+    <div class="col-md-12 row">
+        <div class="col-md-12">
+                   @if(isset($archivosfacs->archivo))
+                       <a href="{{ Storage::url($archivosfacs->archivo) }}" target="_blank" class="btn btn-info  ">Ver Carátula</a>
+                    @endif
+          
+        </div>
+    </div>
+
+
+<hr style="width: 100%;">
+      <form action="{{ route('combustible.addFacturaCom', $formalizado->id ) }}" enctype="multipart/form-data" class="col-md-12" method="post">
+             @csrf
+        <div class="row col-md-12">
+            <input name="tramite" type="hidden" value="{{ $formalizado->id }}"/>
+            <input name="tipo" type="hidden" value="4"/>
+            <div class="col-md-12"> 
+                <div class="form-group">
+            <input type="file" name="factura" id="factura" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-12"> 
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success form-control" value="Subir Archivo">
+                </div>
+            </div>
+
+        </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+</td>
+
 <td>
   <a href="{{ route('combustible.descargarWord', $formalizado->id) }}" target="_blank" class="btn bg-blue"><i class="fa-solid fa-file-word"></i></a>
-</td> -->
+</td> 
 
 <!-- tabla eliminar -->
   <td><form class="delete-form" action="{{ route('combustible.destroyFactura', $formalizado->id) }}" method="post">
@@ -489,7 +643,12 @@ var table = $('#tablaformailzados').DataTable({
 
 
 
-
+var table2 = $('#tablavalesfol').DataTable({
+         "scrollCollapse": true,
+          order: [[ 2, 'desc' ]],
+    });
+    //********Esta bendita linea hace la magia, adjusta el header de la tabla con el body 
+    table2.columns.adjust();
   
       </script>
 
