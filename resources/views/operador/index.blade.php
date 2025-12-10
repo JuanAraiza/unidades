@@ -28,6 +28,7 @@
             <th>Puesto</th>
             <th>Telefono</th>
             <th>Domicilio</th>
+            <th>Contactos</th>
             <th></th>
             <th></th>
         </thead>
@@ -52,6 +53,111 @@
         <td>{{ $operador->puesto }}</td>
         <td>{{ $operador->telefono }}</td>
         <td>{{ $operador->direccion }}</td>
+
+        <td style="text-align: center;">
+                         
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalContactos{{ $operador->id }}">
+ <i class="fa-solid fa-address-book"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modalContactos{{ $operador->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Contactos: <strong>{{ $operador->nombre }} {{ $operador->paterno }} {{ $operador->materno }}</strong></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body row">
+       
+
+
+ @foreach($contactos as $contacto)
+@if($contacto->operador == $operador->id)
+    <div class="col-md-12 row">
+        <div class="col-md-3">
+            <p>{{ $contacto->nombre }}</p>
+        </div>
+        <div class="col-md-2">
+            <p>{{ $contacto->telefono }}</p>
+        </div>
+         <div class="col-md-3">
+            <p>{{ $contacto->direccion }}</p>
+        </div>
+         <div class="col-md-2">
+            <p>{{ $contacto->parentesco }}</p>
+        </div>
+        <div class="col-md-2">
+            <form class="delete-form" action="{{ route('operador.destroyContacto') }}" method="post">
+                @csrf
+              <input type="hidden" name="contacto_id" value="{{ $contacto->id }}"  >
+            
+                <input name="deshabilitado" value="1" type="hidden">
+              <button class="btn btn-danger">  <span class="fas fa-trash"></span></button>
+            </form>                   
+        </div>
+    </div>
+@endif
+ @endforeach
+
+<hr style="width: 100%;">
+      <form action="{{ route('operador.addContacto', $operador->id) }}" class="col-md-12" method="POST">
+            @csrf
+        <div class="row col-md-12">
+            <input type="hidden" name="operador_id" value="{{ $operador->id }}"  >
+            <div class="col-md-3"> 
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input class="form-control" type="text" name="nombrec"  >
+                </div>
+            </div>
+            <div class="col-md-3"> 
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input class="form-control" type="text" name="telefonoc"  >
+                </div>
+            </div>
+            <div class="col-md-3"> 
+                <div class="form-group">
+                    <label>Dirección</label>
+                    <input class="form-control" type="text" name="direccionc"  >
+                </div>
+            </div>
+            <div class="col-md-3"> 
+                <div class="form-group">
+                    <label>Parentesco</label>
+                    <input class="form-control" type="text" name="parentescoc"  >
+                </div>
+            </div>
+
+            <div class="col-md-3"> 
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <input type="submit" class="btn btn-success form-control" value="Guardar Contacto">
+                </div>
+            </div>
+
+        </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+      
+      </div>
+
+    
+    </div>
+  </div>
+</div>
+
+
+                    </td>
+
+
             <td><a href="{{ route('operador.edit', $operador->id) }}" class="btn btn-warning"><span  class="fas fa-pencil"></span></a></td>
             <td><form class="delete-form" action="{{ route('operador.destroy', $operador->id) }}" method="post">
                 @csrf

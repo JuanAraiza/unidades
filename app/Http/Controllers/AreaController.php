@@ -25,6 +25,23 @@ class AreaController extends Controller
         }
     }
 
+     public function subareas(Request $request)
+    {
+        if (auth()->check()) {
+        //
+        //return $request->input('dependencia');
+        /* $dependencias = Dependencia::where('deshabilitado',0)
+        ->latest('id')->paginate();*/
+         $areas = Area::where('deshabilitado',0)
+        ->where('dependencia_id', $request->input('dependencia'))
+        ->get();
+        //return($areas);
+         return response()->json($areas);
+        }else{
+             return redirect()->route('login');
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      */

@@ -605,7 +605,9 @@ public function guardarinci(Request $request, string $unidad){
     {
         if (auth()->check()) {
         //
-         $areas = Area::where('deshabilitado',0)
+        $unidades = Unidad::find($unidad);
+        $areas = Area::where('deshabilitado',0)
+        ->where('dependencia_id', $unidades->dependencia)
         ->latest('id')->paginate();
         $responsables = Responsable::where('deshabilitado',0)
         ->latest('id')->paginate();
@@ -616,7 +618,7 @@ public function guardarinci(Request $request, string $unidad){
          //
          $operadores = Operador::where('deshabilitado',0)
         ->latest('id')->paginate();
-        $unidades = Unidad::find($unidad);
+        
         return view('unidad.edit', compact('unidades','tipos','responsables','areas','dependencias','operadores'));
         }else{
              return redirect()->route('login');

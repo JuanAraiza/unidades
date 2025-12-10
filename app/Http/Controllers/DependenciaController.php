@@ -103,7 +103,7 @@ class DependenciaController extends Controller
         $dependencias->update($request->all());
         session()->flash('swal', [
             'icon' => 'success',
-            'title' => '¡Dependenica Modificada!',
+            'title' => 'Dependencia Modificada!',
             'text' => 'Modificada Correctamente'
         ]);
        return redirect()->route('dependencia.index');

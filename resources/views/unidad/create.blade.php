@@ -239,7 +239,8 @@
 <div class="form-group">
             <label>Dependencia</label>
 {{-- Minimal --}}
-<x-adminlte-select2 name="dependencia"  data-placeholder="Selecciona Dependencia....">
+<x-adminlte-select2 name="dependencia" id="dependencia"  data-placeholder="Selecciona Dependencia...." onChange="cargarAreas(this.value)">
+    <option @selected(old('depdnencia')) value="0">--</option>
     @foreach($dependencias as $dependencia)
         <option @selected(old('depdnencia') == $dependencia->id) value="{{ $dependencia->id }}">{{ $dependencia->dependencia }}</option>
     @endforeach
@@ -252,10 +253,8 @@
 <div class="form-group">
             <label>Área asignada</label>
 {{-- Minimal --}}
-<x-adminlte-select2 name="area_id"  data-placeholder="Selecciona Area....">
-    @foreach($areas as $area)
-        <option @selected(old('area_id') == $area->id) value="{{ $area->id }}">{{ $area->area }}</option>
-    @endforeach
+<x-adminlte-select2 name="area_id"  id="area_id" data-placeholder="Selecciona Area....">
+  
 </x-adminlte-select2>
 </div>
 </div>
@@ -341,5 +340,46 @@
 @stop
 
 @section('js')
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script>
+    $(document).ready(function() {
+           /* var dependenciaSeleccionada = $('#dependencia').val();
+            alert(dependenciaSeleccionada);
+            // Carga las subcategorías según la categoría seleccionada
+            cargarAreas(dependenciaSeleccionada);
+*/
+            // Establece un evento listener para el cambio del select de categorías
+            /*
+            $('#dependencia').on('change', function() {
+                dependenciaSeleccionada = $(this).val();
+                cargarAreas(dependenciaSeleccionada);
+            });
+            */
+
+            // Función para cargar las subcategorías según la categoría seleccionada
+            
+        });
+
+        function cargarAreas(depedendencia) {
+               // alert(dependencia.value);
+                
+                var url = '{{ route("area.subareas") }}';
+                var data = { dependencia: dependencia.value };
+
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    data: data,
+                    success: function(data) {
+                        //console.log(data);
+                        var opciones = '';
+                        $.each(data, function(index, value) {
+                            opciones += '<option value="' + value.id + '">' + value.area + '</option>';
+                        });
+                        $('#area_id').html(opciones).select2();
+                    }
+                });
+                
+            }
+    
+    console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
 @stop

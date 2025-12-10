@@ -38,6 +38,8 @@ Route::post('/dependencia/destroyArea', [DependenciaController::class, 'destroyA
 Route::resource('area', AreaController::class)->middleware('admin');
 Route::resource('responsable', ResponsableController::class)->middleware('admin');
 Route::resource('operador', OperadorController::class)->middleware('admin');
+Route::post('/operdador/addContacto', [OperadorController::class, 'addContacto'])->name('operador.addContacto')->middleware('admin');
+Route::post('/operdador/destroyContacto', [OperadorController::class, 'destroyContacto'])->name('operador.destroyContacto')->middleware('admin');
 
 Route::resource('unidad', UnidadController::class);
 
@@ -85,6 +87,7 @@ Route::post('/unidad/{unidad}/bitacora/update', [UnidadController::class, 'updat
 Route::resource('proveedor', ProveedorController::class)->middleware('admin');
 Route::resource('preciogas', PreciogasController::class)->middleware('admin');
 
+Route::get('/subareas', [AreaController::class, 'subareas'])->name('area.subareas')->middleware('admin');
 
 Route::resource('combustible', CombustibleController::class)->middleware('admin');
 Route::put('/combustible/{vale}/validar', [CombustibleController::class, 'validar'])->name('combustible.validar')->middleware('admin');

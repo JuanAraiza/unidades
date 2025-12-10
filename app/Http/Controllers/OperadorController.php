@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Area;
+use App\Models\contacto_oper;
 use App\Models\Dependencia;
 use App\Models\Operador;
 use Illuminate\Http\Request;
@@ -17,12 +18,13 @@ class OperadorController extends Controller
     {
         if (auth()->check()) {
          $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
          $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
-        return view('operador.index', compact('operadores','areas','dependencias'));
+        ->latest('id')->get();
+        $contactos = contacto_oper::latest('id')->get();
+        return view('operador.index', compact('operadores','areas','dependencias','contactos'));
         }else{
              return redirect()->route('login');
         }
@@ -206,5 +208,57 @@ $request['area']=$request['area_id'];
              return redirect()->route('login');
         }
         
+    }
+
+
+
+
+     public function addContacto(Request $request)
+    {
+      
+if (auth()->check()) {
+$request['operador']=$request['operador_id'];
+$request['nombre']=$request['nombrec'];
+$request['telefono']=$request['telefonoc'];
+$request['direccion']=$request['direccionc'];
+$request['parentesco']=$request['parentescoc'];
+       //return $request;
+
+        contacto_oper::create($request->all());
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Contacto de Operador Creado!',
+            'text' => 'Creado Correctamente'
+        ]);
+       return redirect()->route('operador.index');
+
+       }else{
+             return redirect()->route('login');
+        }
+
+    }
+
+
+
+    public function destroyContacto(Request $request)
+    {
+       
+         if (auth()->check()) {
+                //
+                $area = $request->contacto_id;
+                $areas = contacto_oper::find($area);
+                $areas->delete();
+                
+                //$dependencias->delete();
+                // return($tipovs);
+                session()->flash('swal', [
+                        'icon' => 'success',
+                        'title' => 'Contacto Eliminiado!',
+                        'text' => 'Eliminado Correctamente'
+                    ]);
+         return redirect()->route('operador.index');
+         }else{
+             return redirect()->route('login');
+        }
     }
 }
