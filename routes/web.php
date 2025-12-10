@@ -37,6 +37,9 @@ Route::post('/dependencia/addArea', [DependenciaController::class, 'addArea'])->
 Route::post('/dependencia/destroyArea', [DependenciaController::class, 'destroyArea'])->name('dependencia.destroyArea')->middleware('admin');
 Route::resource('area', AreaController::class)->middleware('admin');
 Route::resource('responsable', ResponsableController::class)->middleware('admin');
+Route::post('/responsable/addEco', [ResponsableController::class, 'addEco'])->name('responsable.addEco')->middleware('admin');
+Route::post('/responsable/destroyEco', [ResponsableController::class, 'destroyEco'])->name('responsable.destroyEco')->middleware('admin');
+
 Route::resource('operador', OperadorController::class)->middleware('admin');
 Route::post('/operdador/addContacto', [OperadorController::class, 'addContacto'])->name('operador.addContacto')->middleware('admin');
 Route::post('/operdador/destroyContacto', [OperadorController::class, 'destroyContacto'])->name('operador.destroyContacto')->middleware('admin');

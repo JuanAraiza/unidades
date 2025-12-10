@@ -24,6 +24,7 @@
             <th>Responsable</th>
             <th>Area</th>
             <th>Puesto</th>
+            <th>No. Economicos</th>
             <th></th>
             <th></th>
         </thead>
@@ -38,6 +39,82 @@
         @endforeach
         </td>
         <td>{{ $responsable->puesto }}</td>
+        <td style="text-align: center;">
+                         
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalEco{{ $responsable->id }}">
+<i class="fa-solid fa-car"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modalEco{{ $responsable->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">No. Ecnomicos: <strong>{{ $responsable->nombre }} {{ $responsable->paterno }} {{ $responsable->materno }}</strong></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body row">
+       
+
+
+ @foreach($ecos as $eco)
+@if($eco->responsable == $responsable->id)
+    <div class="col-md-12 row">
+        <div class="col-md-6">
+            <p>{{ $eco->no_economico }}</p>
+        </div>
+        
+        <div class="col-md-2">
+            <form class="delete-form" action="{{ route('responsable.destroyEco') }}" method="post">
+                @csrf
+              <input type="hidden" name="eco_id" value="{{ $eco->id }}"  >
+            
+                <input name="deshabilitado" value="1" type="hidden">
+              <button class="btn btn-danger">  <span class="fas fa-trash"></span></button>
+            </form>                   
+        </div>
+    </div>
+@endif
+ @endforeach
+
+<hr style="width: 100%;">
+      <form action="{{ route('responsable.addEco', $responsable->id) }}" class="col-md-12" method="POST">
+            @csrf
+        <div class="row col-md-12">
+            <input type="hidden" name="responsable_id" value="{{ $responsable->id }}"  >
+            <div class="col-md-6"> 
+                <div class="form-group">
+                    <label>No. Economico</label>
+                    <input class="form-control" type="text" name="no_economicoc"  >
+                </div>
+            </div>
+            
+            <div class="col-md-6"> 
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <input type="submit" class="btn btn-success form-control" value="Guardar No. Economico">
+                </div>
+            </div>
+
+        </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+      
+      </div>
+
+    
+    </div>
+  </div>
+</div>
+
+
+                    </td>
             <td><a href="{{ route('responsable.edit', $responsable->id) }}" class="btn btn-warning"><span  class="fas fa-pencil"></span></a></td>
             <td><form class="delete-form" action="{{ route('responsable.destroy', $responsable->id) }}" method="post">
                 @csrf

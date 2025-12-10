@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Area;
+use App\Models\resp_noe;
 use App\Models\Responsable;
 use Illuminate\Http\Request;
 use PhpParser\Node\Arg;
@@ -18,10 +19,11 @@ class ResponsableController extends Controller
         if (auth()->check()) {
         //
         $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
          $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
-        return view('responsable.index', compact('responsables','areas'));
+        ->latest('id')->get();
+        $ecos = resp_noe::latest('id')->get();
+        return view('responsable.index', compact('responsables','areas','ecos'));
         }else{
              return redirect()->route('login');
         }
@@ -137,4 +139,53 @@ class ResponsableController extends Controller
              return redirect()->route('login');
         }
     }
+
+
+ public function addEco(Request $request)
+    {
+      
+if (auth()->check()) {
+$request['responsable']=$request['responsable_id'];
+$request['no_economico']=$request['no_economicoc'];
+       //return $request;
+
+        resp_noe::create($request->all());
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Numero Economico Agregado!',
+            'text' => 'Agregado Correctamente'
+        ]);
+       return redirect()->route('responsable.index');
+
+       }else{
+             return redirect()->route('login');
+        }
+
+    }
+
+
+
+    public function destroyEco(Request $request)
+    {
+       
+         if (auth()->check()) {
+                //
+                $area = $request->eco_id;
+                $areas = resp_noe::find($area);
+                $areas->delete();
+                
+                //$dependencias->delete();
+                // return($tipovs);
+                session()->flash('swal', [
+                        'icon' => 'success',
+                        'title' => 'Numero Economico Eliminiado!',
+                        'text' => 'Eliminado Correctamente'
+                    ]);
+         return redirect()->route('responsable.index');
+         }else{
+             return redirect()->route('login');
+        }
+    }
+
+
 }
