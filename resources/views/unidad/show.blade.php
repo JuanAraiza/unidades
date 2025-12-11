@@ -251,7 +251,36 @@
         </div>
     </div>
 
+
+    <div class="col-md-3"> 
+        <div class="form-group">
+            <label>Responsable</label>
+             @php
+                        $responsables = \DB::select("select * from responsable where id in(select responsable from resp_noes where no_economico='".$unidades->no_economico ."')");
+                    @endphp
+                    <p>
+                    @foreach($responsables as $responsable)
+                        {{ $responsable->nombre }} {{ $responsable->paterno }} {{ $responsable->materno }}
+                    @endforeach
+            </p>
+        </div>
+    </div>
+
      
+<div class="col-md-3"> 
+        <div class="form-group">
+            <label>Operador</label>
+            @php
+                        $operadores = \DB::select("select * from operador where id in(select operador from combustibles where unidad='".$unidades->id ."')");
+                    @endphp
+                    <p>
+                    @foreach($operadores as $operadores)
+                        {{ $operadores->nombre }} {{ $operadores->paterno }} {{ $operadores->materno }}<br>
+                    @endforeach
+            </p>
+        </div>
+    </div>
+
     </div>
 
 
