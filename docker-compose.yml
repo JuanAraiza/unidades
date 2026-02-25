@@ -9,7 +9,7 @@ services:
         ports:
             - "8003:80"
         networks:
-            - app_networkk
+            - app_networkkup
         environment:
             - APP_URL=https://avizor.atomustechnologies.com/
             - ASSET_URL=https://avizor.atomustechnologies.com/
@@ -17,7 +17,7 @@ services:
             - APP_DOMAIN=avizor.atomustechnologies.com
             - DB_CONNECTION=mysql
             - DB_HOST=db
-            - DB_PORT=3307
+            - DB_PORT=3309
             - DB_DATABASE=unisistomprod
             - DB_USERNAME=root
             - DB_PASSWORD=Ulis2025!tom
@@ -38,22 +38,22 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: Ulis2025!tom
             MYSQL_DATABASE: unisistomprod
-            MYSQL_TCP_PORT: 3307
+            MYSQL_TCP_PORT: 3309
         volumes:
             - db_dataprd:/var/lib/mysql
             
         ports:
-            - 3307:3307
+            - 3309:3309
         expose:
-            - 3307
+            - 3309
         networks:
-            - app_networkk # Create a database named "todos"
+            - app_networkkup # Create a database named "todos"
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         container_name: phpmyadminunidadesprod
         environment:
             PMA_HOST: db
-            PMA_PORT: 3307
+            PMA_PORT: 3309
             PPMA_USER: root
             PMA_PASSWORD: Ulis2025!tom
         ports:
@@ -66,7 +66,7 @@ services:
             - ./.docker/php/zzz-custom.ini:/usr/local/etc/php/conf.d/zzz-custom.ini
 
 networks:
-  app_networkk:
+  app_networkkup:
     driver: bridge
 
 volumes:
