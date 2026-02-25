@@ -61,7 +61,7 @@ services:
         depends_on:
             - db
         networks:
-            - app_networkk
+            - app_networkkup
         volumes:
             - ./.docker/php/zzz-custom.ini:/usr/local/etc/php/conf.d/zzz-custom.ini
 
