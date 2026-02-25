@@ -14,8 +14,8 @@ class PreciogasController extends Controller
     public function index()
     {
         if (auth()->check()) {
-         $precios = PregcioGas::latest('id')->paginate();
-         $proveedores = Proveedor::latest('id')->paginate();
+         $precios = PregcioGas::latest('id')->get();
+         $proveedores = Proveedor::latest('id')->get();
         return view('preciogas.index', compact('proveedores','precios'));
         }else{
              return redirect()->route('login');
@@ -30,7 +30,7 @@ class PreciogasController extends Controller
         if (auth()->check()) {
         //
          $proveedores = Proveedor::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         return view('preciogas.create', compact('proveedores'));
         }else{
              return redirect()->route('login');
@@ -86,7 +86,7 @@ class PreciogasController extends Controller
         if (auth()->check()) {
         //
         $proveedores = Proveedor::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $precios = PregcioGas::find($id);
         return view('preciogas.edit', compact('proveedores','precios'));
         }else{

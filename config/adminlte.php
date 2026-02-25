@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'Unidades',
+    'title' => 'AVIZOR',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -30,8 +30,8 @@ return [
     |
     */
 
-    'use_ico_only' => 'assets/img/logoUnidades.png',
-    'use_full_favicon' => 'assets/img/logoUnidades.png',
+    'use_ico_only' => 'assets/img/logounidadeschico.png',
+    'use_full_favicon' => 'assets/img/logounidadeschico.png',
 
     /*
     |--------------------------------------------------------------------------
@@ -63,12 +63,12 @@ return [
     |
     */
 
-    'logo' => '<b>Unida</b>des',
-    'logo_img' => 'assets/img/logoUnidades.png',
+    'logo' => '<b>AVIZOR</b>',
+    'logo_img' => 'assets/img/logounidadeschico.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Unidades',
+    'logo_img_alt' => 'AVIZOR',
 
     /*
     |--------------------------------------------------------------------------
@@ -84,13 +84,13 @@ return [
     */
 
     'auth_logo' => [
-        'enabled' => false,
+        'enabled' => true,
         'img' => [
-            'path' => 'assets/img/logoUnidades.png',
-            'alt' => 'Unidades',
+            'path' => 'assets/img/logounidadesg.png',
+            'alt' => 'AVIZOR',
             'class' => '',
-            'width' => 50,
-            'height' => 50,
+            'width' => 360,
+            'height' => 360,
         ],
     ],
 
@@ -113,8 +113,8 @@ return [
         'enabled' => true,
         'mode' => 'fullscreen',
         'img' => [
-            'path' => 'assets/img/logoUnidades.png',
-            'alt' => 'Unidades',
+            'path' => 'assets/img/logounidadesg.png',
+            'alt' => 'AVIZOR',
             'effect' => 'animation__shake',
             'width' => 60,
             'height' => 60,
@@ -300,15 +300,16 @@ return [
 
     'menu' => [
         // Navbar items:
-        [
+        /*[
             'type' => 'navbar-search',
             'text' => 'search',
             'topnav_right' => true,
-        ],
+        ],*/
         [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
+        
 
         // Sidebar items:
         /*[
@@ -374,6 +375,10 @@ return [
                 [
                     'text' => 'Precio Gasolina',
                     'url' => 'preciogas/',
+                ],
+                [
+                    'text' => 'Presupuesto Combustible',
+                    'url' => 'presupuestoc/',
                 ],
             ],
         ],

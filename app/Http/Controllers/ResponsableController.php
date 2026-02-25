@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Area;
+use App\Models\Dependencia;
 use App\Models\resp_noe;
 use App\Models\Responsable;
 use Illuminate\Http\Request;
@@ -19,11 +20,13 @@ class ResponsableController extends Controller
         if (auth()->check()) {
         //
         $areas = Area::where('deshabilitado',0)
-        ->latest('id')->get();
+        ->get();
          $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->get();
+        ->get();
+        $dependencias = Dependencia::where('deshabilitado',0)
+        ->get();
         $ecos = resp_noe::latest('id')->get();
-        return view('responsable.index', compact('responsables','areas','ecos'));
+        return view('responsable.index', compact('responsables','areas','ecos','dependencias'));
         }else{
              return redirect()->route('login');
         }
@@ -37,9 +40,11 @@ class ResponsableController extends Controller
         if (auth()->check()) {
         
           $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->get();
+        $dependencias = Dependencia::where('deshabilitado',0)
+        ->get();
         
-         return view('responsable.create', compact('areas'));
+         return view('responsable.create', compact('areas','dependencias'));
          }else{
              return redirect()->route('login');
         }
@@ -87,10 +92,14 @@ class ResponsableController extends Controller
     public function edit(string $responsable)
     {
         if (auth()->check()) {
-        $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
         $responsables = Responsable::find($responsable);
-        return view('responsable.edit', compact('responsables','areas'));
+        $areas = Area::where('deshabilitado',0)
+        ->where('dependencia_id', $responsables->dependencia)
+        ->get();
+        $dependencias = Dependencia::where('deshabilitado',0)
+        ->get();
+       
+        return view('responsable.edit', compact('responsables','areas','dependencias'));
         }else{
              return redirect()->route('login');
         }

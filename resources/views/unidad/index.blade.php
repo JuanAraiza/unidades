@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <div class="col-md-12 row" >
@@ -148,8 +148,9 @@ if($user->tipo==1){
   
 
     @endforeach
-
-
+<div class="d-flex justify-content-center text-center col-md-12">
+{{ $unidades->links() }}
+</div>
 
 </div>
 

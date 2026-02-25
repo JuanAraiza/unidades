@@ -17,9 +17,9 @@ class UsuariosController extends Controller
         //
         if (auth()->check()) {
         $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $usuarios = Usuarios::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         return view('usuarios.index', compact('dependencias','usuarios'));
         }else{
              return redirect()->route('login');
@@ -36,7 +36,7 @@ class UsuariosController extends Controller
         //
         if (auth()->check()) {
         $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         return view('usuarios.create', compact('dependencias'));
         }else{
              return redirect()->route('login');
@@ -83,7 +83,7 @@ class UsuariosController extends Controller
          if (auth()->check()) {
         //
         $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $usuarios = Usuarios::find($id);
         return view('usuarios.edit', compact('usuarios','dependencias'));
         }else{

@@ -10,6 +10,7 @@ class Responsable extends Model
         'nombre',
         'paterno',
         'materno',
+        'dependencia',
         'area_id',
         'puesto',
         'deshabilitado'

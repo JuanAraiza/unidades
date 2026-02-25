@@ -16,9 +16,9 @@ class DependenciaController extends Controller
          if (auth()->check()) {
         //
         $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->get();
         $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->get();
         return view('dependencia.index', compact('dependencias','areas'));
         }else{
              return redirect()->route('login');

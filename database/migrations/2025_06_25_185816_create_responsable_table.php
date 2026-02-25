@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('paterno');
             $table->string('materno');
             $table->string('puesto');
+            $table->unsignedBigInteger('dependencia');
+            $table->foreign('dependencia')
+            ->references('id')
+            ->on('dependencia');
             $table->unsignedBigInteger('area_id');
             $table->foreign('area_id')
             ->references('id')

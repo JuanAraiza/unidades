@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Operadores</h1>
@@ -28,13 +28,19 @@
             <th>Puesto</th>
             <th>Telefono</th>
             <th>Domicilio</th>
-            <th>Contactos</th>
+            <th>Licencia</th>
+            <th>Vigencia</th> 
+            <th>Contactos</th>  
             <th></th>
             <th></th>
         </thead>
         @foreach($operadores as $operador)
         <tr>
-             <td><img src="{{ Storage::url($operador->foto) }}" style="height:100px;" /></td>
+             <td>
+             <div class="card-heart p-0" style="height:150px; width: 150px;">
+                            <img  id="imgPreview"  style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded"  src="{{ Storage::url($operador->foto) }}" alt="">
+</div>   
+             </td>
             <td>{{ $operador->nombre }} {{ $operador->paterno }} {{ $operador->materno }}</td>
             <td> 
              @foreach($dependencias as $dependencia)   
@@ -53,7 +59,8 @@
         <td>{{ $operador->puesto }}</td>
         <td>{{ $operador->telefono }}</td>
         <td>{{ $operador->direccion }}</td>
-
+        <td> <a href="{{ Storage::url($operador->licencia) }}" target="_blank">Ver Licencia</a></td>
+        <td>{{ $operador->vigencia }}</td>
         <td style="text-align: center;">
                          
 

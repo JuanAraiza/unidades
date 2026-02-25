@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Observers\FacturaObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
-
+#[ObservedBy(FacturaObserver::class)]
 class factura_ga extends Model
 {
     //

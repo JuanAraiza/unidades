@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Validator;
 
 class UnidadController extends Controller
 {
@@ -67,7 +68,7 @@ $unidades = Unidad::orderBy('id','desc')
             ->when($filter['no_economico'], function ($query, $no_economico) {
             return $query->where('no_economico', 'like', "%{$no_economico}%");
             })
-            ->get();
+            ->paginate(8);
             }
 
         }else{
@@ -76,13 +77,13 @@ $unidades = Unidad::orderBy('id','desc')
 
 $unidades = Unidad::orderBy('id','desc')
             ->where('deshabilitado', 0)
-            ->get();
+            ->paginate(8);
             }else{
                 $dependencias = Dependencia::find($user->dependencia);
             $unidades = Unidad::orderBy('id','desc')
             ->where('deshabilitado', 0)
             ->where('dependencia',$dependencias->id)
-            ->get();
+            ->paginate(8);
             }
         }
         
@@ -104,15 +105,15 @@ $unidades = Unidad::orderBy('id','desc')
     {
         if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $tipos = Tipov::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
 
          return view('unidad.create', compact('areas','responsables','tipos','dependencias','operadores'));
          }else{
@@ -257,16 +258,16 @@ return redirect()->route('unidad.show', $unidad);
     {
         if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $tipos = Tipov::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
          //
          $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $unidades = Unidad::find($unidad);
        // return($tipovs);
         return view('unidad.show', compact('unidades','areas','responsables','tipos','dependencias','operadores'));
@@ -283,15 +284,15 @@ return redirect()->route('unidad.show', $unidad);
         $dependencias = Dependencia::find($unidades->dependencia);
         $areas = Area::where('deshabilitado',0)
         ->where('dependencia_id',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $operadores = Operador::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id);
 
         $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         
          $vales = combustible::where('unidad', $unidad)
          ->where('deshabilitado', 0)
@@ -299,9 +300,9 @@ return redirect()->route('unidad.show', $unidad);
          ->get();
         /*
         $operadores_u = Operador_Unidad::where('unidad', $unidad)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         $operadores = Operador::whereIn('id',$operadores_u->pluck('operador'))
-        ->latest('id')->paginate();*/
+        ->latest('id')->get();*/
         
        
         //return($dependencias);
@@ -316,13 +317,13 @@ return redirect()->route('unidad.show', $unidad);
     {
         if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         
          $vales = combustible::find($vale);
         $unidades = Unidad::find($vales->unidad);
@@ -340,6 +341,31 @@ return redirect()->route('unidad.show', $unidad);
 public function guardarvale(Request $request, string $unidad)
     {
 if (auth()->check()) {
+        
+validator($request->all(), [
+
+            'operador' => 'required',
+            'km' =>  'required',
+            'litros' =>  'required',
+            'area' => 'required',
+            'destino' => 'required',
+            'justificacion' => 'required',
+        ], [
+
+            'operador' => 'Operador requerido',
+            'km' =>  'Kilometraje requerido',
+            'litros' =>  'Litros requeridos', 
+            'area' => 'Area requerida',
+            'destino' => 'Destino requerido',
+            'justificacion' => 'Justificacion requerida',  
+        ])->validate(); 
+
+        $ultimovale = combustible::where('unidad', $request['unidad'])->orderBy('id', 'desc')->first();
+        if($ultimovale){
+            if($request['km'] < $ultimovale->km){
+                return back()->withErrors(['km' => 'El kilometraje no puede ser menor al ultimo registrado: '.$ultimovale->km])->withInput();
+            }
+        }
 
         $folio='SF30-';
         $areas = Area::find($request['area']);
@@ -413,13 +439,13 @@ if (auth()->check()) {
             'text' => 'Registrado Correctamente'
         ]);
         /*$areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         */
          //
         $unidades = Unidad::find($unidad);
@@ -540,15 +566,15 @@ public function guardarinci(Request $request, string $unidad){
         $dependencias = Dependencia::find($unidades->dependencia);
         $areas = Area::where('deshabilitado',0)
         ->where('dependencia_id',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $operadores = Operador::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id);
 
         $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         
         $incidentes = incidente::where('unidad', $unidad)
          ->orderBy('id', 'DESC')
@@ -578,17 +604,17 @@ public function guardarinci(Request $request, string $unidad){
         $dependencias = Dependencia::find($unidades->dependencia);
         $areas = Area::where('deshabilitado',0)
         ->where('dependencia_id',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $operadores = Operador::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id);
         $bitacoras = BitacoraUso::where('unidad', $unidad)
         ->orderBy('id', 'DESC')
         ->get();
          $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         $usuarios = Usuarios::All();
        
        // return($graincidentes);
@@ -608,16 +634,16 @@ public function guardarinci(Request $request, string $unidad){
         $unidades = Unidad::find($unidad);
         $areas = Area::where('deshabilitado',0)
         ->where('dependencia_id', $unidades->dependencia)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $tipos = Tipov::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
          //
          $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         
         return view('unidad.edit', compact('unidades','tipos','responsables','areas','dependencias','operadores'));
         }else{
@@ -770,15 +796,15 @@ public function editIncidente(Request $request, string $unidad)
         $inci = incidente::find($incidente);
 
          $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $incidentes = incidente::where('unidad', $unidad)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
           $usuarios = Usuarios::All();
         $unidades = Unidad::find($unidad);
 
@@ -881,16 +907,16 @@ public function cerrarIncidente(Request $request, string $unidad)
         $dependencias = Dependencia::find($unidades->dependencia);
         $areas = Area::where('deshabilitado',0)
         ->where('dependencia_id',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $operadores = Operador::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id);
         $imagenes = img_unidad::where('unidad', $unidad)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
           $usuarios = Usuarios::All();
        // return($tipovs);
         return view('unidad.imagenes', compact('unidades','areas','responsables','tipos','operadores','imagenes','usuarios'));
@@ -1116,17 +1142,17 @@ if($documentos->documento){
         $dependencias = Dependencia::find($unidades->dependencia);
         $areas = Area::where('deshabilitado',0)
         ->where('dependencia_id',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $operadores = Operador::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id);
         $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
     
         $estatus = Estatus_unidad::where('unidad', $unidad)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         $usuarios = Usuarios::All();
        // return($tipovs);
         return view('unidad.estatus', compact('unidades','areas','responsables','tipos','operadores','estatus','usuarios'));
@@ -1187,16 +1213,16 @@ if($documentos->documento){
         $dependencias = Dependencia::find($unidades->dependencia);
         $areas = Area::where('deshabilitado',0)
         ->where('dependencia_id',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $operadores = Operador::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id);
         $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         $recordatorios = Recordatorio_Unidad::where('unidad', $unidad)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         $usuarios = Usuarios::All();
        // return($tipovs);
         return view('unidad.recordatorios', compact('unidades','areas','responsables','tipos','operadores','recordatorios','usuarios'));
@@ -1277,17 +1303,17 @@ public function cerrarRecordatorio(Request $request, string $unidad)
         $dependencias = Dependencia::find($unidades->dependencia);
         $areas = Area::where('deshabilitado',0)
         ->where('dependencia_id',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $operadores = Operador::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
         ->where('dependencia',$dependencias->id);
         $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         
         $operadores_uni = Operador_Unidad::where('unidad', $unidad)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         $usuarios = Usuarios::All();
         
        // return($tipovs);

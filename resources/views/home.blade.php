@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Panel</h1>
@@ -286,6 +286,32 @@ if (auth()->check()) {
       </tr>
       @endif
       @endforeach
+
+      @foreach ($licenciasvencidasdias as $licencia)
+      @if($licencia->dias !='')
+      @if($licencia->dias <=30)
+      <tr>
+        <td>
+          <a href="{{ route('operador.edit', $licencia->id) }}" >{{ $licencia->nombre }} {{ $licencia->paterno }} {{ $licencia->materno }}</a>
+        </td>
+        <td></td>
+        <td></td>
+        <td>Licencia</td>
+       <td>
+      {{ substr($licencia->vigencia,8,2).'/'.substr($licencia->vigencia,5,2).'/'.substr($licencia->vigencia,0,4) }}
+        </td>
+        <td>
+          @if($licencia->dias>=1)
+            <span class="bg-yellow" style="border-radius:5px; padding:5px 10px 5px 10px;">por vencer</span>
+          @else
+            <span class="bg-red" style="border-radius:5px; padding:5px 10px 5px 10px;">vencido</span>
+          @endif
+        </td> 
+      </tr>
+      @endif
+      @endif
+      @endforeach
+    
 </table>
 </div>
 

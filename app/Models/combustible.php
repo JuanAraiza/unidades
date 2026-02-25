@@ -36,5 +36,7 @@ class combustible extends Model
         
     ];
 
+
+
     protected $table = 'combustibles';
 }

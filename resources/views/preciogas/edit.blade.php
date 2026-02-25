@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Editar Precio Fecha {{ substr($precios->fecha,8,2).'-'.substr($precios->fecha,5,2).'-'.substr($precios->fecha,0,4) }} {{ $precios->hora }}</h1>

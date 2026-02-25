@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Documentos Unidad</h1>
@@ -221,7 +221,7 @@ if($dias>30){
 <div class="col-md-6">
 <div class="card "  style="border-left: 3px solid #007bff; border-top:none;"> 
   <div class="card-header">
-    <h3 class="card-title mt-2"><strong>Refrenos</strong></h3>
+    <h3 class="card-title mt-2"><strong>Refrendos</strong></h3>
     <div class="card-tools">
       <!-- Buttons, labels, and many other things can be placed here! -->
       <!-- Here is a label for example -->

@@ -16,9 +16,9 @@ class AreaController extends Controller
         if (auth()->check()) {
         //
          $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->get();
          $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->get();
         return view('area.index', compact('areas','dependencias'));
         }else{
              return redirect()->route('login');
@@ -31,7 +31,7 @@ class AreaController extends Controller
         //
         //return $request->input('dependencia');
         /* $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();*/
+        ->latest('id')->get();*/
          $areas = Area::where('deshabilitado',0)
         ->where('dependencia_id', $request->input('dependencia'))
         ->get();
@@ -50,7 +50,7 @@ class AreaController extends Controller
         if (auth()->check()) {
         //
         $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         
          return view('area.create', compact('dependencias'));
          }else{
@@ -102,7 +102,7 @@ class AreaController extends Controller
         if (auth()->check()) {
         //
         $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $areas = Area::find($area);
         return view('area.edit', compact('areas','dependencias'));
         }else{

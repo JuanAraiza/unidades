@@ -48,10 +48,10 @@
                     <img src="{{ asset(config('adminlte.logo_img')) }}"
                          alt="{{ config('adminlte.logo_img_alt') }}" height="50">
                 @endif
-
+                <?php /*   
                 {{-- Logo Label --}}
                 {!! config('adminlte.logo', '<b>Admin</b>LTE') !!}
-
+                */ ?>
             </a>
         </div>
 

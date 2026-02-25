@@ -14,6 +14,9 @@
 
         {{-- Custom left links --}}
         @yield('content_top_nav_left')
+       <li class="nav-item">
+        <h3 style="padding-top: 2px;">SISTEMA DE CONTROL VEHICULAR</h3>
+       </li>
     </ul>
 
     {{-- Navbar right links --}}

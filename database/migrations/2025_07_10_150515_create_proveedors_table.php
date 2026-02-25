@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('razon_social')->nullable();
             $table->string('nomenclatura')->nullable();
             $table->integer('deshabilitado')->default(0);
+            $table->string('contra')->nullable();
             $table->timestamps();
         });
     }

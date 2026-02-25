@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Cargar Combustible Unidad</h1>
@@ -90,6 +90,7 @@
 
 </div>
 
+@if($unidades->estatus <=2 )
 
 
 <form action="{{ route('unidad.guardarvale', $unidades->id ) }}" method="post" enctype="multipart/form-data">
@@ -224,6 +225,16 @@
 
 
 </form>
+
+
+@else
+
+<div class="alert alert-danger">
+    <h5><i class="icon fas fa-ban"></i> Unidad Inactiva</h5>
+    No se pueden cargar vales de combustible a esta unidad, por el momento se encuentra inactiva.
+  </div>
+
+@endif
 
 
 </x-adminlte-card>

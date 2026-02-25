@@ -15,7 +15,7 @@ class TtipovController extends Controller
         if (auth()->check()) {
         //
         $tipovs = Tipov::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         return view('tipov.index', compact('tipovs'));
          }else{
              return redirect()->route('login');

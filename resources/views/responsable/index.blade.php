@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Responsables</h1>
@@ -22,6 +22,7 @@
     <table class="table">
         <thead>
             <th>Responsable</th>
+            <th>Dependencia</th>
             <th>Area</th>
             <th>Puesto</th>
             <th>No. Economicos</th>
@@ -31,6 +32,13 @@
         @foreach($responsables as $responsable)
         <tr>
             <td>{{ $responsable->nombre }} {{ $responsable->paterno }} {{ $responsable->materno }}</td>
+            <td> 
+             @foreach($dependencias as $dependencia)   
+             @if($dependencia->id == $responsable->dependencia) 
+            {{ $dependencia->dependencia }}
+            @endif
+        @endforeach
+        </td>
             <td> 
              @foreach($areas as $area)   
              @if($area->id == $responsable->area_id) 

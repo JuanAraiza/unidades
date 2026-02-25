@@ -1,6 +1,8 @@
+
+
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Proveedores</h1>
@@ -22,8 +24,9 @@
     <table class="table">
         <thead>
             <th>Gasolinera</th>
-            <th>RCF</th>
+            <th>RFC</th>
             <th>Razon Social</th>
+            <th>Contraseña para<br>Cargar</th>
             <th></th>
             <th></th>
         </thead>
@@ -32,6 +35,7 @@
             <td>{{ $proveedor->gasolinera }}</td>
            <td>{{ $proveedor->rfc }}</td>
         <td>{{ $proveedor->razon_social }}</td>
+        <td>{{ $proveedor->contra }}</td>
             <td><a href="{{ route('proveedor.edit', $proveedor->id) }}" class="btn btn-warning"><span  class="fas fa-pencil"></span></a></td>
             <td><form class="delete-form" action="{{ route('proveedor.destroy', $proveedor->id) }}" method="post">
                 @csrf

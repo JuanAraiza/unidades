@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Nuevo Proveedor</h1>
@@ -17,7 +17,7 @@
     @csrf
 
 <div class="row col-md-12">
-   <div class="col-md-4"> 
+   <div class="col-md-3"> 
         <div class="form-group">
             <label>Gasolinera</label>
             <input type="text" name="gasolinera" value="{{ old('gasolinera') }}" class="form-control"
@@ -30,7 +30,7 @@
         @enderror
     </div>
 
-  <div class="col-md-4"> 
+  <div class="col-md-3"> 
        <div class="form-group">
             <label>RFC</label>
             <input type="text" name="rfc" value="{{ old('rfc') }}" class="form-control"
@@ -44,7 +44,7 @@
     </div>
 
 
-      <div class="col-md-4"> 
+      <div class="col-md-3"> 
         <div class="form-group">
             <label>Razon Social</label>
             <input type="text" name="razon_social" value="{{ old('razon_social') }}" class="form-control"
@@ -61,6 +61,18 @@
 
 
 
+<div class="col-md-3"> 
+        <div class="form-group">
+            <label>Contraseña para cargar</label>
+            <input type="text" name="contra" value="{{ old('contra') }}" class="form-control"
+                placeholder="Contraseña"   >
+        </div>
+        @error('contra')
+            <span style="color:crimson;">
+                 {{$message}}
+            </span>
+        @enderror
+    </div>
 
 
 

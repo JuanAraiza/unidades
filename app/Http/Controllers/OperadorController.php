@@ -37,9 +37,9 @@ class OperadorController extends Controller
     {
         if (auth()->check()) {
           $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->get();
          return view('operador.create', compact('areas','dependencias'));
          }else{
              return redirect()->route('login');
@@ -53,7 +53,9 @@ class OperadorController extends Controller
     {
       
 if (auth()->check()) {
-
+ $request->validate([
+            'nombre' => 'required'
+        ]);
         if($request->hasFile('fotos')){
 
 
@@ -119,11 +121,13 @@ $request['area'] = $request['area_id'];
     public function edit(string $operador)
     {
         if (auth()->check()) {
+            $operadores = Operador::find($operador);
         $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->where('dependencia_id', $operadores->dependencia)
+        ->get();
         $dependencias = Dependencia::where('deshabilitado',0)
-        ->latest('id')->paginate();
-         $operadores = Operador::find($operador);
+        ->get();
+         
         return view('operador.edit', compact('operadores','areas','dependencias'));
         }else{
              return redirect()->route('login');
@@ -135,6 +139,8 @@ $request['area'] = $request['area_id'];
      */
     public function update(Request $request, string $id)
     {
+
+    //return $request->all();
         if (auth()->check()) {
         $request->validate([
             'nombre' => 'required'
@@ -171,7 +177,7 @@ if($operador->licencia){
 }
 $extension = $request->licencias->extension();
 $nameFile = $request['nombre'].date('YmdHsi').'-Licencia.'.$extension;
-$request['licencia'] = Storage::putFileAs('licencias', $request->facturas, $nameFile);
+$request['licencia'] = Storage::putFileAs('licencias', $request->licencias, $nameFile);
 
 }
 $request['area']=$request['area_id'];
@@ -217,6 +223,9 @@ $request['area']=$request['area_id'];
     {
       
 if (auth()->check()) {
+     $request->validate([
+            'nombrec' => 'required'
+        ]);
 $request['operador']=$request['operador_id'];
 $request['nombre']=$request['nombrec'];
 $request['telefono']=$request['telefonoc'];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Area;
 use App\Models\Dependencia;
 use App\Models\Docu_unidad;
+use App\Models\Operador;
 use App\Models\Unidad;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -115,6 +116,13 @@ class HomeController extends Controller
 
          }
 
+         $licenciasvencidasdias = Operador::select('id','nombre','paterno','materno', 'vigencia')
+            ->where('deshabilitado',0)
+            ->selectRaw('DATEDIFF (vigencia, DATE(NOW())) as dias')
+            ->get();
+
+
+            //return $licenciasvencidasdias;
          //$docus=
          //return($seguros);
 
@@ -159,7 +167,7 @@ class HomeController extends Controller
 */
 
         //return($dependencias);
-        return view('home', compact('asignados','entallers','disponibles','fueras','incidentes','seguros','dependencias','areas'));
+        return view('home', compact('asignados','entallers','disponibles','fueras','incidentes','seguros','dependencias','areas','licenciasvencidasdias'));
         }else{
              return redirect()->route('login');
         }

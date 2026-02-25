@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Comprometidos</h1>
@@ -114,85 +114,7 @@
 
 <input type="hidden" id="selectedRows" name="folios" class="form-control" />
 
-<div class="col-md-12">
-     <hr style="border: 1px solid #333;">
-     
-     <h4>Datos Formato Tramite</h4>
 
-
-</div>
-
- <div class="col-md-3"> 
-        <div class="form-group">
-            <label>Folio</label>
-            <input type="text" name="folio" value="{{ old('folio') }}" class="form-control"
-               placeholder="SF30-05-00-TPC001-0006757"  >
-        </div>
-    </div>
-<div class="col-md-6"> 
-        <div class="form-group">
-            <label>Datos de generales</label>
-            <input type="text" name="datos_g" value="{{ old('datos_g') }}" class="form-control"
-               placeholder="2524822100/M290160000/GTM029E0016/226/31111M290160000"  >
-        </div>
-    </div>
-
-<div class="col-md-3"> 
-        <div class="form-group">
-            <label>Nombre de la Partida</label>
-            <input type="text" name="nom_partida" value="{{ old('nom_partida', 'COMBUSTIBLES LUBRICANTES Y ADITIVOS') }}" class="form-control"
-               placeholder="COMBUSTIBLES LUBRICANTES Y ADITIVOS"  >
-        </div>
-    </div>
-
-<div class="col-md-2"> 
-        <div class="form-group">
-            <label>No. de Partida</label>
-            <input type="text" name="no_partida" value="{{ old('no_partida','2610') }}"  onKeyPress="return valida(event)"  class="form-control"
-               placeholder="2610"    >
-        </div>
-    </div>
-
-    <div class="col-md-2"> 
-        <div class="form-group">
-            <label>Presupuestado</label>
-            <input type="text" name="presupuestado" value="{{ old('presupuestado') }}" onKeyPress="return valida(event)"  class="form-control"
-               placeholder="Presupuestado"  >
-        </div>
-    </div>
-
-    <div class="col-md-2"> 
-        <div class="form-group">
-            <label>Ejercido</label>
-            <input type="text" name="ejercido" value="{{ old('ejercido') }}" onKeyPress="return valida(event)"  class="form-control"
-               placeholder="Ejercido"  >
-        </div>
-    </div>
-
-    <div class="col-md-2"> 
-        <div class="form-group">
-            <label>Por Ejercer</label>
-            <input type="text" name="por_ejercer" value="{{ old('por_ejercer') }}" onKeyPress="return valida(event)"  class="form-control"
-               placeholder="Por Ejercer"  >
-        </div>
-    </div>
-
-
-    <div class="col-md-2"> 
-        <div class="form-group">
-            <label>Importe para Afectar</label>
-            <input type="text" name="importea_afectar" value="{{ old('importea_afectar') }}" onKeyPress="return valida(event)"  class="form-control"
-               placeholder="Importe"  >
-        </div>
-    </div>
-
-    <div class="col-md-2"> 
-        <div class="form-group">
-            <label>Saldo Nuevo por Ejercer</label>
-            <input type="text" name="saldo_nuevo" value="{{ old('saldo_nuevo') }}" onKeyPress="return valida(event)"  class="form-control"
-               placeholder="Saldo"  >
-        </div>
-    </div>
 
 
 <div class="col-md-12"> 
@@ -219,6 +141,7 @@
                 <thead>
                 <tr>
                     <th></th>
+                    <th></th>
                 <th>Unidad</th>
                   <th>Folio</th>
                   <th>Fecha</th>
@@ -239,7 +162,17 @@
                 <tbody>
     @foreach ($vales as $vale)
                 <tr>
-                    <td>{{ $vale->id }}</td>
+                   <td>{{ $vale->id }}</td> 
+                <td>
+                   @foreach($unidades as $unidad)
+                        @if($vale->unidad == $unidad->id)
+                        <div class="card-heart p-0" style="height:150px; width: 250px;">
+                            <img  id="imgPreview"  style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded"  src="{{ $vale->unidad == $unidad->id ? Storage::url($unidad->imagen) : '' }}" alt="">
+                        </div>
+                        @endif 
+                        @endforeach 
+                  
+                 </td>
                     <td>
                         @foreach($unidades as $unidad)
                             {{ $vale->unidad == $unidad->id ? $unidad->marca  : '' }}
@@ -352,7 +285,7 @@ var table = $('#tablacomprometidos').DataTable({
         },
         
         initComplete: function() {
-            this.api().columns([6,7,12]).every( function () {
+            this.api().columns([7,8,13]).every( function () {
             //this.api().columns().every(function() {
                 var column = this;
 
@@ -373,13 +306,13 @@ var table = $('#tablacomprometidos').DataTable({
                             let sindexcol = indexcol[0];
 
                         switch(sindexcol){
-                            case 6:
+                            case 7:
                                 document.getElementById('ftipogas').value= valorcol ;
                             break;
-                            case 7:
+                            case 8:
                                 document.getElementById('fproveedor').value= valorcol ;
                             break;
-                            case 12:
+                            case 13:
                                 document.getElementById('fdependencia').value= valorcol ;
                             break;
 
@@ -430,9 +363,9 @@ table.on('click', 'tbody tr', function (e) {
     const selectedData = table.rows('.selected').data();
     for (let i = 0; i < selectedData.length; i++) {
         document.getElementById('selectedRows').value += ','+selectedData[i][0];
-        document.getElementById('selectedRowsFolios').value += selectedData[i][2]+',';
+        document.getElementById('selectedRowsFolios').value += selectedData[i][3]+',';
         var dcosto='';
-        dcosto = selectedData[i][5].replace("$", "");
+        dcosto = selectedData[i][6].replace("$", "");
         dcosto = dcosto.replace(",", "");
         dcosto = dcosto.replace(" ", "");
         

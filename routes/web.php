@@ -6,6 +6,7 @@ use App\Http\Controllers\TtipovController;
 use App\Http\Controllers\DependenciaController;
 use App\Http\Controllers\OperadorController;
 use App\Http\Controllers\PreciogasController;
+use App\Http\Controllers\PresupuestoC;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\ResponsableController;
 use App\Http\Controllers\UnidadController;
@@ -48,7 +49,7 @@ Route::resource('unidad', UnidadController::class);
 
 Route::resource('usuarios', UsuariosController::class)->middleware('admin');
 
-
+Route::resource('/presupuestoc', PresupuestoC::class)->middleware('admin');
 
 Route::get('/unidad/{unidad}/combustible', [UnidadController::class, 'combustible'])->name('unidad.combustible');
 Route::get('/unidad/{unidad}/bitacora', [UnidadController::class, 'bitacora'])->name('unidad.bitacora');
@@ -99,13 +100,15 @@ Route::put('/combustible/{vale}/cancelar', [CombustibleController::class, 'cance
 Route::get('/valesvalidados', [CombustibleController::class, 'validados'])->name('combustible.validados')->middleware('admin');
 Route::put('/combustible/{vale}/cancelarValidados', [CombustibleController::class, 'cancelarValidados'])->name('combustible.cancelarValidados')->middleware('admin');
 Route::get('/combustible/{unidad}/imvale', [CombustibleController::class, 'imvale'])->name('combustible.imvale')->middleware('admin');
+Route::get('/combustible/{unidad}/printimvale', [CombustibleController::class, 'printimvale'])->name('combustible.printimvale')->middleware('admin');
 
 Route::get('/vervale/{vale}', [CombustibleController::class, 'show'])->name('combustible.show');
 Route::get('/cargarvale/{vale}', [CombustibleController::class, 'cargarvale'])->name('combustible.cargarvale');
+Route::get('/cargarvalebien/{vale}', [CombustibleController::class, 'cargarvalebien'])->name('combustible.cargarvale2');
 Route::post('/cargarvaledos/{vale}', [CombustibleController::class, 'cargarvaledos'])->name('combustible.cargarvaledos');
 Route::post('/crearfactura', [CombustibleController::class, 'crearfactura'])->name('combustible.crearFactura');
 
-
+Route::post('/combustible/validarcarga', [CombustibleController::class, 'validarCarga'])->name('combustible.validarCarga');
 Route::post('/combustible/paracargar', [CombustibleController::class, 'paracargar'])->name('combustible.paracargar')->middleware('admin');
 Route::post('/combustible/cargados', [CombustibleController::class, 'cargados'])->name('combustible.cargados')->middleware('admin');
 Route::post('/combustible/pagogas', [CombustibleController::class, 'pagogas'])->name('combustible.pagogas')->middleware('admin');

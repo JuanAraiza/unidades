@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Cancelados</h1>
@@ -47,6 +47,7 @@
 <table id="tablaincidentes" class="table table-bordered table-striped">
                 <thead>
                 <tr>
+                    <th></th>
                 <th>Unidad</th>
                   <th>Folio</th>
                   <th>Fecha</th>
@@ -65,6 +66,16 @@
                 <tbody>
     @foreach ($vales as $vale)
                 <tr>
+                    <td>
+                   @foreach($unidades as $unidad)
+                        @if($vale->unidad == $unidad->id)
+                        <div class="card-heart p-0" style="height:150px; width: 250px;">
+                            <img  id="imgPreview"  style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded"  src="{{ $vale->unidad == $unidad->id ? Storage::url($unidad->imagen) : '' }}" alt="">
+                        </div>
+                        @endif 
+                        @endforeach  
+                  
+                 </td>
                     <td>
                         @foreach($unidades as $unidad)
                             {{ $vale->unidad == $unidad->id ? $unidad->marca  : '' }}

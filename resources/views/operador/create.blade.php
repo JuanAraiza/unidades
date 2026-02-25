@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Nuevo Operador</h1>
@@ -107,8 +107,9 @@
 <div class="form-group">
             <label>Dependencia</label>
 {{-- Minimal --}}
-<x-adminlte-select2 name="dependencia"  data-placeholder="Selecciona Dependencia....">
-    @foreach($dependencias as $dependencia)
+<x-adminlte-select2 name="dependencia" id="dependencia"  data-placeholder="Selecciona Dependencia...." onChange="cargarAreas(this.value)">
+<option @selected(old('depdnencia')) value="0">--</option>    
+@foreach($dependencias as $dependencia)
         <option @selected(old('dependencia') == $dependencia->id) value="{{ $dependencia->id }}">{{ $dependencia->dependencia }}</option>
     @endforeach
     
@@ -124,10 +125,7 @@
             <label>Area</label>
 {{-- Minimal --}}
 <x-adminlte-select2 name="area_id"  data-placeholder="Selecciona Area....">
-    @foreach($areas as $area)
-        <option @selected(old('area_id') == $area->id) value="{{ $area->id }}">{{ $area->area }}</option>
-    @endforeach
-    
+   
  
 </x-adminlte-select2>
 
@@ -197,5 +195,27 @@
 @stop
 
 @section('js')
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script> 
+    function cargarAreas(depedendencia) {
+               // alert(dependencia.value);
+                
+                var url = '{{ route("area.subareas") }}';
+                var data = { dependencia: dependencia.value };
+
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    data: data,
+                    success: function(data) {
+                        //console.log(data);
+                        var opciones = '';
+                        $.each(data, function(index, value) {
+                            opciones += '<option value="' + value.id + '">' + value.area + '</option>';
+                        });
+                        $('#area_id').html(opciones).select2();
+                    }
+                });
+                
+            }
+    console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
 @stop

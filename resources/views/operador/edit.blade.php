@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Editar Operador</h1>
@@ -110,9 +110,9 @@
 <div class="form-group">
             <label>Dependencia</label>
 {{-- Minimal --}}
-<x-adminlte-select2 name="dependencia"  data-placeholder="Selecciona Dependencia....">
+<x-adminlte-select2 name="dependencia"  data-placeholder="Selecciona Dependencia...." onChange="cargarAreas(this.value)">
     @foreach($dependencias as $dependencia)
-        <option @if($dependencia->id == $operadores->dependenecia) @selected(true) @endif  value="{{ $dependencia->id }}">{{ $dependencia->dependencia }}</option>
+        <option @selected(old('dependencia', $operadores->dependencia) == $dependencia->id)  value="{{ $dependencia->id }}">{{ $dependencia->dependencia }}</option>
     @endforeach
     
  
@@ -193,5 +193,27 @@
 @stop
 
 @section('js')
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script>
+     function cargarAreas(depedendencia) {
+               // alert(dependencia.value);
+                
+                var url = '{{ route("area.subareas") }}';
+                var data = { dependencia: dependencia.value };
+
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    data: data,
+                    success: function(data) {
+                        //console.log(data);
+                        var opciones = '';
+                        $.each(data, function(index, value) {
+                            opciones += '<option value="' + value.id + '">' + value.area + '</option>';
+                        });
+                        $('#area_id').html(opciones).select2();
+                    }
+                });
+                
+            }
+    console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
 @stop

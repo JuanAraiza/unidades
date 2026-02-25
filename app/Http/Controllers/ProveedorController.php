@@ -16,7 +16,7 @@ class ProveedorController extends Controller
         if (auth()->check()) {
         //
          $proveedores = Proveedor::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         return view('proveedor.index', compact('proveedores'));
          }else{
              return redirect()->route('login');

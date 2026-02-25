@@ -12,7 +12,9 @@ class Proveedor extends Model
         'gasolinera',
         'rfc',
         'razon_social',         
-        'nomenclatura'
+        'nomenclatura',
+        'contra',
+        'deshabilitado',
     ];
 
 }

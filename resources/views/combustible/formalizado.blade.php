@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Formalizados</h1>
@@ -126,9 +126,9 @@
                 <td>{{ $formalizado->tramite }}</td>
                 <td>{{ substr($formalizado->fecha,0,10) }}</td>
                 <td>
-                     @foreach($proveedores as $proveedor)
-                        {{ $formalizado->gasolinera == $proveedor->id ? $proveedor->gasolinera : '' }}
-                    @endforeach
+                 
+                        {{ $formalizado->gasolinera }}
+                
                 </td>
                 
                 <td> 
@@ -145,7 +145,7 @@ FOLIOS
 
 <!-- Modal -->
 <div class="modal fade" id="modalVerFactu{{ $formalizado->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl" style="width: 90%;">
+  <div class="modal-dialog modal-xl" >
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Folios Tramite: {{ $formalizado->tramite }}</h5>
@@ -154,7 +154,7 @@ FOLIOS
         </button>
       </div>
      
-      <div class="modal-body row">
+      <div class="modal-body  overflow-auto"" > 
  @php
                         $vls = explode(",", $formalizado->folios);
                         $vales = \DB::table('combustibles')->whereIn('id', $vls)->get();
@@ -162,7 +162,7 @@ FOLIOS
 
                    
       <!--    tabla folios. -->
-              <table class="table" style="font-size:10px;">
+              <table class="table table-striped table-bordered" style="font-size:10px; ">
                   <thead>
                       <tr>
                         <th></th>
@@ -185,9 +185,13 @@ FOLIOS
                       @foreach ($vales as $vale)
                           <tr>
                             <td>
-                            @foreach($unidades as $unidad)
-                                        <img style=" height:80px; "  src="{{ $vale->unidad == $unidad->id ? Storage::url($unidad->imagen) : '' }}" alt="">
-                                    @endforeach  
+
+                            @php
+                                  $unidad = \DB::table('unidad')->find($vale->unidad);
+                              @endphp
+                                      <div class="card-heart p-0" style="height:150px; width: 200px;">
+                            <img  id="imgPreview"  style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded"  src="{{ $vale->unidad == $unidad->id ? Storage::url($unidad->imagen) : '' }}" alt="">
+</div> 
                             
                             </td>
                               @php
@@ -195,9 +199,7 @@ FOLIOS
                               @endphp
                               <td>{{ $dependencia->dependencia }}</td>
                               <td>{{ $vale->fecha }}</td>
-                              @php
-                                  $unidad = \DB::table('unidad')->find($vale->unidad);
-                              @endphp
+                              
                               <td>{{ $unidad->no_economico }}</td>
                               @php
                                   switch ($vale->tipo_com) {
@@ -223,8 +225,13 @@ FOLIOS
                               <td>{{ $vale->litros }}</td>
                               @php
                                   $chofer = \DB::table('operador')->find($vale->operador);
+
                               @endphp
-                              <td>{{ $chofer->nombre }} {{ $chofer->paterno }} {{ $chofer->materno }}</td>
+                              <td>
+                                @if($chofer)
+                                {{ $chofer->nombre }} {{ $chofer->paterno }} {{ $chofer->materno }}
+                                @endif
+                            </td>
                               <td>{{ $vale->km }}</td>
                               <td>{{ $vale->destino }}</td>
                               @php

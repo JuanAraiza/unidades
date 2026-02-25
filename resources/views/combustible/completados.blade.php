@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Unidades')
+@section('title', 'AVIZOR')
 
 @section('content_header')
     <h1>Tramites Completos para Pago</h1>
@@ -104,7 +104,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="modalVerFactu{{ $completado->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl" style="width: 90%;">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Folios Tramite: {{ $completado->tramite }}</h5>
@@ -113,7 +113,7 @@
         </button>
       </div>
      
-      <div class="modal-body row">
+      <div class="modal-body overflow-auto">
        
 
 @php
@@ -146,9 +146,13 @@
                       @foreach ($vales as $vale)
                           <tr>
                             <td>
-                            @foreach($unidades as $unidad)
-                                        <img style=" height:80px; "  src="{{ $vale->unidad == $unidad->id ? Storage::url($unidad->imagen) : '' }}" alt="">
-                                    @endforeach  
+                                @php
+                                  $unidad = \DB::table('unidad')->find($vale->unidad);
+                              @endphp
+                            
+                                      <div class="card-heart p-0" style="height:150px; width: 200px;">
+                            <img  id="imgPreview"  style="object-fit: cover;width: 100%; height:100%;" class="img-fluid object-fit-cover border rounded"  src="{{ $vale->unidad == $unidad->id ? Storage::url($unidad->imagen) : '' }}" alt="">
+</div>
                             
                             </td>
                               @php
@@ -156,9 +160,7 @@
                               @endphp
                               <td>{{ $dependencia->dependencia }}</td>
                               <td>{{ $vale->fecha }}</td>
-                              @php
-                                  $unidad = \DB::table('unidad')->find($vale->unidad);
-                              @endphp
+                              
                               <td>{{ $unidad->no_economico }}</td>
                               @php
                                   switch ($vale->tipo_com) {

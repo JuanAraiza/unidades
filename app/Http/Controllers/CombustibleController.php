@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\UsersExport;
 use App\Exports\ValesExport;
 use App\Models\archivos_gas;
 use App\Models\Area;
@@ -17,6 +16,7 @@ use App\Models\Responsable;
 use App\Models\Tipov;
 use App\Models\Unidad;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\presupuestoc as ModelsPresupuestoc;
 use DragonCode\Support\Helpers\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -77,6 +77,9 @@ class CombustibleController extends Controller
         ->where('deshabilitado', 0)
         ->orderBy('fecha', 'DESC')
         ->get();
+
+        
+
         $operadores_u = Operador_Unidad::latest('id')->get();
         $operadores = Operador::latest('id')->get();
        //return('hhh');
@@ -263,6 +266,27 @@ class CombustibleController extends Controller
         return view('combustible.cargarvale', compact('unidades','areas','responsables','tipos','operadores','vales','operadores_u','proveedores'));
     }
 
+    public function cargarvalebien(string $id, Request $request)
+    {
+        //
+        $areas = Area::where('deshabilitado',0)
+        ->latest('id')->get();
+        $proveedores = Proveedor::where('deshabilitado',0)
+        ->latest('id')->get();
+        $responsables = Responsable::where('deshabilitado',0)
+        ->latest('id')->get();
+        $tipos = Tipov::where('deshabilitado',0)
+        ->latest('id')->get();
+        $unidades = Unidad::where('deshabilitado',0)
+        ->latest('id')->get();
+        $vales = combustible::find($id);
+        $operadores_u = Operador_Unidad::latest('id')->get();
+        $operadores = Operador::latest('id')->get();
+       
+        //return($vales);
+      
+        return view('combustible.cargarvale2', compact('unidades','areas','responsables','tipos','operadores','vales','operadores_u','proveedores'));
+    }
 
   public function actualizarFolios(string $id,Request $request)
     {
@@ -336,6 +360,28 @@ class CombustibleController extends Controller
 
     }
 
+    function validarCarga(Request $request)
+    {
+        //
+        $proveedores = Proveedor::where('contra', $request['contra'])
+        ->where('deshabilitado',0)
+        ->first();
+
+        if($proveedores){
+            //return('validado');
+            return redirect()->route('combustible.cargarvale2', ['vale' => $request['vale']]);
+        }else{
+            //return('no validado');
+             session()->flash('swal', [
+            
+            'title' => 'Error en Contraseña!',
+            'text' => 'Contraseña Incorrecta'
+        ]);
+        return redirect()->route('combustible.cargarvale', ['vale' => $request['vale']]);
+        
+        }
+    }
+
 
      public function cargarvaledos(string $id,Request $request)
     {
@@ -387,7 +433,7 @@ class CombustibleController extends Controller
         $vales->estatus=3;
         $vales->fecha_c=date('Y-m-d');
         $vales->folio_sat=$request['folio_sat'];
-        
+        $vales->litros=$request['litros'];
         $vales->save();
 
          session()->flash('swal', [
@@ -421,6 +467,10 @@ $msn='Litros deben ser menos o igual a: '.$request['olitros'].' Litros';
      
     if (auth()->check()) {
 
+
+        
+
+
         if($request['folios2']!=''){
             if(isset($request['fproveedor']) and $request['fproveedor']!=''){
                 $proveedores = Proveedor::where('gasolinera',$request['fproveedor'])->first();
@@ -435,10 +485,6 @@ $msn='Litros deben ser menos o igual a: '.$request['olitros'].' Litros';
         //return($request);
         return redirect()->route('combustible.comprometidos');
             }
-        $user = auth()->user();
-        $request['id_user']=$user->id;
-        $request['fecha'] = date('Y-m-d H:i:s');
-        $request['combustible'] = $request['ftipogas'];
 
             if(isset($request['fdependencia']) and $request['fdependencia']!=''){
                 $dependencias = Dependencia::where('dependencia',$request['fdependencia'])->first();
@@ -455,7 +501,30 @@ $msn='Litros deben ser menos o igual a: '.$request['olitros'].' Litros';
         return redirect()->route('combustible.comprometidos');
 
             }
-        $request['dependencia']=$dep;
+
+         $request['dependencia']=$dep;
+         $presupuesto = ModelsPresupuestoc::where('dependencia',$dep)->first();
+         $request['presupuestado']=$presupuesto->asignado;
+            $request['por_ejercer']=$presupuesto->disponible;
+            $request['nom_partida']=$presupuesto->partida_den;
+            $request['no_partida']=$presupuesto->partida;
+            $ejercido=$presupuesto->asignado - $presupuesto->disponible;
+            $request['ejercido']=$ejercido;
+            $request['importea_afectar']=$request['costo_t'];
+            $saldo_nuevo=$presupuesto->disponible - $request['costo_t'];
+            $request['saldo_nuevo']=$saldo_nuevo;
+            $request['datos_g']=$presupuesto->fondo.'/'.substr($presupuesto->centro_g,5,10).'/'.$presupuesto->programa.'/'.$presupuesto->centro_g;
+            
+            $presupuesto->disponible=$saldo_nuevo;
+
+
+        $user = auth()->user();
+        $request['id_user']=$user->id;
+        $request['fecha'] = date('Y-m-d H:i:s');
+        $request['combustible'] = $request['ftipogas'];
+
+            
+       
         $gas='AD';
         $maxfactura = factura_ga::selectRaw('MAX(id) as id')
         ->first();
@@ -469,7 +538,7 @@ $msn='Litros deben ser menos o igual a: '.$request['olitros'].' Litros';
         }
         
         $fc++;
-
+/*
         $request['presupuestado']=str_replace(',', '', $request['presupuestado']); 
         $request['presupuestado']=str_replace(' ', '', $request['presupuestado']);
         $request['presupuestado']=str_replace('$', '', $request['presupuestado']); 
@@ -495,15 +564,32 @@ $msn='Litros deben ser menos o igual a: '.$request['olitros'].' Litros';
         $request['importea_afectar']=str_replace('$', '', $request['importea_afectar']); 
         $request['importea_afectar']=floatval($request['importea_afectar']);
 
+*/
 
+$folio='SF30-05-00-';
+        
+        switch($request['combustible']){
+            case 'Gasolina':
+                        $folio.='TPC001-';
+                break;
+            case 'Diesel':
+                        $folio.='TPC002-';
+                break;
+            case 'Gas LP':
+                        $folio.='TPC003-';
+                break;
+            
+        }
 
-          
+         $request['folio']=$folio;
         $no_tramite=date('dmY').$gas.str_pad($dep, 2, "0", STR_PAD_LEFT).str_pad($fc, 6, "0", STR_PAD_LEFT);
         $request['tramite'] = $no_tramite;
-
+          //  return($request);
        // return($request);
         factura_ga::create($request->all());
-        
+
+        $presupuesto->save();   
+
         $vls = explode(",", $request['folios']);
             DB::table('combustibles')
             ->whereIn('id', $vls)
@@ -695,7 +781,9 @@ $msn='Litros deben ser menos o igual a: '.$request['olitros'].' Litros';
         if (auth()->check()) {
         //
         $factura = factura_ga::find($id);
-
+            $presupuesto = ModelsPresupuestoc::where('dependencia',$factura->dependencia)->first();
+        $presupuesto->disponible=$presupuesto->disponible + $factura->costo_t;
+            $presupuesto->save();
         $vls = explode(",", $factura->folios);
             DB::table('combustibles')
             ->whereIn('id', $vls)
@@ -844,13 +932,13 @@ public function imvale(string $vale)
     {
         if (auth()->check()) {
         $areas = Area::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $responsables = Responsable::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         $tipos = Tipov::where('deshabilitado',0)
-         ->latest('id')->paginate();
+         ->latest('id')->get();
         $operadores = Operador::where('deshabilitado',0)
-        ->latest('id')->paginate();
+        ->latest('id')->get();
         
          $vales = combustible::find($vale);
         $unidades = Unidad::find($vales->unidad);
@@ -859,6 +947,34 @@ public function imvale(string $vale)
        $customPaper = array(0,0,567.00,283.80);
        $pdf = Pdf::loadView('combustible.imvale', compact('unidades','areas','responsables','tipos','operadores','vales'))->setPaper($customPaper, 'landscape');
        return $pdf->stream('vale.pdf');
+        //return view('unidad.imvale', compact('unidades','areas','responsables','tipos','operadores','vales'));
+    }else{
+             return redirect()->route('login');
+        }
+    
+    }
+
+    public function printimvale(string $vale)
+    {
+        if (auth()->check()) {
+        $areas = Area::where('deshabilitado',0)
+        ->latest('id')->get();
+        $responsables = Responsable::where('deshabilitado',0)
+        ->latest('id')->get();
+        $tipos = Tipov::where('deshabilitado',0)
+         ->latest('id')->get();
+        $operadores = Operador::where('deshabilitado',0)
+        ->latest('id')->get();
+        $proveedores = Proveedor::where('deshabilitado',0)
+        ->latest('id')->get();
+        
+         $vales = combustible::find($vale);
+        $unidades = Unidad::find($vales->unidad);
+       // return($tipovs);
+       
+       //$customPaper = array(0,0,567.00,283.80);
+       $pdf = Pdf::loadView('combustible.printimvale', compact('unidades','areas','responsables','tipos','operadores','proveedores','vales'))->setPaper('landscape');
+       return $pdf->stream('vale-'.$vale.'.pdf');
         //return view('unidad.imvale', compact('unidades','areas','responsables','tipos','operadores','vales'));
     }else{
              return redirect()->route('login');
